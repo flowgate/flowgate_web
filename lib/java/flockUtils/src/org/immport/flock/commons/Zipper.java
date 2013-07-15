@@ -6,6 +6,7 @@ import net.lingala.zip4j.util.Zip4jConstants;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * User: hkim
@@ -47,16 +48,24 @@ public class Zipper {
 
     public static void compress(String path) throws Exception {
         ZipFile zipFile = new ZipFile(path +".zip");
-        String folderToAdd = path;
+
         ZipParameters parameters = new ZipParameters();
         parameters.setCompressionMethod(Zip4jConstants.COMP_DEFLATE);
         parameters.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_NORMAL);
 
-        // Add folder to the zip file
-        zipFile.addFolder(folderToAdd, parameters);
+        File parent = new File(path);
+        ArrayList<File> filesToAdd = new ArrayList<File>();
+        String[] children = parent.list();
+        for(String childName : children) {
+            filesToAdd.add(new File(path + File.separator + childName));
+        }
 
-        File addedFolder = new File(folderToAdd);
-        FileUtils.deleteDirectory(addedFolder);
+        // Add folder to the zip file
+        //zipFile.addFolder(folderToAdd, parameters);
+
+        zipFile.addFiles(filesToAdd, parameters);
+
+        FileUtils.deleteDirectory(parent);
     }
 
     public static void buildNestedZip(String dirPath) throws Exception {

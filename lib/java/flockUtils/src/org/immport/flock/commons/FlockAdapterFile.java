@@ -10,13 +10,13 @@ import java.util.Map;
 
 public class FlockAdapterFile implements FlockAdapter {
 
-    private String INPUT_DATA = "coordinates.txt";
-    private String PERCENTAGE_TXT = "percentage.txt";
-    private String PROFILE_TXT = "profile.txt";
-    private String POPULATION_ID_COL = "population_id.txt";
-    private String POPULATION_CENTER = "population_center.txt";
-    private String MFI = "MFI.txt";
-    private String PARAMETERS = "parameters.txt";
+    public final static String INPUT_DATA = "coordinates.txt";
+    public final static String PERCENTAGE_TXT = "percentage.txt";
+    public final static String PROFILE_TXT = "profile.txt";
+    public final static String POPULATION_ID_COL = "population_id.txt";
+    public final static String POPULATION_CENTER = "population_center.txt";
+    public final static String MFI = "MFI.txt";
+    public final static String PARAMETERS = "parameters.txt";
     private File outputDir;
     private File inputDir;
     private PoorMansTable dbmock;

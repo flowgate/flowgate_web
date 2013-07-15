@@ -652,10 +652,10 @@ public class FlockImageGenerator {
 
     public static void main(String[] args) throws Exception {
         String errorMsg = "Usage: command \n"
-            +"<Type: all_images, overview(_color,_bw), all_markers, all_populations, marker_populations,single_population, gen_propsfile> \n"
+            +"<Type: all_images, overview(_color,_bw), all_markers, all_populations, marker_populations, single_population, gen_propsfile> \n"
             +"<INPUT_DIR or File...> <OUTPUT_DIR> [Index 1] [Index 2]";
 
-        if (args.length < 4) {
+        if (args.length < 3) {
             throw new Exception(errorMsg);
         }
 

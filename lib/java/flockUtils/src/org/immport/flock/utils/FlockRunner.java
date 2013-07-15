@@ -1,6 +1,5 @@
 package org.immport.flock.utils;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.immport.flock.commons.Zipper;
 
@@ -21,7 +20,7 @@ import java.util.zip.ZipFile;
  * org.immport.flock.utils
  */
 public class FlockRunner {
-    private final String flockName = "flock1"; //"flock1_gp_osx";
+    private final String flockName = "flock1"; //"flock1", "flock1_gp_osx";
 
     public static void main(final String[] args) throws Exception {
         String errorMsg = "Usage: (d:integer) command <zipFile> <# of bin(d) OR range of # of bins(d-d)> <density(d) OR range of density(d-d)>";
@@ -109,7 +108,6 @@ public class FlockRunner {
             }
         }
         Zipper.buildNestedZip(resultDir.getAbsolutePath());
-        FileUtils.deleteDirectory(inputDir);
     }
 
     public URI getFlockFile() throws Exception {
