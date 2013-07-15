@@ -18,12 +18,12 @@ import java.io.File;
 public class Zipper {
     public Zipper() {}
 
-    public void extract(String inputFilePath, String outDirPath) throws Exception {
+    public static void extract(String inputFilePath, String outDirPath) throws Exception {
         ZipFile zipFile = new ZipFile(inputFilePath);
         zipFile.extractAll(outDirPath);
-        this.findNestedZip(outDirPath);
+        Zipper.extractNestedZip(outDirPath);
     }
-    public void findNestedZip(String dirPath) throws Exception {
+    public static void extractNestedZip(String dirPath) throws Exception {
         File outDir = new File(dirPath);
         String[] children = outDir.list();
 
@@ -32,11 +32,11 @@ public class Zipper {
             for(String child : children) {
                 File childFile = new File(currDir + child);
                 if(childFile.isDirectory()) {
-                    this.findNestedZip(childFile.getAbsolutePath());
+                    Zipper.extractNestedZip(childFile.getAbsolutePath());
                 } else {
                     if(child.endsWith(".zip")) {
                         String nestedZipPath = currDir + child;
-                        this.extract(nestedZipPath, currDir + child.substring(0, child.lastIndexOf(".zip")));
+                        Zipper.extract(nestedZipPath, currDir + child.substring(0, child.lastIndexOf(".zip")));
                         File nestedZipFile = new File(nestedZipPath);
                         nestedZipFile.delete();
                     }
@@ -45,7 +45,7 @@ public class Zipper {
         }
     }
 
-    public void compress(String path) throws Exception {
+    public static void compress(String path) throws Exception {
         ZipFile zipFile = new ZipFile(path +".zip");
         String folderToAdd = path;
         ZipParameters parameters = new ZipParameters();
@@ -59,7 +59,7 @@ public class Zipper {
         FileUtils.deleteDirectory(addedFolder);
     }
 
-    public void buildNestedZip(String dirPath) throws Exception {
+    public static void buildNestedZip(String dirPath) throws Exception {
         File outDir = new File(dirPath);
         String[] children = outDir.list();
 
@@ -68,10 +68,10 @@ public class Zipper {
             for(String child : children) {
                 File childFile = new File(currDir + child);
                 if(childFile.isDirectory()) {
-                    this.buildNestedZip(childFile.getAbsolutePath());
+                    Zipper.buildNestedZip(childFile.getAbsolutePath());
                 }
             }
         }
-        this.compress(outDir.getAbsolutePath());
+        Zipper.compress(outDir.getAbsolutePath());
     }
 }

@@ -11,9 +11,12 @@
           <element id="file-copy" path="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" />
         </element>
         <element id="module-output" name="FlockUtils" />
-        <element id="extracted-dir" path="$PROJECT_DIR$/../../htdocs/lib/commons-io-1.4.jar" path-in-jar="/" />
-        <element id="extracted-dir" path="$PROJECT_DIR$/../../htdocs/lib/commons-logging.jar" path-in-jar="/" />
-        <element id="extracted-dir" path="$PROJECT_DIR$/../../htdocs/lib/log4j-1.2.15.jar" path-in-jar="/" />
+        <element id="file-copy" path="$PROJECT_DIR$/src/flock1" />
+        <element id="extracted-dir" path="$PROJECT_DIR$/../../commons-io-1.4.jar" path-in-jar="/" />
+        <element id="extracted-dir" path="$PROJECT_DIR$/../../commons-logging.jar" path-in-jar="/" />
+        <element id="extracted-dir" path="$PROJECT_DIR$/../../log4j-1.2.15.jar" path-in-jar="/" />
+        <element id="file-copy" path="$PROJECT_DIR$/src/flock1_gp_osx" />
+        <element id="extracted-dir" path="$PROJECT_DIR$/../../zip4j_1.3.1.jar" path-in-jar="/" />
       </root>
     </artifact>
   </component>
@@ -225,6 +228,7 @@
         <root url="jar://$PROJECT_DIR$/../../commons-io-1.4.jar!/" />
         <root url="jar://$PROJECT_DIR$/../../commons-logging.jar!/" />
         <root url="jar://$PROJECT_DIR$/../../log4j-1.2.15.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../zip4j_1.3.1.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
