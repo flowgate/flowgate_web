@@ -1,15 +1,16 @@
 #!/bin/bash
 
-FLOCK_HOME=/opt/www/gofcm/htdocs/flock/lib
-export FLOCK_HOME
 
-CLASSPATH=.:../lib/flock.jar:$FLOCK_HOME/commons-io-1.4.jar:$FLOCK_HOME/commons-logging.jar:$FLOCK_HOME/log4j-1.2.15.jar
-export CLASSPATH
+#FLOCK_HOME=/opt/www/gofcm/htdocs/flock/lib
+#export FLOCK_HOME
 
-JAVA_HOME=/usr/local/java/1.6.0
-export JAVA_HOME
+#CLASSPATH=.:../lib/flock.jar:$FLOCK_HOME/commons-io-1.4.jar:$FLOCK_HOME/commons-logging.jar:$FLOCK_HOME/log4j-1.2.15.jar
+#export CLASSPATH
 
-PATH=.:$JAVA_HOME/bin:$PATH
-export PATH
+#JAVA_HOME=/usr/local/java/1.6.0
+#export JAVA_HOME
 
-java -Djava.awt.headless=true org.immport.flock.utils.FlockImageGenerator overview_color $1 $2
+#PATH=.:$JAVA_HOME/bin:$PATH
+#export PATH
+
+java -classpath ../lib/flock.jar:../lib/commons-io-1.4.jar:../lib/commons-logging.jar:../lib/log4j-1.2.15.jar -Djava.awt.headless=true org.immport.flock.utils.FlockImageGenerator overview_color $1 $2

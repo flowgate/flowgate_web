@@ -7,9 +7,8 @@
     $runOverview = true;
     $createHistory = false;
 
-    function executeOverview($_tid, $type) {
-        `./$currentRun ../Tasks/$taskId ../Tasks/$taskId`;
-        error_log("./$currentRun ../Tasks/$taskId ../Tasks/$taskId");
+    function executeOverview($_taskId, $_currentRun) {
+        `./$_currentRun ../Tasks/$_taskId ../Tasks/$_taskId`;
     }
 
     if(file_exists($historyFile)) {
@@ -29,7 +28,7 @@
     }
 
     if($runOverview) {
-        executeOverview(); 
+        executeOverview($taskId, $currentRun); 
         $fp = fopen($historyFile, ($createHistory?"w":"a"));  
         fwrite($fp,$currentRun."\n\r");  
         fclose($fp);    
