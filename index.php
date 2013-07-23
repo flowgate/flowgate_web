@@ -9,7 +9,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link rel="stylesheet" type="text/css" href="ext-2.2/resources/css/ext-all.css">
     <link rel="stylesheet" type="text/css" href="css/merged.css">
-    <title id="page-title">Flock Main</title>
+    <title id="page-title">Flock Main on genepatt-dev</title>
 </head>
 <body>
     <div id="flock_main">
