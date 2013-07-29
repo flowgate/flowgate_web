@@ -8,59 +8,63 @@ class FileModule {
 
     function dbm() {
         if(is_null($this->dbModule)) {
-            require_once 'db.php';
+            require_once 'db_mongo.php';
             $this->dbModule = new DatabaseModule();
         }
     }
 
     function addFile($_name, $_pid, $_uid, $_org, $_tmp) {
     	$this->dbm();
-        $con = $this->dbModule->connect();
-
-        $seq = $this->dbModule->getNextSequence($con, "f");
-
-        $destDir = $this::$FILELOC.$seq."/";
+        $file = array(
+            "_id" => new MongoId().'',
+            "f_name" => $_name,
+            "f_status" => 1,
+            "f_project_id" => $_pid,
+            "f_org_name" => $_org,
+            "f_user_id" => $_uid,
+            "f_tasks" => array()
+        );
+        $destDir = $this::$FILELOC.$file['_id']."/";
 		mkdir($destDir);
 
 		//$target_path = $destDir . basename($_FILES['uploadFile']['name']);
 		$target_path = $destDir . 'fcs.txt';
-	    $_uploaded = move_uploaded_file($_tmp,$target_path);
-        $this::$SUCCESS = $this->dbModule->addFile($con, $_name, $_pid, $_org, $_uid);
+	    $_uploaded = move_uploaded_file($_tmp, $target_path);
+        $this::$SUCCESS = $this->dbModule->addFile($file);
     } 
 
 	function getFiles($_uid, $_pid, $_fid) {
         $this->dbm();
-        $con = $this->dbModule->connect();
 
-        $result = $this->dbModule->getFile($con, $_uid, $_pid, $_fid);
+        $result = $this->dbModule->getFile($_uid, $_pid, $_fid);
         $json = null;
         if(!is_null($result)) {
-            $fields = array("f_id","f_name","f_org_name","f_status","p_name");
-            $headers = array("Sequence", "Name", "File Name", "Status", "Project Name");
+            $fields = array("f_num","f_name","f_org_name", "_id","f_status","p_name");
+            $headers = array("Sequence", "Name", "File Name", "File ID", "Status", "Project Name");
             $columns = array();
             for($i=0;$i<count($headers);$i++) {
                 $column['header'] = $headers[$i];
                 $column['dataIndex'] = $fields[$i];
                 array_push($columns, $column);
             }
-            $json['columns'] = $columns;
-            $json["fields"] = $fields;
+            
             $rows = array();
+            $i=1;
             foreach ($result as $file) {
-                $row;
+                $row['f_num']=$i++;
                 foreach(array_keys($file) as $key) {
                     $row[$key]=($key=='f_status'?($file[$key]=='1'?"Loaded":"N/A"):$file[$key]);
                 }
                 array_push($rows, $row);
             }
 
+            $json["columns"] = $columns;
+            $json["fields"] = $fields;
             $json["rows"]=$rows;
 
             $this::$RESULT = $json;
             $this::$SUCCESS = true;
         }
-
-        $this->dbModule->close($con);
 	}
 }
 ?>

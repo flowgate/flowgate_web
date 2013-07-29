@@ -14,7 +14,7 @@
     }
 
 	//session_start();
-    $_uid = isset($_SESSION['authenticated'],$_SESSION['userName'])?$_SESSION['userName']:null;
+    $_uid = isset($_SESSION['authenticated'],$_SESSION['userId'])?$_SESSION['userId']:null;
 
 
     #assigns correct module according to the passed job type

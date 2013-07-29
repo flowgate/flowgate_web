@@ -7,7 +7,7 @@ class RASModule {
 
 	function dbm() {
 		if(is_null($this->dbModule)) {
-			require_once 'db.php';
+			require_once 'db_mongo.php';
 			$this->dbModule = new DatabaseModule();
 		}
 	}

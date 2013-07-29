@@ -20,7 +20,7 @@
       header("Location: pages/logout.php");
       exit;
     }
-    if(!isset($_SESSION['authenticated']) || $_SESSION['authenticated']!="true" || !isset($_SESSION['userName'])) {
+    if(!isset($_SESSION['authenticated']) || $_SESSION['authenticated']!="true" || !isset($_SESSION['userId'])) {
       header("Location: pages/logout.php");
       exit;
     }

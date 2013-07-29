@@ -71,7 +71,7 @@ var sessionCheck = function() {
                 name: 'tbin'
             },{
                 xtype: 'hidden',
-                value: data.f_id,
+                value: data._id,
                 name: 'fid'
             },{
                 xtype: 'textfield',
