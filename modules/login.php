@@ -24,7 +24,6 @@ class LoginModule{
         } else {
             //hashed password
             $hashed = $this->crypt($userId, $pass);
-
             if(!is_null($result) && $hashed == $result['u_pass']) {
                 session_cache_expire( 20 );
                 session_start();

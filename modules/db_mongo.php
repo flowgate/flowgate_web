@@ -46,7 +46,7 @@ class DatabaseModule {
 		return $this->findOne(
 			$this->USER_TABLE, 
 			array('u_id' => $uid), 
-			array("u_projects"=>true, "_id"=>false), 
+			array("u_projects"=>false), 
 			true
 		);
 	}
