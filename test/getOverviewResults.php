@@ -63,21 +63,19 @@
         echo "Unable to open file";
        exit;
     }
-    $pops = "{";
+    $pops = array();
     $totalPops = 0;
     while(!feof($fp)){
         $line = rtrim(rtrim(fgets($fp),"\n"),"\r");
         if(strlen($line)>0 && $totalPops++ > 0) {
             $lineData = explode("\t",$line);
-            $pops.=$lineData[0].":'".$lineData[1]."',";
+            $pops[(int)$lineData[0]]=$lineData[1];
         }
     }
-    $pops.="}";
     fclose($fp);
 
     $json = array();
     $json['success'] = 'true';
-    $json['popId'] = $populations[0];
     $json['totalPops'] = ($totalPops-1);
     $json['pops'] = $pops;
     $json['taskDir'] = $taskDir."/";

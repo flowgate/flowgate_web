@@ -111,7 +111,7 @@ div.item {
 }
 
 /* population background color */
-.popul1 { background-color: red; }
+.popul1 { background-color: red !important; }
 .popul2 { background-color: yellow; }
 .popul3 { background-color: #008000; }
 .popul4 { background-color: blue; }

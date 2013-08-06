@@ -4,6 +4,10 @@
     <meta charset="utf-8">
     <title>mockup with bootstrap</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="bootstrap.min.css" rel="stylesheet">
+    <link href="jqueryFileTree.css" rel="stylesheet">
+    <link href="../css/merged.css" rel="stylesheet">
+    <link href="bootstrap-select.css" rel="stylesheet">
     <style type="text/css">
     body {
         padding-top: 60px;
@@ -23,6 +27,11 @@
       height: 100%;
     }
 
+    .hero-unit {
+      padding: 25px !important;
+    }
+
+    #details td { padding: 0 10px;}
     #overviewTable td { border: 3px white solid; }
     #overviewTable th { 
         font-family: Verdana,Arial,Helvetica,sans-serif;
@@ -37,65 +46,71 @@
         border: 3px solid #FFF;
         background-color: ##f5f5f5;
     }
-    #overviewTbody img {
-      width: 85px;
-      height: 85px;
+    #overviewTable img {
+      min-width: 85px;
+      min-height: 85px;
     }
     </style>
-    <link href="bootstrap.min.css" rel="stylesheet">
-    <link href="jqueryFileTree.css" rel="stylesheet">
 </head>
 
 <body>
-
-    <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container-fluid">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </a>
-        <a class="brand" href="#">gofcm</a>
-        <div class="nav-collapse collapse">
-            <p class="navbar-text pull-right">
-              Logged in as <a href="#" class="navbar-link">Username</a>            
-          </p>
-          <ul class="nav">
-              <li class="active"><a href="#">Home</a></li>
-              <li><a href="#about">About</a></li>
-              <li><a href="#contact">Contact</a></li>
-          </ul>
+<div class="navbar navbar-inverse navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container-fluid">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+      <a class="brand" href="#">gofcm</a>
+      <div class="nav-collapse collapse">
+          <p class="navbar-text pull-right">
+            Logged in as <a href="#" class="navbar-link">Username</a>            
+        </p>
+        <ul class="nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
       </div>
-      <!--/.nav-collapse -->
+    </div>
   </div>
 </div>
-</div>
+
 <div class="container-fluid fill">
   <div class="row-fluid fill">
     <div class="span2 fill">
       <div class="well" id="fileNav" style="overflow:auto;"></div>
     </div>
     <div class="span10">
-      <div class="hero-unit">
-        <h4>Details</h1>
-        <p></p>
-      </div>
-      <div class="hero-unit">
-        <div class="row-fluid">
-          <div class="span3">
-            <h4 id="overviewH4">Overview</h4>
-          </div>
-          <div class="span4">
-            <select id="populSelect"></select>  
+      <div class="row-fluid">
+        <div class="span12" style="background-color:#eee; border: 1px solid #888; border-radius:3px;">
+          <div class="span11 offset1" id="details">
+            <table>
+              <tr>
+                <td><strong>Method Name</strong></td><td>FLOCK</td>
+              </tr>
+              <tr>
+                <td><strong>Method Version</strong></td><td>v0.1</td>
+              </tr>
+            </table>
           </div>
         </div>
-        <div id="flock_main">
-          <div id="flock_content">
-            <table id="overviewTable">
-              <thead id="overviewThead"></thead>
-              <tbody id="overviewTbody"></tbody>
-            </table>
+      </div>
+      <div class="hero-unit" id="overview">
+        <div class="container">
+          <div class="row-fluid">
+            <div class="span3">
+              <h4 id="overviewH4">Overview</h4>
+            </div>
+            <div class="span4 offset5">
+              <select id="populselect" class="selectpicker"></select>
+            </div>
+          </div>
+          <div id="flock_main">
+            <div id="flock_content">
+              <table id="overviewTable"></table>
+            </div>
           </div>
         </div>
       </div>
@@ -103,12 +118,14 @@
     </div>
   </div>
 </div>
+
     <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="jquery-1.10.2.min.js"></script>
     <script src="bootstrap.min.js"></script>
     <script src="jqueryFileTree.js"></script>
+    <script src="bootstrap-select.min.js"></script>
     <script>
       $(document).ready(function() {
         //_utils.loadOverview(1);
@@ -116,7 +133,7 @@
             root: '/export/gofcm/Tasks/',
             script: 'jqueryFileTree.php',
             expandSpeed: 1000,
-            collapseSpeed: 1000,
+            collapseSpeed: 13000,
             multiFolder: false
         }, function(file) {
             alert(file);
@@ -129,10 +146,17 @@
           if(data) {
             data = $.parseJSON(data);
           }
-          var imgHtml = '<img src="$imgPath$"/>';
-          if(data && data.columns && data.taskDir && data.type) {
-            var cols = data.columns, taskDir = data.taskDir, type = data.type, thead='', tbody='';
-            thead = '<tr><th id="name"></th>';
+          var imgHtml = '<img src="$imgPath$"/>',
+              populHtml = '<option data-content="<span class=\'$c$\'>&nbsp;&nbsp;&nbsp;</span>$t$">$v$</option>';
+          if(data && data.columns && data.taskDir && data.type && data.pops) {
+            var cols = data.columns, 
+                taskDir = data.taskDir, 
+                type = data.type, 
+                thead='', 
+                tbody='<tbody>',
+                pops = data.pops,
+                popOptions='';
+            thead = '<thead><tr><th id="name"></th>';
             for(var i=0;i<cols.length;i++) {
               thead+='<th id="'+cols[i]+'">'+cols[i]+'</th>';
               tbody+='<tr><th id="'+cols[i]+'_'+cols[i]+'" headers="name">'+cols[i]+'</th>';
@@ -143,12 +167,31 @@
               }
               tbody+='</tr>';
             }
-            thead+='</tr>';
-            $('#overviewThead').html(thead);
-            $('#overviewTbody').html(tbody);
+            tbody+='</tbody>';
+            thead+='</tr></thead>';
+            $('#overviewTable').html(thead+tbody);
+
+            var $selecObj = $('.selectpicker');
+            $selecObj.append(
+              populHtml.replace("$c$", "")
+                .replace("$t$", "Overview")
+                .replace("$v$",0)
+            );
+            $.each(pops, function(i,pop){
+              $selecObj.append(
+                populHtml.replace("$c$", "popul"+(i>24?i%25+1:i))
+                  .replace("$t$", "Population "+i+"("+pop+")")
+                  .replace("$v$",i)
+                );
+            });
+            $selecObj.selectpicker('deselectAll');
+            $selecObj.change(function(){
+              var currPopul = $selecObj.find("option:selected").val();
+              $('#overviewH4').html(currPopul==='0'?'Overview':'Population '+currPopul);
+            });
+
           }
         });
-        
       });
 
       /*
