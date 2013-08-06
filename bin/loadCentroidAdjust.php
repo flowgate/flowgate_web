@@ -124,11 +124,11 @@
 
     print "  fields: [\n";
     for ($i = 0; $i < 5; $i++) {
-       if ($i < 4) {
-        print "    'p$i',\n";
-    } else {
-        print "    'p$i'\n";
-    }
+           if ($i < 4) {
+            print "    'p$i',\n";
+        } else {
+            print "    'p$i'\n";
+        }
     }
     print "  ],\n";
 
