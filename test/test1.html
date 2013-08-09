@@ -104,6 +104,7 @@
             <div class="row">
               <div class="span3">
                 <h4 id="overviewH4">Overview</h4>
+                <img src="ajax-loader.gif" id="loading-indicator" style="display:none;"/>
               </div>
               <div class="span3">
                 <select id="populselect" class="selectpicker"></select>
@@ -160,6 +161,7 @@
           if(type==='color') {
             this.popul(taskId, pops);
           }
+          $('#loading-indicator').hide();
         }
       },
       popul: function(taskId, pops) {
@@ -183,13 +185,14 @@
         $selecObj.change(function(){
           var currPopul = $selecObj.find("option:selected").val();
           $('#overviewH4').html(currPopul==='0'?'Overview':'Population '+currPopul);
-          _this.ajax(taskId, 'pop', currPopul);
+          _this.ajax(taskId, currPopul==='0'?'color':'pop', currPopul);
         });
       },
       ajax: function(taskId, type, popId) {
         var _this = this;
+        $('#loading-indicator').show();
         $.ajax({
-          url: 'getOverviewResults.php?taskId='+taskId+'&type='+type+'&popId='+popId
+          url: 'loadResults.php?taskId='+taskId+'&type='+type+'&popId='+popId
         }).done(function(data) {
           if(data) {
             data = $.parseJSON(data);
