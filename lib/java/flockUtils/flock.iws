@@ -7,7 +7,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="30a1623c-b601-43a8-b264-dece87be815d" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/flock.iws" afterPath="$PROJECT_DIR$/flock.iws" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/immport/flock/utils/FlockImageGenerator.java" afterPath="$PROJECT_DIR$/src/org/immport/flock/utils/FlockImageGenerator.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/FlockImageGeneratorTest.java" afterPath="$PROJECT_DIR$/test/FlockImageGeneratorTest.java" />
     </list>
     <ignored path="flock.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -25,6 +26,21 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
+    <line_breakpoints>
+      <breakpoint url="file://$PROJECT_DIR$/src/org/immport/flock/utils/FlockImageGenerator.java" line="463" class="org.immport.flock.utils.FlockImageGenerator" package="org.immport.flock.utils">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="false" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+    </line_breakpoints>
     <breakpoint_any>
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -68,7 +84,16 @@
       <file leaf-file-name="FlockImageGenerator.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/org/immport/flock/utils/FlockImageGenerator.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="712" column="93" selection-start="28089" selection-end="28089" vertical-scroll-proportion="0.3642384">
+            <state line="249" column="39" selection-start="10064" selection-end="10064" vertical-scroll-proportion="0.08158508">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FlockEvents.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/org/immport/flock/commons/FlockEvents.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="7" column="42" selection-start="185" selection-end="185" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -77,7 +102,7 @@
       <file leaf-file-name="FlockAdapterFile.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/org/immport/flock/commons/FlockAdapterFile.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="18" column="41" selection-start="672" selection-end="682" vertical-scroll-proportion="0.0">
+            <state line="450" column="52" selection-start="16008" selection-end="16008" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -95,7 +120,7 @@
       <file leaf-file-name="FlockImageGeneratorTest.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test/FlockImageGeneratorTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="26" column="37" selection-start="693" selection-end="693" vertical-scroll-proportion="0.0">
+            <state line="22" column="20" selection-start="530" selection-end="530" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -133,14 +158,14 @@
     <option name="changedFiles">
       <list>
         <option value="$PROJECT_DIR$/test/FlockImageGenerator.java" />
-        <option value="$PROJECT_DIR$/test/FlockImageGeneratorTest.java" />
         <option value="$PROJECT_DIR$/test/FlockRunnerTest.java" />
         <option value="$PROJECT_DIR$/src/org/immport/flock/commons/FlockAdapterFile.java" />
-        <option value="$PROJECT_DIR$/src/org/immport/flock/utils/FlockImageGenerator.java" />
         <option value="$PROJECT_DIR$/src/org/immport/flock/utils/FLockImageRunner.java" />
         <option value="$PROJECT_DIR$/src/org/immport/flock/commons/Zipper.java" />
         <option value="$PROJECT_DIR$/src/org/immport/flock/utils/FlockImageRunner.java" />
         <option value="$PROJECT_DIR$/src/org/immport/flock/utils/FlockRunner.java" />
+        <option value="$PROJECT_DIR$/test/FlockImageGeneratorTest.java" />
+        <option value="$PROJECT_DIR$/src/org/immport/flock/utils/FlockImageGenerator.java" />
       </list>
     </option>
   </component>
@@ -184,64 +209,6 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="flock" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="flockLib" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="flock" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="flockLib" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="commons-io-1.4.jar" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="io" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="flock" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="flockLib" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="commons-io-1.4.jar" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="flock" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -363,6 +330,7 @@
     <property name="options.lastSelected" value="preferences.keymap" />
     <property name="MemberChooser.sorted" value="false" />
     <property name="project.structure.side.proportion" value="0.2" />
+    <property name="GoToClass.includeJavaFiles" value="false" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -385,7 +353,7 @@
       <recent name="$PROJECT_DIR$/src" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.FlockRunnerTest">
+  <component name="RunManager" selected="JUnit.FlockImageGeneratorTest">
     <configuration default="false" name="FlockImageGeneratorTest" type="JUnit" factoryName="JUnit" temporary="true">
       <extension name="coverage" enabled="false" merge="false" runner="idea" />
       <module name="FlockUtils" />
@@ -562,6 +530,7 @@
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290461" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39978564" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -569,16 +538,15 @@
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290461" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24951768" sideWeight="0.53483385" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2392283" sideWeight="0.44801715" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24951768" sideWeight="0.45766345" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2392283" sideWeight="0.54448014" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290461" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290461" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290461" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
@@ -681,11 +649,6 @@
         <state line="25" column="13" selection-start="644" selection-end="644" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/flock.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1" column="12" selection-start="51" selection-end="51" vertical-scroll-proportion="0.01986755" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/org/immport/flock/commons/FlockAdapterImpl.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="226" column="30" selection-start="6143" selection-end="6143" vertical-scroll-proportion="0.33222038" />
@@ -699,11 +662,6 @@
     <entry file="file://$PROJECT_DIR$/src/org/immport/flock/commons/ArrayUtils.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="2" column="13" selection-start="49" selection-end="49" vertical-scroll-proportion="0.040723983" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/immport/flock/commons/FlockEvents.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="16" selection-start="270" selection-end="270" vertical-scroll-proportion="0.2239819" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/org/immport/flock/commons/PoorMansTable.java">
@@ -721,24 +679,9 @@
         <state line="254" column="13" selection-start="5840" selection-end="5840" vertical-scroll-proportion="-4.277066" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/immport/flock/commons/FlockAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="16" selection-start="222" selection-end="222" vertical-scroll-proportion="0.16289593" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/immport/flock/commons/FlockAdapterFile.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="41" selection-start="672" selection-end="682" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/org/immport/flock/utils/FlockImageRunner.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="11" column="66" selection-start="231" selection-end="231" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/FlockImageGeneratorTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="37" selection-start="693" selection-end="693" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/org/immport/flock/utils/FlockRunner.java">
@@ -751,9 +694,44 @@
         <state line="53" column="58" selection-start="1973" selection-end="1973" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/flock.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1" column="12" selection-start="51" selection-end="51" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/immport/flock/commons/FlockAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="28" column="16" selection-start="843" selection-end="843" vertical-scroll-proportion="0.3325792">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/immport/flock/commons/FlockAdapterFile.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="450" column="52" selection-start="16008" selection-end="16008" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/FlockImageGeneratorTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="22" column="20" selection-start="530" selection-end="530" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/immport/flock/commons/FlockEvents.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="42" selection-start="185" selection-end="185" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/org/immport/flock/utils/FlockImageGenerator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="712" column="93" selection-start="28089" selection-end="28089" vertical-scroll-proportion="0.3642384">
+        <state line="249" column="39" selection-start="10064" selection-end="10064" vertical-scroll-proportion="0.08158508">
           <folding />
         </state>
       </provider>

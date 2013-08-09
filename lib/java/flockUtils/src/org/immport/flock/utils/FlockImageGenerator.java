@@ -77,19 +77,19 @@ public class FlockImageGenerator {
     public void processFlockOutputFiles(
             String profilePath, String percentPath, String populcPath, String MFIPath,
             String populidPath, String paramPath, String coordPath) throws FlockAdapterException {
-            try {
-                profile = ((FlockAdapterFile)adapter).getProfile(profilePath,percentPath,populcPath,MFIPath);
-                markers = profile.getMarkers();
-                populations = profile.getPopulations();
-                minMax = ((FlockAdapterFile)adapter).getMinMaxFile(paramPath);
-                events = ((FlockAdapterFile)adapter).getEvents(populidPath);
-                coordinates = ((FlockAdapterFile)adapter).getCoordinates(events.length, markers.size(), paramPath, coordPath);
+        try {
+            profile = ((FlockAdapterFile)adapter).getProfile(profilePath,percentPath,populcPath,MFIPath);
+            markers = profile.getMarkers();
+            populations = profile.getPopulations();
+            minMax = ((FlockAdapterFile)adapter).getMinMaxFile(paramPath);
+            events = ((FlockAdapterFile)adapter).getEvents(populidPath);
+            coordinates = ((FlockAdapterFile)adapter).getCoordinates(events.length, markers.size(), paramPath, coordPath);
 
-            } catch (Exception e) {
-                System.out.println("E: " + e);
-                throw new FlockAdapterException(e);
-            }
+        } catch (Exception e) {
+            System.out.println("E: " + e);
+            throw new FlockAdapterException(e);
         }
+    }
 
     public void genPropsFile() throws FlockAdapterException {
         profile = adapter.getProfile();
@@ -264,7 +264,8 @@ public class FlockImageGenerator {
                     int idx2 = markers.get(j).getIndex();
                     String name2 = markers.get(j).getName();
 
-                    FlockEvents flockEvents = genEventsMatrix(width, height, idx1, idx2);
+                    //FlockEvents flockEvents = genEventsMatrix(width, height, idx1, idx2);
+                    FlockEvents flockEvents = genEventsMatrixPop(width, height, idx1, idx2);
                     Color[][] allEvents = flockEvents.getAllEvents();
                     Map<Byte, boolean[][]> popEvents = flockEvents.getPopEvents();
 
@@ -652,8 +653,8 @@ public class FlockImageGenerator {
 
     public static void main(String[] args) throws Exception {
         String errorMsg = "Usage: command \n"
-            +"<Type: all_images, overview(_color,_bw), all_markers, all_populations, marker_populations, single_population, gen_propsfile> \n"
-            +"<INPUT_DIR or File...> <OUTPUT_DIR> [Index 1] [Index 2]";
+                +"<Type: all_images, overview(_color,_bw), all_markers, all_populations, marker_populations, single_population, gen_propsfile> \n"
+                +"<INPUT_DIR or File...> <OUTPUT_DIR> [Index 1] [Index 2]";
 
         if (args.length < 3) {
             throw new Exception(errorMsg);

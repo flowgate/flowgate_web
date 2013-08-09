@@ -19,7 +19,12 @@ public class FlockImageGeneratorTest {
     }
 
     @Test
-    public void run() throws Exception {
+    public void run() throws Exception  {
+        //runFiles();
+        runSingle();
+    }
+
+    public void runFiles() throws Exception {
         String[] args = {
                 "overview_color",
                 resultPath+"profile.txt",
@@ -30,6 +35,16 @@ public class FlockImageGeneratorTest {
                 resultPath+"parameters.txt",
                 resultPath+"coordinates.txt",
                 jobPath
+        };
+        generator.main(args);
+    }
+
+    public void runSingle() throws Exception {
+        String[] args = {
+                "single_population",
+                "/Users/hkim/workspace/Workspace/gofcm/Tasks/2",
+                "/Users/hkim/workspace/Workspace/gofcm/Tasks/2/pop",
+                "1"
         };
         generator.main(args);
     }
