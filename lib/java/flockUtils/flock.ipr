@@ -224,14 +224,18 @@
   <component name="WebServicesPlugin" addRequiredLibraries="true" />
   <component name="libraryTable">
     <library name="flockLib">
+      <CLASSES />
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="lib">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/../../commons-io-1.4.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../commons-logging.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../log4j-1.2.15.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../zip4j_1.3.1.jar!/" />
+        <root url="file://$PROJECT_DIR$/lib" />
+        <root url="file://$PROJECT_DIR$/lib" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
+      <jarDirectory url="file://$PROJECT_DIR$/lib" recursive="false" />
     </library>
   </component>
 </project>
