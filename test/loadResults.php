@@ -5,20 +5,20 @@
 
     $taskDir = "../Tasks/$taskId";
     $historyFile = "$taskDir/history.txt";
-    $currentRun = ($type == "color"?"genOverviewColor":($type=="bw"?"genOverviewBW":"genMarker2Pop"));
+    $currentRun = ($type == "color"?"overview_color":($type=="bw"?"overview_bw":"single_population"));
     $runBin = true;
     $createHistory = false;
 
-    function executeBin($_type, $_taskId, $_currentRun, $_markerLen) {
-        `mkdir ../Tasks/$_taskId/$_type`;
+    function executeBin($_type, $_taskId, $_currentRun, $_popId) {
+        $executor = "java".
+            " -classpath ../lib/FlockUtils.jar".
+            " -Djava.awt.headless=true".
+            " org.immport.flock.utils.FlockImageGenerator ";
+        shell_exec("mkdir ../Tasks/$_taskId/$_type");
         if(strpos($_currentRun, "Overview")>0) {
-            `../bin/$_currentRun ../Tasks/$_taskId ../Tasks/$_taskId/$_type`;
+            shell_exec($executor."$_currentRun ../Tasks/$_taskId ../Tasks/$_taskId/$_type");
         } else {
-            for($i=0;$i<$_markerLen;$i++) {
-                for($j=0;$j<$_markerLen;$j++) {
-                    `../bin/$_currentRun ../Tasks/$_taskId ../Tasks/$_taskId/$_type $i $j`;    
-                }
-            }
+            shell_exec($executor."$_currentRun ../Tasks/$_taskId ../Tasks/$_taskId/$_type $_popId");
         }
     }
 
@@ -48,7 +48,7 @@
             $line = fgets($fp,999);
             if ($line) {
                 $line = trim($line);
-                if($line == $currentRun) {
+                if($line == $currentRun.($type=="pop"?$popId:"")) {
                     $runBin = false;
                     break;
                 }
@@ -79,9 +79,9 @@
 
     //only runs a bin if it never run
     if($runBin) {
-        executeBin($type, $taskId, $currentRun, $markerLen); 
+        executeBin($type, $taskId, $currentRun, $popId); 
         $fp = fopen($historyFile, ($createHistory?"w":"a"));  
-        fwrite($fp, $currentRun."\n\r");  
+        fwrite($fp, $currentRun.($type=="pop"?$popId:"")."\n\r");  
         fclose($fp);    
     }
 
@@ -103,7 +103,7 @@
     fclose($fp);
 
     $params = null;
-    if(strpos($currentRun, "Marker2Pop")>0) {
+    if(strpos($currentRun, "single_population")>0) {
         $params = readParameters($taskId);
     }
 
