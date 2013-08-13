@@ -20,21 +20,21 @@
     #assigns correct module according to the passed job type
     $_module = null;
     if($_job[0]=='f') {
-        require_once './modules/file.php';
+        require_once 'file.php';
         $_module = new FileModule();
     } elseif($_job[0]=='p') {
-        require_once './modules/project.php';
+        require_once 'project.php';
         $_module = new ProjectModule();
     } elseif($_job[0]=='t') {
-        require_once './modules/task.php';
+        require_once 'task.php';
         $_module = new TaskModule();    
     } elseif($_job[0]=='r') {
-        require_once './modules/ras.php';
+        require_once 'ras.php';
         $_module = new RASModule();    
     }else {
-        require_once './modules/login.php';
+        require_once 'login.php';
         $_module = new LoginModule();    
-    } 
+    }  
 
     switch($_job) {
     	case "f_a": //add file

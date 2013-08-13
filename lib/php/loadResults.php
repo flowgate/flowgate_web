@@ -3,28 +3,28 @@
     $type = $_GET['type'];
     $popId = $_GET['popId'];
 
-    $taskDir = "../Tasks/$taskId";
+    $taskDir = "../../Tasks/$taskId";
     $historyFile = "$taskDir/history.txt";
     $currentRun = ($type == "color"?"overview_color":($type=="bw"?"overview_bw":"single_population"));
     $runBin = true;
     $createHistory = false;
 
-    function executeBin($_type, $_taskId, $_currentRun, $_popId) {
+    function executeBin($_type, $_taskDir, $_currentRun, $_popId) {
         $executor = "java".
-            " -classpath ../lib/FlockUtils.jar".
+            " -classpath ../java/FlockUtils.jar".
             " -Djava.awt.headless=true".
             " org.immport.flock.utils.FlockImageGenerator ";
-        shell_exec("mkdir ../Tasks/$_taskId/$_type");
+        shell_exec("mkdir $_taskDir/$_type");
         if(strpos($_currentRun, "Overview")>0) {
-            shell_exec($executor."$_currentRun ../Tasks/$_taskId ../Tasks/$_taskId/$_type");
+            shell_exec($executor."$_currentRun $_taskDir $_taskDir/$_type");
         } else {
-            shell_exec($executor."$_currentRun ../Tasks/$_taskId ../Tasks/$_taskId/$_type $_popId");
+            shell_exec($executor."$_currentRun $_taskDir $_taskDir/$_type $_popId");
         }
     }
 
     function readParameters($_taskId) {
         $params = array();
-        $fp = fopen("../Tasks/$_taskId/parameters.txt",'r');
+        $fp = fopen("$taskDir/parameters.txt",'r');
         if (!$fp) {
             echo "Unable to open file";
             exit;
@@ -79,7 +79,7 @@
 
     //only runs a bin if it never run
     if($runBin) {
-        executeBin($type, $taskId, $currentRun, $popId); 
+        executeBin($type, $taskDir, $currentRun, $popId); 
         $fp = fopen($historyFile, ($createHistory?"w":"a"));  
         fwrite($fp, $currentRun.($type=="pop"?$popId:"")."\n\r");  
         fclose($fp);    
