@@ -20,11 +20,17 @@ public class FlockImageGeneratorTest {
 
     @Test
     public void run() throws Exception  {
-        //runFiles();
-        runSingle();
+        //runOverview();
+        runOverview1();
+
+        runSingle("1");
+        runSingle("2");
+        runSingle("3");
+        runSingle("4");
+        runMultiPop();
     }
 
-    public void runFiles() throws Exception {
+    public void runOverview() throws Exception {
         String[] args = {
                 "overview_color",
                 resultPath+"profile.txt",
@@ -39,12 +45,31 @@ public class FlockImageGeneratorTest {
         generator.main(args);
     }
 
-    public void runSingle() throws Exception {
+    public void runOverview1() throws Exception {
+        String[] args = {
+                "overview_color",
+                "/Users/hkim/Stuffs/test/gofcm/result",
+                "/Users/hkim/Stuffs/test/gofcm/overview"
+        };
+        generator.main(args);
+    }
+
+    public void runSingle(String arg) throws Exception {
         String[] args = {
                 "single_population",
-                "/Users/hkim/workspace/Workspace/gofcm/Tasks/2",
-                "/Users/hkim/workspace/Workspace/gofcm/Tasks/2/pop",
-                "1"
+                "/Users/hkim/Stuffs/test/gofcm/result",
+                "/Users/hkim/Stuffs/test/gofcm/single"+arg,
+                arg
+        };
+        generator.main(args);
+    }
+
+    public void runMultiPop() throws Exception {
+        String[] args = {
+                "multi_population",
+                "/Users/hkim/Stuffs/test/gofcm/result",
+                "/Users/hkim/Stuffs/test/gofcm/multip",
+                "1,2,3,4"
         };
         generator.main(args);
     }

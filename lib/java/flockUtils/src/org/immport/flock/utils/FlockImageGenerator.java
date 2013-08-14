@@ -57,7 +57,6 @@ public class FlockImageGenerator {
       * loads this file into the coordinates vector
       */
     public void processFlockOutput() throws FlockAdapterException {
-        long startTime = System.currentTimeMillis();
         try {
             profile = adapter.getProfile();
             markers = profile.getMarkers();
@@ -71,12 +70,11 @@ public class FlockImageGenerator {
             System.out.println("E: " + e);
             throw new FlockAdapterException(e);
         }
-        long stopTime = System.currentTimeMillis();
-        System.out.println("ProcessFlockOutput: " + (stopTime - startTime) / 1000);
     }
     public void processFlockOutputFiles(
-            String profilePath, String percentPath, String populcPath, String MFIPath,
-            String populidPath, String paramPath, String coordPath) throws FlockAdapterException {
+            String profilePath, String percentPath, String populcPath,
+            String MFIPath, String populidPath, String paramPath,
+            String coordPath) throws FlockAdapterException {
         try {
             profile = ((FlockAdapterFile)adapter).getProfile(profilePath,percentPath,populcPath,MFIPath);
             markers = profile.getMarkers();
@@ -112,56 +110,56 @@ public class FlockImageGenerator {
         }
     }
 
-    /*
-      * Generates individual images for each Marker vs Marker combination.
-      * The files can represent the all.color or all.bw images
-      */
-    public void genOverviewImages(int width, int height, boolean bw) throws FlockAdapterException {
-        int numMarkers = markers.size();
-
-        long startTime = System.currentTimeMillis();
+    public void generate(ProcessParameter pp) throws FlockAdapterException {
         try {
-
+            int numMarkers = markers.size();
             for (int i = 0; i < numMarkers; i++) {
                 for (int j = 0; j < numMarkers; j++) {
                     int idx1 = markers.get(i).getIndex();
                     String name1 = markers.get(i).getName();
                     int idx2 = markers.get(j).getIndex();
                     String name2 = markers.get(j).getName();
-                    String imageName = name1 + "." + name2 + ".all."+(bw?"bw":"color")+".png";
 
-                    BufferedImage img = new BufferedImage(width, height,BufferedImage.TYPE_INT_RGB);
-                    Graphics2D g2d = img.createGraphics();
-                    g2d.setColor(Color.LIGHT_GRAY);
-                    g2d.fillRect(0, 0, width, height);
-
-                    FlockEvents flockEvents = genEventsMatrix(width, height,idx1, idx2);
-                    Color[][] allEvents = flockEvents.getAllEvents();
-
-                    for (int k = 0; k < height; k++) {
-                        for (int l = 0; l < height; l++) {
-                            if (allEvents[k][l] != null) {
-                                if (bw) {
-                                    g2d.setColor(Color.BLACK);
-                                } else {
-                                    g2d.setColor(allEvents[k][l]);
-                                }
-                                g2d.drawLine(k, l, k, l);
-                            }
-                        }
-                    }
+                    String imageName = name1 + "." + name2 + pp.getImageName();
 
                     if (name1.equals(name2)) {
                         byte [] b4 = generateSolidImage(300,300);
                         adapter.saveDotPlotImage(imageName, new ByteArrayInputStream(b4));
                     } else {
+                        int width = pp.getWidth();
+                        int height = pp.getHeight();
 
-                        //File outputfile = new File(outputDir,imageName);
-                        //ImageIO.write(img, "png", outputfile);
+                        FlockEvents flockEvents = genEventsMatrixPop(width, height, idx1, idx2);
+                        Color[][] allEvents = flockEvents.getAllEvents();
+                        byte[] imgBytes = null;
 
-                        byte[] allPopColor = getImageAsByteArray(img);
-                        adapter.saveDotPlotImage(imageName, new ByteArrayInputStream(allPopColor));
+                        if(pp.getMarker().equals("a") && pp.getPopulation().equals("a")) { //overview
+                            /*BufferedImage img = new BufferedImage(width, height,BufferedImage.TYPE_INT_RGB);
+                            Graphics2D g2d = img.createGraphics();
+                            g2d.setColor(Color.LIGHT_GRAY);
+                            g2d.fillRect(0, 0, width, height);
 
+                            for (int k = 0; k < height; k++) {
+                                for (int l = 0; l < height; l++) {
+                                    if (allEvents[k][l] != null) {
+                                        if (pp.isBw()) {
+                                            g2d.setColor(Color.BLACK);
+                                        } else {
+                                            g2d.setColor(allEvents[k][l]);
+                                        }
+                                        g2d.drawLine(k, l, k, l);
+                                    }
+                                }
+                            }
+                            imgBytes = getImageAsByteArray(img);*/
+                            imgBytes = generatePopulations(flockEvents, true, pp.getParams(), pp.isBw(), false);
+                        } else if(pp.getMarker().equals("a") && pp.getPopulation().equals("s")) { //single population for all marker sets
+                            imgBytes = generatePopulations(flockEvents, false, pp.getParams(), pp.isBw(), pp.isHighlighted());
+                            //imgBytes = generatePopulations(allEvents, popEvents.get(popId), ColorUtils.getColor(popId), pp.isBw(), pp.isHighlighted());
+                        } else if(pp.getMarker().equals("a") && pp.getPopulation().equals("m")) {
+                            imgBytes = generatePopulations(flockEvents, false, pp.getParams(), pp.isBw(), pp.isHighlighted());
+                        }
+                        adapter.saveDotPlotImage(imageName, new ByteArrayInputStream(imgBytes));
                     }
                 }
             }
@@ -170,9 +168,6 @@ public class FlockImageGenerator {
             System.out.println("E: " + e);
             throw new FlockAdapterException(e);
         }
-        long stopTime = System.currentTimeMillis();
-        System.out.println("genOverviewImages " + (stopTime - startTime) / 1000);
-
     }
 
     /*
@@ -245,71 +240,8 @@ public class FlockImageGenerator {
     }
 
     /*
-      * For a single population, generate images representing all the
-      * marker combination.
-      */
-    public void genSinglePopulation(Byte popId, int width, int height,
-                                    boolean bw, boolean highlighted) throws FlockAdapterException {
-
-        int numMarkers = markers.size();
-
-        long startTime = System.currentTimeMillis();
-        try {
-
-            for (int i = 0; i < numMarkers; i++) {
-                for (int j = 0; j < numMarkers; j++) {
-
-                    int idx1 = markers.get(i).getIndex();
-                    String name1 = markers.get(i).getName();
-                    int idx2 = markers.get(j).getIndex();
-                    String name2 = markers.get(j).getName();
-
-                    //FlockEvents flockEvents = genEventsMatrix(width, height, idx1, idx2);
-                    FlockEvents flockEvents = genEventsMatrixPop(width, height, idx1, idx2);
-                    Color[][] allEvents = flockEvents.getAllEvents();
-                    Map<Byte, boolean[][]> popEvents = flockEvents.getPopEvents();
-
-                    String imageName = "";
-                    if (highlighted) {
-                        imageName = name1 + "." + name2 + "." + popId + ".color.highlighted.png";
-
-                        if (name1.equals(name2)) {
-                            byte [] b4 = generateSolidImage(300,300);
-                            adapter.saveDotPlotImage(imageName, new ByteArrayInputStream(b4));
-                        } else {
-                            byte[] b4 = generatePopHighlighted(allEvents, popEvents.get(popId), ColorUtils.getColor(popId), bw);
-
-                            adapter.saveDotPlotImage(imageName,new ByteArrayInputStream(b4));
-                        }
-
-                    } else {
-                        imageName = name1 + "." + name2 + "." + popId + ".color.only.png";
-
-                        if (name1.equals(name2)){
-                            byte [] b4 = generateSolidImage(300,300);
-                            adapter.saveDotPlotImage(imageName, new ByteArrayInputStream(b4));
-                        } else {
-                            byte[] b4 = generatePopColorOnly(allEvents, popEvents.get(popId), ColorUtils.getColor(popId), bw);
-
-                            adapter.saveDotPlotImage(imageName, new ByteArrayInputStream(b4));
-                        }
-                    }
-
-                }
-            }
-
-        } catch (Exception e) {
-            System.out.println("E: " + e);
-            throw new FlockAdapterException(e);
-        }
-        long stopTime = System.currentTimeMillis();
-        System.out.println("genSinglePopulation " + (stopTime - startTime) / 1000);
-
-    }
-
-    /*
       * For every population and every marker combination, create an image
-      */
+      *
     public void genMarkerByMarkerPopulations(int width, int height, boolean bw, boolean highlighted) throws FlockAdapterException {
         int numMarkers = markers.size();
         long startTime = System.currentTimeMillis();
@@ -368,7 +300,7 @@ public class FlockImageGenerator {
 
     /*
       * For 2 markers, create all the images for every population
-      */
+      *
     public void genMarker2MarkerPopulations(int index1, int index2, int width,
                                             int height, boolean bw, boolean highlighted) throws FlockAdapterException {
 
@@ -421,6 +353,7 @@ public class FlockImageGenerator {
         System.out.println("genMarker2MarkerPopulations " + (stopTime - startTime) / 1000);
 
     }
+    */
 
     private FlockEvents genEventsMatrix(int width, int height, int idx1, int idx2) {
 
@@ -522,45 +455,12 @@ public class FlockImageGenerator {
         return getImageAsByteArray(img);
     }
 
-    private byte[] generatePopHighlighted(Color[][] allEvents, boolean[][] popEvents, Color c, boolean bw) throws Exception {
-        int width = popEvents.length;
-        int height = popEvents[0].length;
+    private byte[] generatePopulations(FlockEvents flockEvents/*Color[][] allEvents, boolean[][] popEvents, Color c*/, boolean isAll, String popIds, boolean bw, boolean highlighted) throws Exception {
+        Color[][] allEvents = flockEvents.getAllEvents();
+        Map<Byte, boolean[][]> popEvents = flockEvents.getPopEvents();
 
-        BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-
-        Graphics2D g2d = img.createGraphics();
-        g2d.setColor(Color.LIGHT_GRAY);
-        g2d.fillRect(0, 0, width, height);
-        g2d.setColor(Color.WHITE);
-        // draw background
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                if (allEvents[i][j] != null) {
-                    g2d.drawLine(i, j, i, j);
-                }
-            }
-        }
-
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                if (popEvents[i][j]) {
-                    if (bw) {
-                        g2d.setColor(Color.BLACK);
-                    } else {
-                        g2d.setColor(c);
-                    }
-                    g2d.drawLine(i, j, i, j);
-                }
-            }
-        }
-
-        return getImageAsByteArray(img);
-    }
-
-    private byte[] generatePopColorOnly(Color[][] allEvents, boolean[][] popEvents, Color c, boolean bw) throws Exception {
-
-        int width = popEvents.length;
-        int height = popEvents[0].length;
+        int width = allEvents.length;
+        int height = allEvents[0].length;
 
         BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
@@ -568,21 +468,51 @@ public class FlockImageGenerator {
         g2d.setColor(Color.LIGHT_GRAY);
         g2d.fillRect(0, 0, width, height);
 
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                if (popEvents[i][j]) {
-                    if (bw) {
-                        g2d.setColor(Color.BLACK);
-                    } else {
-                        g2d.setColor(c);
+        if(highlighted) {
+            g2d.setColor(Color.WHITE);
+            // draw background
+            for (int i = 0; i < width; i++) {
+                for (int j = 0; j < height; j++) {
+                    if (allEvents[i][j] != null) {
+                        g2d.drawLine(i, j, i, j);
                     }
-                    g2d.drawLine(i, j, i, j);
+                }
+            }
+        }
+
+        if(isAll) {
+            for (int i = 0; i < width; i++) {
+                for (int j = 0; j < height; j++) {
+                    if (allEvents[i][j] != null) {
+                        g2d.setColor(allEvents[i][j]);
+                        g2d.drawLine(i, j, i, j);
+                    }
+                }
+            }
+        } else {
+            String[] pops = popIds.split(",");
+            for(String pop : pops) {
+                Byte popId = Byte.parseByte(pop);
+                boolean[][] popEvent = popEvents.get(popId);
+                Color currentColor = ColorUtils.getColor(popId);
+                if (bw) {
+                    g2d.setColor(Color.BLACK);
+                } else {
+                    g2d.setColor(currentColor);
+                }
+                for (int i = 0; i < width; i++) {
+                    for (int j = 0; j < height; j++) {
+                        if (popEvent[i][j]) {
+                            g2d.drawLine(i, j, i, j);
+                        }
+                    }
                 }
             }
         }
 
         return getImageAsByteArray(img);
     }
+
     /*
       * THIS IS PROTOTYPE CODE AND NOT CURRENTLY USED
       * Tries to generate one image that contains all marker combinations
@@ -684,6 +614,9 @@ public class FlockImageGenerator {
         }
 
         File outputDir = new File(args[argIndex++]);
+        if(!outputDir.exists()) {
+            outputDir.mkdirs();
+        }
         FlockImageGenerator fig = null;
 
         if(isDirectory) {
@@ -694,22 +627,19 @@ public class FlockImageGenerator {
             fig.processFlockOutputFiles(profilePath,percentPath,populcPath,MFIPath,populidPath,paramPath,coordPath);
         }
 
+        ProcessParameter pp = null;
         if (type.equals("all_images")) {
             //fig.genMarkerByMarkerImages(300, 300, false);
             //fig.genMarkerByMarkerImages(300, 300, true);
             //fig.genMarkerByMarkerPopulations(300, 300, false,true);
             //fig.genMarkerByMarkerPopulations(300, 300, false,false);
         } else if (type.startsWith("overview")) {
-            if(!type.equals("overview_bw")) {
-                fig.genOverviewImages(300,300,false);
-            }
-            if(!type.equals("overview_color")) {
-                fig.genOverviewImages(300,300,true);
-            }
+            pp = new ProcessParameter("a", "a", true, type.endsWith("bw"), null);
         } else if (type.equals("all_markers")) {
-            fig.genMarkerByMarkerImages(300, 300, false);
+            //fig.genMarkerByMarkerImages(300, 300, false);
+            //fig.genOverviewImages(300,300,false);
         } else if (type.equals("all_populations")) {
-            fig.genMarkerByMarkerPopulations(300, 300, false,true);
+            //fig.genMarkerByMarkerPopulations(300, 300, false,true);
         } else if (type.equals("marker_populations")) {
             if (args.length < 5) {
                 System.err.println("For type 'marker_populations, you must provide index1 and index2");
@@ -718,15 +648,19 @@ public class FlockImageGenerator {
             int index1 = Integer.parseInt(args[argIndex++]);
             int index2 = Integer.parseInt(args[argIndex]);
 
-            fig.genMarker2MarkerPopulations(index1, index2, 300, 300, false,true);
+            //fig.genMarker2MarkerPopulations(index1, index2, 300, 300, false,true);
         } else if (type.equals("single_population")) {
             if (args.length < 4) {
                 System.err.println("For type 'single_population, you must provide popIdx");
                 throw new Exception(errorMsg);
             }
-            Byte index1 = Byte.parseByte(args[argIndex]);
-
-            fig.genSinglePopulation(index1, 300, 300, false,true);
+            pp = new ProcessParameter("a", "s", true, false, args[argIndex]);
+        } else if (type.equals("multi_population")) {
+            if (args.length < 4) {
+                System.err.println("For type 'multi_population, you must provide comma(,) separated population indexes");
+                throw new Exception(errorMsg);
+            }
+            pp = new ProcessParameter("a", "m", true, false, args[argIndex]);
         } else if (type.equals("gen_propsfile")) {
             fig.genPropsFile();
         } else {
@@ -734,6 +668,7 @@ public class FlockImageGenerator {
             throw new Exception(errorMsg);
         }
 
+        fig.generate(pp);
     }
 
 }
