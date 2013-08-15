@@ -4,30 +4,11 @@
   <meta charset="utf-8">
   <title>mockup with bootstrap</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="../css/bootstrap.min.css" rel="stylesheet">
   <link href="../css/jqueryFileTree.css" rel="stylesheet">
   <link href="../css/merged.css" rel="stylesheet">
   <link href="../css/bootstrap-select.css" rel="stylesheet">
   <style type="text/css">
-    body {
-      padding-top: 60px;
-    }
-
-    #fileNav {
-      height: 100%;
-      min-height: 100%;
-    }
-
-    html, body {
-      height: 90%;
-    }
-
-    .fill { 
-      min-height: 100%;
-      height: 100%;
-    }
-
-    #centerContent .span12 {
+    .centerSub {
       background-color:#eee; 
       border: 1px solid #888; 
       border-radius:3px;
@@ -53,96 +34,87 @@
       min-height: 85px;
     }
   </style>
+
 </head>
 
   <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container-fluid">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
-          <a class="brand" href="#">gofcm</a>
-          <div class="nav-collapse collapse">
-            <ul class="nav">
-              <li><a data-toggle="modal" href="#projectSelectModal">Project</a></li>
-              <li><a href="#about">File</a></li>
-              <li class="active"><a href="#contact">FLOCK Result</a></li>
-            </ul>
-            <ul class="nav pull-right">
-              <li><a href="register.php">Register</a></li>
-              <li class="dropdown">
-                <a class="dropdown-toggle" href="#" data-toggle="dropdown">Log In <strong class="caret"></strong></a>
-                <div class="dropdown-menu" role="menu" style="padding: 15px; padding-bottom: 0px;">
-                  <form action="index.php" method="post"> 
-                    Username:<br /> 
-                    <input type="text" name="username" value="" /> 
-                    <br /><br /> 
-                    Password:<br /> 
-                    <input type="password" name="password" value="" /> 
-                    <br /><br /> 
-                    <input type="submit" class="btn btn-info" value="Login" /> 
-                  </form> 
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
+    <div id="nav"></div>
+    <div class="row-fluid">
+      <div class="span3" style="height:100%;">
+        <div class="well" id="fileNav" style="height:100%;overflow:auto;"></div>
       </div>
-    </div>
-
-    <div class="container fill" id="centerContent" style="margin-left:20px;">
-      <div class="row fill">
-        <div class="span3 fill">
-          <div class="well" id="fileNav" style="overflow:auto;"></div>
-        </div>
-        <div class="span9">
-          <div class="row">
-            <div class="span12">
-              <div class="span11 offset1" id="details">
-                <table>
-                  <tr>
-                    <td><strong>Method Name</strong></td><td>FLOCK</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Method Version</strong></td><td>v0.1</td>
-                  </tr>
-                </table>
-              </div>
+      <div class="span9" style="">
+        <div class="row-fluid">
+          <div class="span12 centerSub">
+            <div class="span11 offset1" id="details">
+              <table>
+                <tr>
+                  <td><strong>Method Name</strong></td><td>FLOCK</td>
+                </tr>
+                <tr>
+                  <td><strong>Method Version</strong></td><td>v0.1</td>
+                </tr>
+              </table>
             </div>
           </div>
-          <div class="row">
-            <div class="span12" id="overview">
-              <div class="row">
+        </div>
+        <div class="row-fluid">
+          <div class="span12 centerSub" id="overview">
+            <div class="row-fluid">
+              <div class="span12" style="margin-left:5px;">
                 <div class="span3">
-                  <h4 id="overviewH4">Overview</h4>
-                  <img src="../images/ajax-loader.gif" id="loading-indicator" style="display:none;"/>
+                  <h6>Population</h6>
+                  <select id="populselect" class="selectpicker" multiple data-selected-text-format="count>1" data-count-selected-text="{0} of {1} populations">
+                  </select>
                 </div>
                 <div class="span3">
-                  <select id="populselect" class="selectpicker"></select>
+                  <h6>X-axis</h6>
+                  <select id="xmarker" class="selectpicker" multiple data-selected-text-format="count>1" data-count-selected-text="{0} of {1} markers"></select>
+                </div>
+                <div class="span3">
+                  <h6>Y-axis</h6>
+                  <select id="ymarker" class="selectpicker" multiple data-selected-text-format="count>1" data-count-selected-text="{0} of {1} markers"></select>
+                </div>
+                <div class="span3">
+                  <h6>Parameters</h6>
+                  <select id="paramselect" class="selectpicker" multiple data-selected-text-format="count>1" data-count-selected-text="{0} of {1}"></select>
                 </div>
               </div>
-              <div id="flock_main">
-                <div id="flock_content">
-                  <table id="overviewTable"></table>
+            </div>
+            <div class="row-fluid">
+              <div class="span2">
+                <button class="btn btn-primary" type="button" id="updateButton">Update</button>
+              </div>
+              <div class="span10">
+                <img src="../images/ajax-loader.gif" id="loading-indicator" style="display:none;"/>
+              </div>
+            </div>
+            <div class="row-fluid" style="margin-top:5px;">
+              <div class="span12">
+                <div id="flock_main">
+                  <div id="flock_content">
+                    <table id="overviewTable"></table>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>  
-      </div>
+        </div>
+      </div>  
     </div>
 
-    <script src="../js/jquery-1.10.2.min.js"></script>
-    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.min.js"></script>
     <script src="../js/jqueryFileTree.js"></script>
     <script src="../js/bootstrap-select.min.js"></script>
     <script>
       var _page = {
+        init: false, //initial load flag,
+        html: {
+          opt_dc: "<option data-content='<span class=\"$c$\">&nbsp;&nbsp;&nbsp;</span>$t$'>$v$</option>",
+          opt: "<option value='$v$'>$v$</option>"
+        },
         draw: function(data) {
-          var imgHtml = '<img src="$imgPath$"/>';
+          var imgHtml = "<img src='$imgPath$'/>";
 
           if(data && data.columns && data.taskDir && data.type && data.pops) {
             var cols = data.columns, 
@@ -169,35 +141,49 @@
             thead+='</tr></thead>';
             $('#overviewTable').html(thead+tbody);
 
-            if(type==='color') {
-              this.popul(taskId, pops);
+            if(!this.init) {
+              //if(type==='color') {
+                this.popul(taskId, pops);
+              //}
+              this.markers(cols);
+              this.params(["It's", "Not", "Ready", "Yet"]);
             }
+
             $('#loading-indicator').hide();
+            this.initial = true;
           }
         },
         popul: function(taskId, pops) {
-          var _this = this;
-          var populHtml = '<option data-content="<span class=\'$c$\'>&nbsp;&nbsp;&nbsp;</span>$t$">$v$</option>',
-              $selecObj = $('.selectpicker');
+          var _this = this,
+              $selecObj = $('#populselect');
 
-          $selecObj.append(
-            populHtml.replace("$c$", "")
-              .replace("$t$", "Overview")
-              .replace("$v$",0)
-            );
           $.each(pops, function(i,pop){
             $selecObj.append(
-              populHtml.replace("$c$", "popul"+(i>24?i%25+1:i))
+              _this.html.opt_dc.replace("$c$", "popul"+(i>24?i%25+1:i))
                 .replace("$t$", "Population "+i+"("+pop+")")
                 .replace("$v$",i)
               );
           });
-          $selecObj.selectpicker('deselectAll');
-          $selecObj.change(function(){
-            var currPopul = $selecObj.find("option:selected").val();
-            $('#overviewH4').html(currPopul==='0'?'Overview':'Population '+currPopul);
-            _this.ajax(taskId, currPopul==='0'?'color':'pop', currPopul);
-          });
+          $selecObj.selectpicker('selectAll');
+          //$selecObj.change(function(){
+          //  var currPopul = $selecObj.find("option:selected").val();
+          //  $('#overviewH4').html(currPopul==='0'?'Overview':'Population '+currPopul);
+          //  _this.ajax(taskId, currPopul==='0'?'color':'pop', currPopul);
+          //});
+        },
+        markers: function(markers) {
+          var opts = "";
+          for(var i=0;i<markers.length;i++) {
+            opts+=this.html.opt.replace(/\$v\$/g, markers[i]);    
+          }
+          $("#xmarker, #ymarker").append(opts).selectpicker("selectAll");
+        },
+        params: function(params) {
+          var opts = "";
+          for(var i=0;i<params.length;i++) {
+            opts+=this.html.opt.replace(/\$v\$/g, params[i]);    
+          }
+          $("#paramselect").append(opts).selectpicker();
         },
         ajax: function(taskId, type, popId) {
           var _this = this;
@@ -214,9 +200,10 @@
       } //_page END
 
       $(document).ready(function() {
+        $("#nav").load("common.html");
         //_utils.loadOverview(1);
         $('#fileNav').fileTree({
-            root: '/export/gofcm/Tasks/',
+            root: '../../../Tasks/',
             script: '../lib/php/fileTree/jqueryFileTree.php',
             expandSpeed: 1000,
             collapseSpeed: 13000,
@@ -225,6 +212,10 @@
             alert(file);
         });
         _page.ajax('51f6d35da9d945c814b49d4c', 'color', 3);
+
+        $("#updateButton").click(function() {
+          alert($("#populselect").val());
+        })
       });
     </script>
   </body>
