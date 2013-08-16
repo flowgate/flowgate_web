@@ -24,17 +24,30 @@ if( file_exists($_POST['dir']) ) {
 		echo "<ul class=\"jqueryFileTree\" style=\"display: none;\">";
 		// All dirs
 		foreach( $files as $file ) {
-			if( file_exists( $_POST['dir'] . $file) && $file != '.' && $file != '..' && is_dir($_POST['dir'] . $file) ) {
-				echo "<li class=\"directory collapsed\"><a href=\"#\" rel=\"" . htmlentities($_POST['dir'] . $file) . "/\">" . htmlentities($file) . "</a></li>";
+			if( file_exists( $_POST['dir'] . $file) && $file != '.' && $file != '..') {
+				if(is_dir($_POST['dir'] . $file) ) {
+					echo "<li class=\"directory collapsed\"><a href=\"#\" rel=\"" . htmlentities($_POST['dir'] . $file) . "/\">" . htmlentities($file) . "</a></li>";
+				} else {
+					$htmlFileName=htmlentities($file);
+					echo "<li class=\"ext_cb\">".
+						"<input type='checkbox' id='fcb_".$htmlFileName."' name='fcb_".$htmlFileName."'> ".$htmlFileName.
+						//"<input type='checkbox' id='fcb_".$htmlFileName."' name='fcb_".$htmlFileName."' onclick='_page.fileClicked();'> ".$htmlFileName.
+						"</li>";	
+				}
+
 			}
 		}
 		// All files
-		foreach( $files as $file ) {
+		/*foreach( $files as $file ) {
 			if( file_exists($_POST['dir'] . $file) && $file != '.' && $file != '..' && !is_dir($_POST['dir'] . $file) ) {
-				$ext = preg_replace('/^.*\./', '', $file);
-				echo "<li class=\"file ext_$ext\"><a href=\"#\" rel=\"" . htmlentities($_POST['dir'] . $file) . "\">" . htmlentities($file) . "</a></li>";
+				//$ext = preg_replace('/^.*\./', '', $file);
+				$htmlFileName=htmlentities($file);
+				echo "<li class=\"ext_cb\">".
+					"<input type='checkbox' id='fcb_".$htmlFileName."' name='fcb_".$htmlFileName."'> ".$htmlFileName.
+					//"<a href=\"#\" rel=\"" . htmlentities($_POST['dir'] . $file) . "\">" . htmlentities($file) . "</a>".
+					"</li>";
 			}
-		}
+		}*/
 		echo "</ul>";	
 	}
 }
