@@ -53,7 +53,7 @@
           <div class="row-fluid span12">
             <button class="btn btn-mini btn-warning" type="button" id="fileAllButton">Select All</button>
             <button class="btn btn-mini btn-inverse" type="button" id="fileNoneButton">Deselect All</button>
-            <p><span class="label label-important">Collapsing a directory will deselect files under it!</span></p>
+            <p><span class="label label-important">Collapsing a directory deselects files under it!</span></p>
           </div>
           <div class="row-fluid span12" id="fileNav" style="overflow:auto;"></div>
         </div>
@@ -80,16 +80,16 @@
                 <div class="row-fluid">
                   <div class="span3">
                     <h6>Population</h6>
-                    <select id="populselect" class="selectpicker" multiple data-selected-text-format="count>1" data-count-selected-text="{0} of {1} populations">
+                    <select id="populselect" class="selectpicker" rel="populations" multiple data-selected-text-format="count>1" data-count-selected-text="{0} of {1} populations">
                     </select>
                   </div>
                   <div class="span2 markerSelect">
                     <h6>X-axis</h6>
-                    <select id="xmarker" class="selectpicker" multiple data-selected-text-format="count>1" data-count-selected-text="{0} of {1} markers"></select>
+                    <select id="xmarker" class="selectpicker" multiple rel="markers" data-selected-text-format="count>1" data-count-selected-text="{0} of {1} markers"></select>
                   </div>
                   <div class="span2 markerSelect">
                     <h6>Y-axis</h6>
-                    <select id="ymarker" class="selectpicker" multiple data-selected-text-format="count>1" data-count-selected-text="{0} of {1} markers"></select>
+                    <select id="ymarker" class="selectpicker" multiple rel="markers" data-selected-text-format="count>1" data-count-selected-text="{0} of {1} markers"></select>
                   </div>
                   <div class="span3">
                     <h6>Parameters</h6>
@@ -207,13 +207,25 @@
           $("#paramselect").append(opts).selectpicker();
         },
         selecpicker: {
-          makeSingle: function() {
-
+          makeSingle: function(id) {
+            $('#'+id).removeAttr('multiple')
+              .removeAttr('data-selected-text-format')
+              .removeAttr('data-count-selected-text');
+            this.refresh(id);
           },
-          makeMulti: function() {
-            
+          makeMulti: function(id) {
+            var $_sel = $('#'+id);
+                rel = $_sel.attr('rel');
+            $_sel.attr('multiple', '')
+              .attr('data-selected-text-format', 'count>1')
+              .attr('data-count-selected-text', '{0} of {1} '+rel);
+              console.log(rel);
+            this.refresh(id);    
+          },
+          refresh: function(id) {
+            $('#'+id).selectpicker('refresh', 'deselectAll');
           }
-        }.
+        },
         ajax: function(taskId, type, popId) {
           var _this = this;
           $('#loading-indicator').show();
@@ -249,7 +261,7 @@
 
         $("#fileAllButton, #fileNoneButton").click(function() { //select all files or none 
           var ischeck = $(this).attr("id")==="fileAllButton",
-              firstFile = null;;
+              firstFile = null;
           $('[name^="fcb_"]').each(function(i, v) {
             if(i===0) {
               firstFile = v;
@@ -258,6 +270,13 @@
           });
           if(firstFile) { //fires change event to update files variable at page level
             $(firstFile).change();
+          }
+          if(ischeck) {
+            _page.selecpicker.makeSingle('xmarker');
+            _page.selecpicker.makeSingle('ymarker');
+          } else {
+            _page.selecpicker.makeMulti('xmarker');
+            _page.selecpicker.makeMulti('ymarker');
           }
         });
 
