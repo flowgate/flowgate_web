@@ -23,7 +23,7 @@
             <ul class="nav">
               <li><a data-toggle="modal" href="#projectSelectModal">Project</a></li>
               <li id="menuFile"><a href="#about">File</a></li>
-              <li id="menuResult"><a href="#result">FLOCK Result</a></li>
+              <li id="menuResult"><a href="pages/results.html">FLOCK Result</a></li>
             </ul>
             <ul class="nav pull-right">
               <li><a href="register.php">Register</a></li>
@@ -57,7 +57,8 @@
           <div class="divPopupMenu">
             <div class="input">
               <select class="medium" name="mediumSelect" id="projectSelect">
-                <option id="woOptionblogpost">blogpost</option>
+                <option id="woOptionblogpost">project1</option>
+                <option id="woOptionblogpost">project2</option>
               </select>
             </div>
           </div>
@@ -100,7 +101,7 @@
       }, currentPage = document.URL;
 
       currentPage = currentPage.substring(currentPage.lastIndexOf("/")+1, currentPage.lastIndexOf("."));
-      $("#menu" + (currentPage==="results"?"Result":"File")).addClass("active");
+      $("#menu" + (currentPage==="results"?"Result":currentPage==="files"?"File":"")).addClass("active");
     </script>
   </body>
 </html>

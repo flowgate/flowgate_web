@@ -85,11 +85,11 @@
                   </div>
                   <div class="span2 markerSelect">
                     <h6>X-axis</h6>
-                    <select id="xmarker" class="selectpicker" multiple rel="markers" data-selected-text-format="count>1" data-count-selected-text="{0} of {1} markers"></select>
+                    <select id="xmarker" class="selectpicker"></select>
                   </div>
                   <div class="span2 markerSelect">
                     <h6>Y-axis</h6>
-                    <select id="ymarker" class="selectpicker" multiple rel="markers" data-selected-text-format="count>1" data-count-selected-text="{0} of {1} markers"></select>
+                    <select id="ymarker" class="selectpicker"></select>
                   </div>
                   <div class="span3">
                     <h6>Parameters</h6>
@@ -167,7 +167,7 @@
                 this.popul(taskId, pops);
               //}
               this.markers(cols);
-              this.params(["It's", "Not", "Ready", "Yet"]);
+              this.params(["Density:0 & Bin:0", "Density:0 & Bin:0", "Density:0 & Bin:0", "Density:0 & Bin:0"]);
             }
 
             $('#loading-indicator').hide();
@@ -193,11 +193,11 @@
           //});
         },
         markers: function(markers) {
-          var opts = "";
+          var opts = "<option value='all' id='markerall'>All</option>";
           for(var i=0;i<markers.length;i++) {
             opts+=this.html.opt.replace(/\$v\$/g, markers[i]);    
           }
-          $("#xmarker, #ymarker").append(opts).selectpicker("selectAll");
+          $("#xmarker, #ymarker").append(opts).selectpicker();
         },
         params: function(params) {
           var opts = "";
@@ -207,6 +207,19 @@
           $("#paramselect").append(opts).selectpicker();
         },
         selecpicker: {
+          disable: function(id) {
+            var $_sel = $('#'+id),
+                $_option = $_sel.find('#markerall');
+            $_option.prop('disabled',true);
+            $_option.next().prop('selected', true); //select a marker next to overview
+            this.refresh(id);
+          },
+          enable: function(id) {
+            var $_sel = $('#'+id),
+                $_option = $_sel.find('#markerall');
+            $_option.prop('disabled',false);
+            this.refresh(id);
+          },
           makeSingle: function(id) {
             $('#'+id).removeAttr('multiple')
               .removeAttr('data-selected-text-format')
@@ -215,11 +228,9 @@
           },
           makeMulti: function(id) {
             var $_sel = $('#'+id);
-                rel = $_sel.attr('rel');
             $_sel.attr('multiple', '')
               .attr('data-selected-text-format', 'count>1')
-              .attr('data-count-selected-text', '{0} of {1} '+rel);
-              console.log(rel);
+              .attr('data-count-selected-text', '{0} of {1}');
             this.refresh(id);    
           },
           refresh: function(id) {
@@ -250,7 +261,7 @@
             collapseSpeed: 200,
             multiFolder: true
           }, function(file) {
-              //alert(file);
+            //alert(file);
         });
 
         _page.ajax('51f6d35da9d945c814b49d4c', 'color', 3);
@@ -272,11 +283,14 @@
             $(firstFile).change();
           }
           if(ischeck) {
-            _page.selecpicker.makeSingle('xmarker');
-            _page.selecpicker.makeSingle('ymarker');
+            _page.selecpicker.disable('xmarker', 'all');
+            _page.selecpicker.disable('ymarker', 'all');
+            _page.selecpicker.makeSingle('paramselect');
+            
           } else {
-            _page.selecpicker.makeMulti('xmarker');
-            _page.selecpicker.makeMulti('ymarker');
+            _page.selecpicker.enable('xmarker');
+            _page.selecpicker.enable('ymarker');
+            _page.selecpicker.makeMulti('paramselect');
           }
         });
 
@@ -289,6 +303,8 @@
           _page.files = selectedFiles.substring(0, selectedFiles.length-1)
         });
       });
+
+    //todo at submission("Show Result") - there should be a validation check on inputs (markers, files, populations and params)
     </script>
   </body>
 </html>
