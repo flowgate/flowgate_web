@@ -1,4 +1,5 @@
-import org.immport.flock.utils.FlockImageGenerator;
+package org.immport.flock.utils;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -44,6 +45,7 @@ public class FlockImageGeneratorTest {
         };
         generator.main(args);
     }
+
 
     public void runOverview1() throws Exception {
         String[] args = {
