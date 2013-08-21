@@ -124,15 +124,101 @@
     <script src="../js/jqueryFileTree.js"></script>
     <script src="../js/bootstrap-select.min.js"></script>
     <script>
+      $(function(){
+        $("#nav").load("common.html"); 
+        _data.ajax('51f6d35da9d945c814b49d4c', 'color', 3);
+        _plugin.filetree.init('fileNav');
+        _page.event.trigger();
+      });
+
       var _page = {
         init: false, //initial load flag,
-        files: '',
+        data: {
+          taskId: '',
+          files: '', //comma separated list of selected files,
+          populs: '',
+          xmarker: '',
+          ymarker: '',
+          params: ''
+        },
         html: {
           opt_dc: "<option data-content='<span class=\"$c$\">&nbsp;&nbsp;&nbsp;</span>$t$'>$v$</option>",
           opt: "<option value='$v$'>$v$</option>"
         },
-        fileClicked: function() {
-          console.log($('[name^="fcb_"]:checked').attr("name"));
+        event: {
+          trigger: function() {
+            this.button.file();
+            this.button.update();
+            this.file.checkbox();
+          },
+          button: {
+            file: function() {
+              $("#fileAllButton, #fileNoneButton").click(function() { //select all files or none 
+                var ischeck = $(this).attr("id")==="fileAllButton",
+                    firstFile = null;
+                $('[name^="fcb_"]').each(function(i, v) {
+                  if(i===0) {
+                    firstFile = v;
+                  }
+                  $(v).prop("checked", ischeck);
+                });
+                if(firstFile) { //fires change event to update files variable at page level
+                  $(firstFile).change();
+                }
+                if(ischeck) {
+                  _plugin.selecpicker.disable('xmarker', 'all');
+                  _plugin.selecpicker.disable('ymarker', 'all');
+                  _plugin.selecpicker.makeSingle('paramselect');
+                  
+                } else {
+                  _plugin.selecpicker.enable('xmarker');
+                  _plugin.selecpicker.enable('ymarker');
+                  _plugin.selecpicker.makeMulti('paramselect');
+                }
+              });
+            },
+            update: function() {
+              $("#updateButton").click(function() {
+                var _data = _page.data;
+                _data.populs = $('#populselect').val();
+                _data.xmarker = $('#xmarker').val();
+                _data.ymarker = $('#ymarker').val();
+                _data.params = $('#paramselect').val();
+                if(_page.validation(_data)) {
+                  _data.ajax();
+                }
+              });
+            }
+          },
+          file: {
+            checkbox: function() {
+              $('#fileNav').on('change', '[name^="fcb_"]', function(event){ //keeps currently selected files at page level
+                var selectedFiles = '', attrName;
+                $('[name^="fcb_"]:checked').each(function(i, v) {
+                  attrName = $(v).attr('name');
+                  selectedFiles += attrName.substring(attrName.indexOf("_")+1) + ",";
+                });
+                _page.data.files = selectedFiles.substring(0, selectedFiles.length-1)
+              });
+            }
+          }
+        },
+        validation: function(data) {
+          return true;
+        }
+      }; 
+      var _data = {
+        ajax: function(taskId, type, popId) {
+          var _this = this;
+          $('#loading-indicator').show();
+          $.ajax({
+            url: '../lib/php/loadResults.php?taskId='+taskId+'&type='+type+'&popId='+popId
+          }).done(function(data) {
+            if(data) {
+              data = $.parseJSON(data);
+              _this.draw(data);
+            }
+          });
         },
         draw: function(data) {
           var imgHtml = "<img src='$imgPath$'/>";
@@ -162,7 +248,7 @@
             thead+='</tr></thead>';
             $('#overviewTable').html(thead+tbody);
 
-            if(!this.init) {
+            if(!_page.init) {
               //if(type==='color') {
                 this.popul(taskId, pops);
               //}
@@ -171,41 +257,37 @@
             }
 
             $('#loading-indicator').hide();
-            this.initial = true;
+            _page.initial = true;
           }
         },
         popul: function(taskId, pops) {
-          var _this = this,
-              $selecObj = $('#populselect');
+          var $selecObj = $('#populselect');
 
           $.each(pops, function(i,pop){
             $selecObj.append(
-              _this.html.opt_dc.replace("$c$", "popul"+(i>24?i%25+1:i))
+              _page.html.opt_dc.replace("$c$", "popul"+(i>24?i%25+1:i))
                 .replace("$t$", "Population "+i+"("+pop+")")
                 .replace("$v$",i)
               );
           });
           $selecObj.selectpicker('selectAll');
-          //$selecObj.change(function(){
-          //  var currPopul = $selecObj.find("option:selected").val();
-          //  $('#overviewH4').html(currPopul==='0'?'Overview':'Population '+currPopul);
-          //  _this.ajax(taskId, currPopul==='0'?'color':'pop', currPopul);
-          //});
         },
         markers: function(markers) {
           var opts = "<option value='all' id='markerall'>All</option>";
           for(var i=0;i<markers.length;i++) {
-            opts+=this.html.opt.replace(/\$v\$/g, markers[i]);    
+            opts+=_page.html.opt.replace(/\$v\$/g, markers[i]);    
           }
           $("#xmarker, #ymarker").append(opts).selectpicker();
         },
         params: function(params) {
           var opts = "";
           for(var i=0;i<params.length;i++) {
-            opts+=this.html.opt.replace(/\$v\$/g, params[i]);    
+            opts+=_page.html.opt.replace(/\$v\$/g, params[i]);    
           }
           $("#paramselect").append(opts).selectpicker();
-        },
+        }
+      };
+      var _plugin = {
         selecpicker: {
           disable: function(id) {
             var $_sel = $('#'+id),
@@ -237,72 +319,20 @@
             $('#'+id).selectpicker('refresh', 'deselectAll');
           }
         },
-        ajax: function(taskId, type, popId) {
-          var _this = this;
-          $('#loading-indicator').show();
-          $.ajax({
-            url: '../lib/php/loadResults.php?taskId='+taskId+'&type='+type+'&popId='+popId
-          }).done(function(data) {
-            if(data) {
-              data = $.parseJSON(data);
-              _this.draw(data);
-            }
-          });
+        filetree: {
+          init: function(id) {
+            $('#'+id).fileTree({
+              root: '../../../Tasks/',
+              script: '../lib/php/fileTree/jqueryFileTree.php',
+              expandSpeed: 300,
+              collapseSpeed: 200,
+              multiFolder: true
+            }, function(file) {
+              //alert(file);
+            }); 
+          }
         }
-      } //_page END
-
-      $(document).ready(function() {
-        $("#nav").load("common.html");
-        //_utils.loadOverview(1);
-        $('#fileNav').fileTree({
-            root: '../../../Tasks/',
-            script: '../lib/php/fileTree/jqueryFileTree.php',
-            expandSpeed: 300,
-            collapseSpeed: 200,
-            multiFolder: true
-          }, function(file) {
-            //alert(file);
-        });
-
-        _page.ajax('51f6d35da9d945c814b49d4c', 'color', 3);
-
-        $("#updateButton").click(function() {
-          alert($("#populselect").val());
-        });
-
-        $("#fileAllButton, #fileNoneButton").click(function() { //select all files or none 
-          var ischeck = $(this).attr("id")==="fileAllButton",
-              firstFile = null;
-          $('[name^="fcb_"]').each(function(i, v) {
-            if(i===0) {
-              firstFile = v;
-            }
-            $(v).prop("checked", ischeck);
-          });
-          if(firstFile) { //fires change event to update files variable at page level
-            $(firstFile).change();
-          }
-          if(ischeck) {
-            _page.selecpicker.disable('xmarker', 'all');
-            _page.selecpicker.disable('ymarker', 'all');
-            _page.selecpicker.makeSingle('paramselect');
-            
-          } else {
-            _page.selecpicker.enable('xmarker');
-            _page.selecpicker.enable('ymarker');
-            _page.selecpicker.makeMulti('paramselect');
-          }
-        });
-
-        $('#fileNav').on('change', '[name^="fcb_"]', function(event){ //keeps currently selected files at page level
-          var selectedFiles = '', attrName;
-          $('[name^="fcb_"]:checked').each(function(i, v) {
-            attrName = $(v).attr('name');
-            selectedFiles += attrName.substring(attrName.indexOf("_")+1) + ",";
-          });
-          _page.files = selectedFiles.substring(0, selectedFiles.length-1)
-        });
-      });
+      };        
 
     //todo at submission("Show Result") - there should be a validation check on inputs (markers, files, populations and params)
     </script>
