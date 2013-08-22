@@ -63,8 +63,10 @@ public class Zipper {
         // Add folder to the zip file
         //zipFile.addFolder(folderToAdd, parameters);
 
-        zipFile.addFiles(filesToAdd, parameters);
+        if(filesToAdd.size()>0) {
+            zipFile.addFiles(filesToAdd, parameters);
 
+        }
         FileUtils.deleteDirectory(parent);
     }
 

@@ -252,7 +252,7 @@
                     popIds = data.popIds,
                     xcols = data.xmarker,
                     ycols = data.ymarker,
-                    imgSuffix = (type=='pop'?popIds+'.color.highlighted':'all.'+type),
+                    imgSuffix = (type=='pop'?popIds.replace(/,/g,'.')+'.color.highlighted':'all.'+type),
                     thead = '<thead><tr><th id="name"></th>', 
                     tbody = '<tbody>';
 

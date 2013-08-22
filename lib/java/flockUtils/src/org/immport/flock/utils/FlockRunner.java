@@ -70,14 +70,20 @@ public class FlockRunner {
         String zipInput = args[0];
         if(zipInput!=null) {
             FlockRunner runner = new FlockRunner();
-            runner.execute(zipInput, bins, densities, Integer.parseInt(population));
+            runner.execute(zipInput, bins, densities, Integer.parseInt(population), null, null);
         }
     }
 
-    public void execute(String zipInput, List<Integer> bins, List<Integer> densities, int population) throws Exception {
-        URI flockUri = this.getFlockFile();
+    public void execute(String zipInput, List<Integer> bins, List<Integer> densities, int population, String workDir, String flock) throws Exception {
+        URI flockUri = null;
+        if(flock==null) {
+            flockUri = this.getFlockFile();
+        } else {
+            File flockFile = new File(workDir + File.separator + flock);
+            flockUri = flockFile.toURI();
+        }
 
-        File inputDir = new File("inputs");
+        File inputDir = new File(workDir==null?"":workDir+"inputs");
         inputDir.mkdir();
 
         Zipper.extract(zipInput, inputDir.getAbsolutePath());
@@ -85,7 +91,7 @@ public class FlockRunner {
         //this.extract(zipInput, null, inputDir.getAbsolutePath());
         String[] inputArr = inputDir.list();
 
-        File resultDir = new File("results");
+        File resultDir = new File(workDir==null?"":workDir+"results");
         resultDir.mkdir();
 
         if(inputArr!=null && inputArr.length>0 && bins.size()>0 && densities.size()>0) {
