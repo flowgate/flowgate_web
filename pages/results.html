@@ -126,7 +126,7 @@
     <script>
       $(function(){
         $("#nav").load("common.html"); 
-        _data.ajax('51f6d35da9d945c814b49d4c', 'color', 3);
+        _data.meta('51f6d35da9d945c814b49d4c');
         _plugin.filetree.init('fileNav');
         _page.event.trigger();
       });
@@ -179,13 +179,13 @@
             },
             update: function() {
               $("#updateButton").click(function() {
-                var _data = _page.data;
-                _data.populs = $('#populselect').val();
-                _data.xmarker = $('#xmarker').val();
-                _data.ymarker = $('#ymarker').val();
-                _data.params = $('#paramselect').val();
-                if(_page.validation(_data)) {
-                  _data.ajax();
+                var data = _page.data;
+                data.populs = $('#populselect').val();
+                data.xmarker = $('#xmarker').val();
+                data.ymarker = $('#ymarker').val();
+                data.params = $('#paramselect').val();
+                if(_page.validation(data)) {
+                  _data.ajax('51f6d35da9d945c814b49d4c', 'pop', data.populs, data.xmarker, data.ymarker);
                 }
               });
             }
@@ -208,15 +208,79 @@
         }
       }; 
       var _data = {
-        ajax: function(taskId, type, popId) {
+        meta: function(tid) {
           var _this = this;
-          $('#loading-indicator').show();
           $.ajax({
-            url: '../lib/php/loadResults.php?taskId='+taskId+'&type='+type+'&popId='+popId
+            url: '../lib/php/getTaskInfo.php?tid='+tid,
+            async: false
           }).done(function(data) {
             if(data) {
               data = $.parseJSON(data);
-              _this.draw(data);
+              if(data.success==='true' && data.columns && data.pops) {
+                var cols = data.columns, 
+                    taskId = data.taskId,
+                    pops = data.pops;
+
+                if(!_page.init) {
+                  _page.data.taskId = taskId;
+                  _this.popul(pops);
+                  _this.markers(cols);
+                  _this.params(["Density:1 & Bin:0", "Density:0 & Bin:1", "Density:0 & Bin:0", "Density:1 & Bin:1"]);
+
+                  _page.init = true;
+                }
+              }
+            }
+          });  
+        },
+        result: function() {
+          var _this = this;
+          $.ajax({
+            url: '../lib/php/common/runFlock.php?tid='+tid+'&t='+t+'&x='+xmarker+'&y='+ymarker+'&p='+p,
+            async: false
+          }).done(function(data) {
+            if(data) {
+              data = $.parseJSON(data);
+              var imgHtml = "<img src='$imgPath$'/>";
+
+              if(data.result==='success' && data.taskDir && data.type) {
+                var cols = data.columns, 
+                    taskId = data.taskId,
+                    taskDir = data.taskDir, 
+                    type = data.type, 
+                    popIds = data.popIds,
+                    pops = data.pops,
+                    imgPostfix = (type=='pop'?popIds+'.color.highlighted':'all.'+type),
+                    thead = '<thead><tr><th id="name"></th>', 
+                    tbody = '<tbody>';
+
+                for(var i=0;i<cols.length;i++) {
+                  thead+='<th id="'+cols[i]+'">'+cols[i]+'</th>';
+                  tbody+='<tr><th id="'+cols[i]+'_'+cols[i]+'" headers="name">'+cols[i]+'</th>';
+                  for(var j=0;j<cols.length;j++) {
+                    tbody+='<td headers="'+cols[j]+' '+cols[i]+'">'
+                    +imgHtml.replace("$imgPath$", "../Tasks/"+taskId+"/"+type+"/"+cols[j]+"."+cols[i]+'.'+imgPostfix+'.png');
+                    +'</td>'
+                  }
+                  tbody+='</tr>';
+                }
+                tbody+='</tbody>';
+                thead+='</tr></thead>';
+                $('#overviewTable').html(thead+tbody);
+
+                if(!_page.init) {
+                  _page.data.taskId = taskId;
+                  //if(type==='color') {
+                  this.popul(pops);
+                  //}
+                  this.markers(cols);
+                  this.params(["Density:1 & Bin:0", "Density:0 & Bin:1", "Density:0 & Bin:0", "Density:1 & Bin:1"]);
+
+                  _page.init = true;
+                }
+
+                $('#loading-indicator').hide();
+              }
             }
           });
         },
@@ -228,11 +292,11 @@
                 taskId = data.taskId,
                 taskDir = data.taskDir, 
                 type = data.type, 
-                popId = data.popId,
-                imgPostfix = (type=='pop'?popId+'.color.highlighted':'all.'+type),
+                popIds = data.popIds,
+                pops = data.pops,
+                imgPostfix = (type=='pop'?popIds+'.color.highlighted':'all.'+type),
                 thead = '<thead><tr><th id="name"></th>', 
-                tbody = '<tbody>',
-                pops = data.pops;
+                tbody = '<tbody>';
 
             for(var i=0;i<cols.length;i++) {
               thead+='<th id="'+cols[i]+'">'+cols[i]+'</th>';
@@ -249,18 +313,20 @@
             $('#overviewTable').html(thead+tbody);
 
             if(!_page.init) {
+              _page.data.taskId = taskId;
               //if(type==='color') {
-                this.popul(taskId, pops);
+              this.popul(pops);
               //}
               this.markers(cols);
               this.params(["Density:1 & Bin:0", "Density:0 & Bin:1", "Density:0 & Bin:0", "Density:1 & Bin:1"]);
+
+              _page.init = true;
             }
 
             $('#loading-indicator').hide();
-            _page.initial = true;
           }
         },
-        popul: function(taskId, pops) {
+        popul: function(pops) {
           var $selecObj = $('#populselect');
 
           $.each(pops, function(i,pop){
