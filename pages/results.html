@@ -139,7 +139,9 @@
           populs: '',
           xmarker: '',
           ymarker: '',
-          params: ''
+          params: '',
+          cols: null,
+          ppl: 0
         },
         html: {
           opt_dc: "<option data-content='<span class=\"$c$\">&nbsp;&nbsp;&nbsp;</span>$t$'>$v$</option>",
@@ -185,7 +187,8 @@
                 data.ymarker = $('#ymarker').val();
                 data.params = $('#paramselect').val();
                 if(_page.validation(data)) {
-                  _data.ajax('51f6d35da9d945c814b49d4c', 'pop', data.populs, data.xmarker, data.ymarker);
+                  $('#loading-indicator').show();
+                  _data.result(data.populs, data.xmarker, data.ymarker, data.params);
                 }
               });
             }
@@ -211,7 +214,7 @@
         meta: function(tid) {
           var _this = this;
           $.ajax({
-            url: '../lib/php/getTaskInfo.php?tid='+tid,
+            url: '../php/getTaskInfo.php?tid='+tid,
             async: false
           }).done(function(data) {
             if(data) {
@@ -233,101 +236,55 @@
             }
           });  
         },
-        result: function() {
-          var _this = this;
+        result: function(pp,x,y,pr) {
+          var _this = this,
+              _data = _page.data;
           $.ajax({
-            url: '../lib/php/common/runFlock.php?tid='+tid+'&t='+t+'&x='+xmarker+'&y='+ymarker+'&p='+p,
-            async: false
+            url: '../php/bin/runFlock.php?tid='+_data.taskId+'&ppl='+_data.ppl+'&pp='+pp+'&x='+x+'&y='+y+'&pr='+pr
           }).done(function(data) {
             if(data) {
               data = $.parseJSON(data);
               var imgHtml = "<img src='$imgPath$'/>";
 
-              if(data.result==='success' && data.taskDir && data.type) {
-                var cols = data.columns, 
-                    taskId = data.taskId,
-                    taskDir = data.taskDir, 
+              if(data.success==='true' && data.taskDir && data.type) {
+                var taskDir = data.taskDir, 
                     type = data.type, 
                     popIds = data.popIds,
-                    pops = data.pops,
-                    imgPostfix = (type=='pop'?popIds+'.color.highlighted':'all.'+type),
+                    xcols = data.xmarker,
+                    ycols = data.ymarker,
+                    imgSuffix = (type=='pop'?popIds+'.color.highlighted':'all.'+type),
                     thead = '<thead><tr><th id="name"></th>', 
                     tbody = '<tbody>';
 
-                for(var i=0;i<cols.length;i++) {
-                  thead+='<th id="'+cols[i]+'">'+cols[i]+'</th>';
-                  tbody+='<tr><th id="'+cols[i]+'_'+cols[i]+'" headers="name">'+cols[i]+'</th>';
-                  for(var j=0;j<cols.length;j++) {
-                    tbody+='<td headers="'+cols[j]+' '+cols[i]+'">'
-                    +imgHtml.replace("$imgPath$", "../Tasks/"+taskId+"/"+type+"/"+cols[j]+"."+cols[i]+'.'+imgPostfix+'.png');
+                xcols = (!xcols || xcols==='all')?_data.cols:[xcols];
+                ycols = (!ycols || ycols==='all')?_data.cols:[ycols];
+
+                //headers for x-axis
+                for(var i=0;i<xcols.length;i++) {
+                  thead+='<th id="'+xcols[i]+'">'+xcols[i]+'</th>';  
+                }
+                thead+='</tr></thead>';
+
+                for(var i=0;i<ycols.length;i++) {
+                  tbody+='<tr><th id="'+ycols[i]+'_'+xcols[j]+'" headers="name">'+ycols[i]+'</th>';
+                  for(var j=0;j<xcols.length;j++) {
+                    tbody+='<td headers="'+ycols[i]+' '+xcols[j]+'">'
+                    +imgHtml.replace("$imgPath$", "../Tasks/"+_data.taskId+"/"+type+"/"+ycols[i]+"."+xcols[j]+'.'+imgSuffix+'.png');
                     +'</td>'
                   }
                   tbody+='</tr>';
                 }
                 tbody+='</tbody>';
-                thead+='</tr></thead>';
                 $('#overviewTable').html(thead+tbody);
-
-                if(!_page.init) {
-                  _page.data.taskId = taskId;
-                  //if(type==='color') {
-                  this.popul(pops);
-                  //}
-                  this.markers(cols);
-                  this.params(["Density:1 & Bin:0", "Density:0 & Bin:1", "Density:0 & Bin:0", "Density:1 & Bin:1"]);
-
-                  _page.init = true;
-                }
 
                 $('#loading-indicator').hide();
               }
             }
           });
         },
-        draw: function(data) {
-          var imgHtml = "<img src='$imgPath$'/>";
-
-          if(data && data.columns && data.taskDir && data.type && data.pops) {
-            var cols = data.columns, 
-                taskId = data.taskId,
-                taskDir = data.taskDir, 
-                type = data.type, 
-                popIds = data.popIds,
-                pops = data.pops,
-                imgPostfix = (type=='pop'?popIds+'.color.highlighted':'all.'+type),
-                thead = '<thead><tr><th id="name"></th>', 
-                tbody = '<tbody>';
-
-            for(var i=0;i<cols.length;i++) {
-              thead+='<th id="'+cols[i]+'">'+cols[i]+'</th>';
-              tbody+='<tr><th id="'+cols[i]+'_'+cols[i]+'" headers="name">'+cols[i]+'</th>';
-              for(var j=0;j<cols.length;j++) {
-                tbody+='<td headers="'+cols[j]+' '+cols[i]+'">'
-                +imgHtml.replace("$imgPath$", "../Tasks/"+taskId+"/"+type+"/"+cols[j]+"."+cols[i]+'.'+imgPostfix+'.png');
-                +'</td>'
-              }
-              tbody+='</tr>';
-            }
-            tbody+='</tbody>';
-            thead+='</tr></thead>';
-            $('#overviewTable').html(thead+tbody);
-
-            if(!_page.init) {
-              _page.data.taskId = taskId;
-              //if(type==='color') {
-              this.popul(pops);
-              //}
-              this.markers(cols);
-              this.params(["Density:1 & Bin:0", "Density:0 & Bin:1", "Density:0 & Bin:0", "Density:1 & Bin:1"]);
-
-              _page.init = true;
-            }
-
-            $('#loading-indicator').hide();
-          }
-        },
         popul: function(pops) {
-          var $selecObj = $('#populselect');
+          var $selecObj = $('#populselect'),
+              count = 0;
 
           $.each(pops, function(i,pop){
             $selecObj.append(
@@ -335,8 +292,10 @@
                 .replace("$t$", "Population "+i+"("+pop+")")
                 .replace("$v$",i)
               );
+            count++;
           });
           $selecObj.selectpicker('selectAll');
+          _page.data.ppl = count;
         },
         markers: function(markers) {
           var opts = "<option value='all' id='markerall'>All</option>";
@@ -344,6 +303,7 @@
             opts+=_page.html.opt.replace(/\$v\$/g, markers[i]);    
           }
           $("#xmarker, #ymarker").append(opts).selectpicker();
+          _page.data.cols = markers;
         },
         params: function(params) {
           var opts = "";
@@ -388,8 +348,8 @@
         filetree: {
           init: function(id) {
             $('#'+id).fileTree({
-              root: '../../../Tasks/',
-              script: '../lib/php/fileTree/jqueryFileTree.php',
+              root: '../../Tasks/',
+              script: '../php/fileTree/jqueryFileTree.php',
               expandSpeed: 300,
               collapseSpeed: 200,
               multiFolder: true

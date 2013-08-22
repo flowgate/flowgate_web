@@ -1,7 +1,7 @@
 <?php
     $taskId = $_GET['tid'];
 
-    $taskDir = "../../Tasks/$taskId";
+    $taskDir = "../Tasks/$taskId";
 
     $fp = fopen("$taskDir/profile.txt",'r');
     if (!$fp) {

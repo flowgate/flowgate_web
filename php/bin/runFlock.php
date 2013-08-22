@@ -1,18 +1,19 @@
 <?php
 	$taskId = $_GET['tid'];
-    $type = $_GET['t'];
-    $popIds = $_GET['p'];
+    $popIds = $_GET['pp'];
+    $popCount = $_GET['ppl'];
     $xmarker = $_GET['x'];
     $ymarker = $_GET['y'];
+    $param = $_GET['pr'];
 
     $taskDir = "../../Tasks/$taskId";
     $historyFile = "$taskDir/history.txt";
 
-    
+    $type = "color";
     $popIds_arr = split(",", $popIds);
-    if(count($pops)==count($popIds_arr)) {
-        $type = "color";
-    }
+    if(intval($popCount)!=count($popIds_arr)) {
+        $type = "pop";
+    } 
 
     $currentRun = (
         $type == "color"?
@@ -48,25 +49,25 @@
 	    fclose($fp);    
 	}
 
+	$json = array();
+    $json['success'] = 'true';
+    $json['taskDir'] = $taskDir."/";
+    $json['type'] = $type;
+    $json['popIds'] = $popIds;
+    $json['xmarker'] = $xmarker;
+    $json['ymarker'] = $ymarker;
+    $json['param'] = $param;
+    print json_encode($json);	
+
 	function executeBin($_type, $_taskDir, $_currentRun, $_popIds) {
 	    $executor = "java".
-	        " -classpath ../java/FlockUtils.jar".
+	        " -classpath ../../lib/java/FlockUtils.jar".
 	        //" -Djava.awt.headless=true".
 	        " org.immport.flock.utils.FlockImageGenerator ";
-	    shell_exec("mkdir $_taskDir/$_type");
 	    if(strpos($_currentRun, "Overview")>0) {
 	        shell_exec($executor."$_currentRun $_taskDir $_taskDir/$_type");
 	    } else {
 	        shell_exec($executor."$_currentRun $_taskDir $_taskDir/$_type $_popIds");
 	    }
 	}
-
-	$json = array();
-    $json['success'] = 'true';
-    $json['taskDir'] = $taskDir."/";
-    $json['type'] = $type;
-    $json['popIds'] = $popIds;
-
-    print json_encode($json);	
-
 ?>
