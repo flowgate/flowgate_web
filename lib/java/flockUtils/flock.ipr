@@ -230,6 +230,7 @@
         <root url="jar://$PROJECT_DIR$/lib/log4j-1.2.15.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/zip4j_1.3.1.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/mongo-java-driver-2.11.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/jackson-all-1.9.11.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

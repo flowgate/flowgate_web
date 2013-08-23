@@ -2236,6 +2236,7 @@ int main (int argc, char **argv)
   f_parameters=fopen("parameters.txt","w");
   fprintf(f_parameters,"Number_of_Bins\t%d\n",num_bin);
   fprintf(f_parameters,"Density\t%d\n",den_t_event);
+  fprintf(f_parameters,"Dots\t%d\n",num_nonempty);
   fprintf(f_parameters,"Min\t%d\n",min);
   fprintf(f_parameters,"Max\t%d\n",max);
   fclose(f_parameters);
