@@ -7,8 +7,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="30a1623c-b601-43a8-b264-dece87be815d" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/org/immport/flock/commons/Jsoner.java" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/jackson-1.9.11.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/FlockUtils/flock.properties" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/FlockUtils/log4j.properties" afterPath="" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/FlockUtils.iml" afterPath="$PROJECT_DIR$/flockUtil.iml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/out/FlockUtils.jar" afterPath="$PROJECT_DIR$/out/flockUtils.jar" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/flock.ipr" afterPath="$PROJECT_DIR$/flock.ipr" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/flock.iws" afterPath="$PROJECT_DIR$/flock.iws" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/immport/flock/utils/FlockRunnerTest.java" afterPath="$PROJECT_DIR$/test/org/immport/flock/utils/FlockRunnerTest.java" />
     </list>
     <ignored path="flock.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -26,21 +33,6 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
-    <line_breakpoints>
-      <breakpoint url="file://$PROJECT_DIR$/src/org/immport/flock/utils/FlockRunner.java" line="125" class="org.immport.flock.utils.FlockRunner" package="org.immport.flock.utils">
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="false" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
-    </line_breakpoints>
     <breakpoint_any>
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -93,19 +85,8 @@
       <file leaf-file-name="FlockRunner.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/org/immport/flock/utils/FlockRunner.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="102" column="76" selection-start="3803" selection-end="3803" vertical-scroll-proportion="0.0">
+            <state line="125" column="0" selection-start="4691" selection-end="4691" vertical-scroll-proportion="0.0">
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Jsoner.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/org/immport/flock/commons/Jsoner.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="1" column="0" selection-start="35" selection-end="35" vertical-scroll-proportion="0.01986755">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -113,16 +94,16 @@
       <file leaf-file-name="Zipper.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/org/immport/flock/commons/Zipper.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="70" column="6" selection-start="2501" selection-end="2501" vertical-scroll-proportion="0.0">
+            <state line="23" column="23" selection-start="680" selection-end="680" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="FlockRunnerTest.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="FlockRunnerTest.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/test/org/immport/flock/utils/FlockRunnerTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="20" column="54" selection-start="478" selection-end="478" vertical-scroll-proportion="0.0">
+            <state line="14" column="67" selection-start="326" selection-end="326" vertical-scroll-proportion="0.2781457">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -174,9 +155,9 @@
         <option value="$PROJECT_DIR$/test/org/immport/flock/db/MongoTest.java" />
         <option value="$PROJECT_DIR$/test/org/immport/flock/utils/FlockImageGeneratorTest.java" />
         <option value="$PROJECT_DIR$/src/org/immport/flock/utils/FlockRunner.java" />
-        <option value="$PROJECT_DIR$/test/org/immport/flock/utils/FlockRunnerTest.java" />
         <option value="$PROJECT_DIR$/src/org/immport/flock/commons/Zipper.java" />
         <option value="$PROJECT_DIR$/src/org/immport/flock/commons/Jsoner.java" />
+        <option value="$PROJECT_DIR$/test/org/immport/flock/utils/FlockRunnerTest.java" />
       </list>
     </option>
   </component>
@@ -379,60 +360,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="flock" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="flockUtils" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="lib" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="flock" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="flockUtils" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="lib" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="jackson-all-1.9.11.jar" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="jackson" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="flock" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="flockUtils" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="lib" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="jackson-all-1.9.11.jar" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
     </panes>
@@ -440,7 +367,7 @@
   <component name="PropertiesComponent">
     <property name="last_directory_selection" value="$PROJECT_DIR$/test/org/immport/flock/utils" />
     <property name="GoToFile.includeJavaFiles" value="false" />
-    <property name="project.structure.last.edited" value="Libraries" />
+    <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="recentsLimit" value="5" />
@@ -510,16 +437,16 @@
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <module name="FlockUtils" />
+      <module name="flockUtil" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ALTERNATIVE_JRE_PATH" value="" />
       <option name="PACKAGE_NAME" value="org.immport.flock.utils" />
       <option name="MAIN_CLASS_NAME" value="org.immport.flock.utils.FlockRunnerTest" />
-      <option name="METHOD_NAME" />
+      <option name="METHOD_NAME" value="" />
       <option name="TEST_OBJECT" value="class" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="VM_PARAMETERS" value="" />
+      <option name="PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
       <option name="ENV_VARIABLES" />
       <option name="PASS_PARENT_ENVS" value="true" />
       <option name="TEST_SEARCH_SCOPE">
@@ -775,13 +702,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/org/immport/flock/commons/FlockFactory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="70" selection-start="272" selection-end="326" vertical-scroll-proportion="0.14253394">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/org/immport/flock/commons/PoorMansTable.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="29" column="76" selection-start="761" selection-end="761" vertical-scroll-proportion="0.3388521">
@@ -838,12 +758,24 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/org/immport/flock/utils/FlockRunnerTest.java">
+    <entry file="file://$PROJECT_DIR$/src/org/immport/flock/commons/ArrayUtils.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="54" selection-start="478" selection-end="478" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state line="2" column="13" selection-start="49" selection-end="49" vertical-scroll-proportion="0.040723983">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/immport/flock/utils/FlockImageGenerator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="636" column="29" selection-start="25598" selection-end="25598" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/immport/flock/commons/Jsoner.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="12" column="42" selection-start="147" selection-end="147" vertical-scroll-proportion="0.23841059">
+          <folding />
         </state>
       </provider>
     </entry>
@@ -861,30 +793,23 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/immport/flock/commons/Zipper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="70" column="6" selection-start="2501" selection-end="2501" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/immport/flock/utils/FlockImageGenerator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="636" column="29" selection-start="25598" selection-end="25598" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/org/immport/flock/utils/FlockRunner.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="102" column="76" selection-start="3803" selection-end="3803" vertical-scroll-proportion="0.0">
+        <state line="125" column="0" selection-start="4691" selection-end="4691" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/immport/flock/commons/Jsoner.java">
+    <entry file="file://$PROJECT_DIR$/src/org/immport/flock/commons/Zipper.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1" column="0" selection-start="35" selection-end="35" vertical-scroll-proportion="0.01986755">
+        <state line="23" column="23" selection-start="680" selection-end="680" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/org/immport/flock/utils/FlockRunnerTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="67" selection-start="326" selection-end="326" vertical-scroll-proportion="0.2781457">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -945,7 +870,7 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>FlockUtils</last-edited>
+          <last-edited>flockUtil</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

@@ -1,8 +1,7 @@
 package org.immport.flock.utils;
 
+import org.immport.flock.commons.Zipper;
 import org.junit.Test;
-
-import java.util.Arrays;
 
 /**
  * User: hkim
@@ -12,17 +11,20 @@ import java.util.Arrays;
  */
 public class FlockRunnerTest {
     FlockRunner runner = new FlockRunner();
+    private final String testDir = "/Users/hkim/Stuffs/test/gofcm/";
 
     @Test
     public void run() throws Exception {
         Integer[] bins = new Integer[] {10, 11, 12};
         Integer[] dens = new Integer[] {11, 12, 13};
-        runner.execute(
-                "/Users/hkim/Stuffs/test/gofcm/inputs1.zip",
+        /*runner.execute(
+                testDir + "inputs3.zip",
                 Arrays.asList(bins),
                 Arrays.asList(dens),
                 20,
-                "/Users/hkim/Stuffs/test/gofcm/",
-                "flock1_gp_osx");
+                testDir,
+                "flock1_gp_osx");*/
+
+        Zipper.extract(testDir + "results.zip", testDir + "output");
     }
 }

@@ -6,17 +6,19 @@
   <component name="ArtifactManager">
     <artifact type="jar" name="flock:jar">
       <output-path>$PROJECT_DIR$/out</output-path>
-      <root id="archive" name="FlockUtils.jar">
+      <root id="archive" name="flockUtils.jar">
         <element id="directory" name="META-INF">
           <element id="file-copy" path="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" />
         </element>
-        <element id="module-output" name="FlockUtils" />
+        <element id="module-output" name="flockUtil" />
         <element id="file-copy" path="$PROJECT_DIR$/src/flock1" />
         <element id="file-copy" path="$PROJECT_DIR$/src/flock1_gp_osx" />
         <element id="extracted-dir" path="$PROJECT_DIR$/lib/commons-io-1.4.jar" path-in-jar="/" />
         <element id="extracted-dir" path="$PROJECT_DIR$/lib/commons-logging.jar" path-in-jar="/" />
         <element id="extracted-dir" path="$PROJECT_DIR$/lib/log4j-1.2.15.jar" path-in-jar="/" />
         <element id="extracted-dir" path="$PROJECT_DIR$/lib/zip4j_1.3.1.jar" path-in-jar="/" />
+        <element id="extracted-dir" path="$PROJECT_DIR$/lib/mongo-java-driver-2.11.2.jar" path-in-jar="/" />
+        <element id="extracted-dir" path="$PROJECT_DIR$/lib/gson-2.2.4.jar" path-in-jar="/" />
       </root>
     </artifact>
   </component>
@@ -208,7 +210,7 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/FlockUtils.iml" filepath="$PROJECT_DIR$/FlockUtils.iml" />
+      <module fileurl="file://$PROJECT_DIR$/flockUtil.iml" filepath="$PROJECT_DIR$/flockUtil.iml" />
     </modules>
   </component>
   <component name="ProjectResources">
@@ -230,7 +232,7 @@
         <root url="jar://$PROJECT_DIR$/lib/log4j-1.2.15.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/zip4j_1.3.1.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/mongo-java-driver-2.11.2.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/jackson-all-1.9.11.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/gson-2.2.4.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
