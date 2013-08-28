@@ -3,30 +3,33 @@
 
     $taskDir = "../Tasks/$taskId";
 
-    $fp = fopen("$taskDir/profile.txt",'r');
-    if (!$fp) {
-        echo "Unable to open file";
-        exit;
-    }
+    $contents = file_get_contents("$taskDir/properties");
+    $json = json_decode($contents, true);
 
-    // Read in the first line that has the Marker names
-    $line = trim(fgets($fp,999));
-    $markers = array_slice(explode("\t",$line), 1);
-    $markerLen = count($markers);
-    for ($i = 0; $i < $markerLen; $i++) {
-      $markers[$i] = str_replace(">","",str_replace("<","",$markers[$i]));
-    }
-    fclose($fp);
+    // $fp = fopen("$taskDir/profile.txt",'r');
+    // if (!$fp) {
+    //     echo "Unable to open file";
+    //     exit;
+    // }
 
-    $params = readParameters($taskDir);
-    $pops = readPopulations($taskDir);
+    // // Read in the first line that has the Marker names
+    // $line = trim(fgets($fp,999));
+    // $markers = array_slice(explode("\t",$line), 1);
+    // $markerLen = count($markers);
+    // for ($i = 0; $i < $markerLen; $i++) {
+    //   $markers[$i] = str_replace(">","",str_replace("<","",$markers[$i]));
+    // }
+    // fclose($fp);
 
-    $json = array();
+    // $params = readParameters($taskDir);
+    // $pops = readPopulations($taskDir);
+
+    // $json = array();
     $json['success'] = 'true';
-    $json['pops'] = $pops;
+    // $json['pops'] = $pops;
     $json['taskId'] = $taskId;
-    $json['columns'] = $markers;
-    $json['params'] = $params;
+    // $json['columns'] = $markers;
+    // $json['params'] = $params;
 
     print json_encode($json);
 

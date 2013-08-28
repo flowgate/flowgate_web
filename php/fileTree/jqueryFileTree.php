@@ -25,7 +25,13 @@ if( file_exists($_POST['dir']) ) {
 		// All dirs
 		foreach( $files as $file ) {
 			if( file_exists( $_POST['dir'] . $file) && $file != '.' && $file != '..') {
-				if(is_dir($_POST['dir'] . $file) ) {
+				if(is_dir($_POST['dir'].$file) && strpos($file, "_out")>1) {
+					$htmlFileName=htmlentities(substr($file, 0, strpos($file, "_out")));
+					echo "<li class=\"ext_cb\">".
+						"<input type='checkbox' id='fcb_".$htmlFileName."' name='fcb_".$htmlFileName."'> ".$htmlFileName.
+						"</li>";
+				}
+				/*if(is_dir($_POST['dir'] . $file) ) {
 					echo "<li class=\"directory collapsed\"><a href=\"#\" rel=\"" . htmlentities($_POST['dir'] . $file) . "/\">" . htmlentities($file) . "</a></li>";
 				} else {
 					$htmlFileName=htmlentities($file);
@@ -33,8 +39,7 @@ if( file_exists($_POST['dir']) ) {
 						"<input type='checkbox' id='fcb_".$htmlFileName."' name='fcb_".$htmlFileName."'> ".$htmlFileName.
 						//"<input type='checkbox' id='fcb_".$htmlFileName."' name='fcb_".$htmlFileName."' onclick='_page.fileClicked();'> ".$htmlFileName.
 						"</li>";	
-				}
-
+				}*/
 			}
 		}
 		// All files
