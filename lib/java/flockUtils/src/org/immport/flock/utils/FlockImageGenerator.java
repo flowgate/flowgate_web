@@ -494,16 +494,18 @@ public class FlockImageGenerator {
             for(String pop : pops) {
                 Byte popId = Byte.parseByte(pop);
                 boolean[][] popEvent = popEvents.get(popId);
-                Color currentColor = ColorUtils.getColor(popId);
-                if (bw) {
-                    g2d.setColor(Color.BLACK);
-                } else {
-                    g2d.setColor(currentColor);
-                }
-                for (int i = 0; i < width; i++) {
-                    for (int j = 0; j < height; j++) {
-                        if (popEvent[i][j]) {
-                            g2d.drawLine(i, j, i, j);
+                if(popEvent!=null) {
+                    Color currentColor = ColorUtils.getColor(popId);
+                    if (bw) {
+                        g2d.setColor(Color.BLACK);
+                    } else {
+                        g2d.setColor(currentColor);
+                    }
+                    for (int i = 0; i < width; i++) {
+                        for (int j = 0; j < height; j++) {
+                            if (popEvent[i][j]) {
+                                g2d.drawLine(i, j, i, j);
+                            }
                         }
                     }
                 }
