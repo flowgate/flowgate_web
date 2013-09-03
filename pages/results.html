@@ -126,10 +126,20 @@
     <script src="../js/bootstrap-select.min.js"></script>
     <script>
       $(function(){
-        $("#nav").load("common.html"); 
-        _data.meta('777');
+        $("#nav").load("common.html");
+
+        var query = window.location.search.substring(1),
+            vars = query.split("&"),
+            taskId = ''; 
+        for (var i=0;i<vars.length;i++) {
+          var pair = vars[i].split("=");
+          if(pair[0]==='taskId') {
+            taskId = pair[1];
+          }
+        } 
+        _data.meta(taskId);
         $('.selectpicker').selectpicker();
-        _plugin.filetree.init('fileNav');
+        _plugin.filetree.init('fileNav', taskId);
         _page.event.trigger();
       });
 
@@ -429,9 +439,9 @@
           }
         },
         filetree: {
-          init: function(id) {
+          init: function(id, tid) {
             $('#'+id).fileTree({
-              root: '/Users/hkim/workspace/Workspace/gofcm/new/Tasks/777/',//'../../Tasks/output/',
+              root: '/Users/hkim/workspace/Workspace/gofcm/new/Tasks/'+tid+'/',//'../../Tasks/output/',
               script: '../php/fileTree/jqueryFileTree.php',
               expandSpeed: 300,
               collapseSpeed: 200,
