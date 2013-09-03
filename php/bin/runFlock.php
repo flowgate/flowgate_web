@@ -13,7 +13,7 @@
     //handles file parameter
     $fileArr = array();
     if(strlen($file)>0 && strpos($file, ',')!==false) {
-    	$fileArr = split(",", $file);
+    	$fileArr = explode(",", $file);
     } else {
     	array_push($fileArr, $file);
     }
@@ -21,16 +21,16 @@
     //handles multiple or single parameters
     $paramArr = array();
     if(strlen($param)>0 && strpos($param, ',')!==false) {
-    	$tempParams = split(",", $param);
+    	$tempParams = explode(",", $param);
     	foreach($tempParams as $eachParam) {
-    		array_push($paramArr, split(":", $eachParam));
+    		array_push($paramArr, explode(":", $eachParam));
     	}
     } else {
-    	array_push($paramArr, split(":", $param));
+    	array_push($paramArr, explode(":", $param));
     }
 
     $type = "color";
-    $popIds_arr = split(",", $popIds);
+    $popIds_arr = explode(",", $popIds);
     if(intval($popCount)!=count($popIds_arr)) {
         $type = "pop";
     } 
