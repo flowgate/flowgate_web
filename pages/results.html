@@ -19,7 +19,7 @@
       padding-left:5px;
     }
 
-    #overviewTable td { border: 3px white solid; }
+    #overviewTable td { border: 3px #7f7f7f solid; }
     #overviewTable th { 
       font-family: Verdana,Arial,Helvetica,sans-serif;
       font-weight: normal;
@@ -30,8 +30,8 @@
       margin: 0;
       padding: 5px 12px 5px 12px;
       vertical-align: top;
-      border: 3px solid #FFF;
-      background-color: ##f5f5f5;
+      border: 3px solid #7f7f7f;
+      background-color: #f5f5f5;
     }
     #overviewTable img {
       min-width: 85px;
@@ -279,6 +279,8 @@
                     xcols = data.xmarker,
                     ycols = data.ymarker,
                     dirs = data.dirs,
+                    print_f = data.m_f,
+                    print_p = data.m_p,
                     imgSuffix = (type=='pop'?popIds.replace(/,/g,'.'):'all') + '.color.highlighted',
                     thead = '<thead><tr><th id="name"></th>', 
                     tbody = '<tbody>';
@@ -288,16 +290,19 @@
 
                 //headers for x-axis
                 for(var i=0;i<xcols.length;i++) {
-                  thead+='<th id="'+xcols[i]+'">'+xcols[i]+'</th>';  
+                  thead+='<th id="'+xcols[i]+'_x">'+xcols[i]+'</th>';  
                 }
                 thead+='</tr></thead>';
 
                 for(var i=0;i<ycols.length;i++) {
-                  tbody+='<tr><th id="'+ycols[i]+'_'+xcols[j]+'" headers="name">'+ycols[i]+'</th>';
+                  tbody+='<tr><th id="'+ycols[i]+'_y" headers="name">'+ycols[i]+'</th>';
                   for(var j=0;j<xcols.length;j++) {
-                    tbody+='<td headers="'+ycols[i]+' '+xcols[j]+'">';
+                    tbody+='<td headers="'+xcols[j]+'_x">';
                     for(var d=0;d<dirs.length;d++) {
-                      tbody+=imgHtml.replace("$imgPath$", '../Tasks/'+taskId+'/'+dirs[d]+type+'/'+ycols[i]+'.'+xcols[j]+'.'+imgSuffix+'.png');
+                      var dir = dirs[d], dir_a = dir.split('/')[1].split('_'), d_l=dir_a.length;
+                      tbody+='<div style="font-size:80%; text-align:center;">'+imgHtml.replace("$imgPath$", '../Tasks/'+taskId+'/'+dirs[d]+type+'/'+ycols[i]+'.'+xcols[j]+'.'+imgSuffix+'.png')
+                        +(xcols[j]!==ycols[i]?(print_f?dir.substring(0, dir.indexOf('_out')):'')+(print_p?'['+dir_a[d_l-2]+':'+dir_a[d_l-1]+']':''):'&nbsp;')
+                        +'</div>';
                     }
                     tbody+='</td>';
                   }

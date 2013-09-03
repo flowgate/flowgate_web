@@ -61,7 +61,9 @@
     $json['ymarker'] = $ymarker;
     $json['param'] = $param;
     $json['files'] = $file;
+    $json['m_f'] = count($fileArr)>1;
     $json['dirs'] = $dirs;
+    $json['m_p'] = count($paramArr)>1;
     print json_encode($json);	
 
 
