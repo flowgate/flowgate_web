@@ -6,7 +6,11 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="30a1623c-b601-43a8-b264-dece87be815d" name="Default" comment="" />
+    <list default="true" id="30a1623c-b601-43a8-b264-dece87be815d" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../php/bin/runFlock.php" afterPath="$PROJECT_DIR$/../../../php/bin/runFlock.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/flock.iws" afterPath="$PROJECT_DIR$/flock.iws" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../pages/results.html" afterPath="$PROJECT_DIR$/../../../pages/results.html" />
+    </list>
     <ignored path="flock.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -95,10 +99,28 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="FlockImageGenerator.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="FlockRunner.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/org/immport/flock/utils/FlockRunner.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="125" column="0" selection-start="4691" selection-end="4691" vertical-scroll-proportion="2.2649007">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FlockImageGenerator.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/org/immport/flock/utils/FlockImageGenerator.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="398" column="93" selection-start="16908" selection-end="16908" vertical-scroll-proportion="0.2418813">
+            <state line="19" column="53" selection-start="462" selection-end="462" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FlockImageRunner.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/org/immport/flock/utils/FlockImageRunner.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="9" column="64" selection-start="200" selection-end="200" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -696,13 +718,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/org/immport/flock/commons/PoorMansTable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="76" selection-start="761" selection-end="761" vertical-scroll-proportion="0.3388521">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/org/immport/flock/commons/ColorUtils.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="109" column="24" selection-start="3421" selection-end="3421" vertical-scroll-proportion="0.8013245">
@@ -739,13 +754,6 @@
     <entry file="file://$PROJECT_DIR$/src/org/immport/flock/commons/Jsoner.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="12" column="42" selection-start="147" selection-end="147" vertical-scroll-proportion="0.23841059">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/immport/flock/utils/FlockRunner.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="125" column="0" selection-start="4691" selection-end="4691" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -787,13 +795,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/immport/flock/commons/ProcessParameter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="85" column="0" selection-start="2337" selection-end="2337" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/test/org/immport/flock/utils/FlockImageGeneratorTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="58" column="41" selection-start="1488" selection-end="1488" vertical-scroll-proportion="0.0">
@@ -801,9 +802,30 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/immport/flock/utils/FlockImageRunner.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="64" selection-start="200" selection-end="200" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/immport/flock/commons/ProcessParameter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="85" column="0" selection-start="2337" selection-end="2337" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/org/immport/flock/utils/FlockImageGenerator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="398" column="93" selection-start="16908" selection-end="16908" vertical-scroll-proportion="0.2418813">
+        <state line="19" column="53" selection-start="462" selection-end="462" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/immport/flock/utils/FlockRunner.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="125" column="0" selection-start="4691" selection-end="4691" vertical-scroll-proportion="2.2649007">
           <folding />
         </state>
       </provider>

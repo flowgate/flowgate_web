@@ -59,8 +59,8 @@
     $json['popIds'] = $popIds;
     $json['xmarker'] = $xmarker;
     $json['ymarker'] = $ymarker;
-    $json['param'] = $param;
-    $json['files'] = $file;
+    $json['params'] = $paramArr;
+    $json['files'] = $fileArr;
     $json['m_f'] = count($fileArr)>1;
     $json['dirs'] = $dirs;
     $json['m_p'] = count($paramArr)>1;

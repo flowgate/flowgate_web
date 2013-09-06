@@ -34,6 +34,8 @@
       background-color: #f5f5f5;
     }
     #overviewTable img {
+      width: auto;
+      height: auto;
       min-width: 85px;
       min-height: 85px;
     }
@@ -111,7 +113,7 @@
               <div class="span12">
                 <div id="flock_main">
                   <div id="flock_content">
-                    <table id="overviewTable"></table>
+                    <table id="overviewTable" style="width:100%;"></table>
                   </div>
                 </div>
               </div>
@@ -289,10 +291,12 @@
                     xcols = data.xmarker,
                     ycols = data.ymarker,
                     dirs = data.dirs,
-                    print_f = data.m_f,
-                    print_p = data.m_p,
+                    m_f = data.m_f,
+                    files = data.files,
+                    params = data.params,
+                    m_p = data.m_p,
                     imgSuffix = (type=='pop'?popIds.replace(/,/g,'.'):'all') + '.color.highlighted',
-                    thead = '<thead><tr><th id="name"></th>', 
+                    thead = '<thead><tr><th id="name" style="width:7%;"></th>', 
                     tbody = '<tbody>';
 
                 xcols = (!xcols || xcols==='all')?_data.cols:[xcols];
@@ -308,11 +312,20 @@
                   tbody+='<tr><th id="'+ycols[i]+'_y" headers="name">'+ycols[i]+'</th>';
                   for(var j=0;j<xcols.length;j++) {
                     tbody+='<td headers="'+xcols[j]+'_x">';
-                    for(var d=0;d<dirs.length;d++) {
-                      var dir = dirs[d], dir_a = dir.split('/')[1].split('_'), d_l=dir_a.length;
-                      tbody+='<div style="font-size:80%; text-align:center;">'+imgHtml.replace("$imgPath$", '../Tasks/'+taskId+'/'+dirs[d]+type+'/'+ycols[i]+'.'+xcols[j]+'.'+imgSuffix+'.png')
-                        +(xcols[j]!==ycols[i]?(print_f?dir.substring(0, dir.indexOf('_out')):'')+(print_p?'['+dir_a[d_l-2]+':'+dir_a[d_l-1]+']':''):'&nbsp;')
-                        +'</div>';
+                    for(var f=0;f<files.length;f++) {
+                      var divW = 100/params.length, filePath = files[f]+'_out';
+                      for(var p=0;p<params.length;p++) {
+                        var paramPath = filePath+'/'+filePath+'_'+params[p][0]+'_'+params[p][1]+'/'+type+'/';
+                        tbody+=
+                          '<div style="width:'+divW+'%;display:inline-block;">'
+                          +'  <div>'
+                          +'    <img src="../Tasks/'+taskId+'/'+paramPath+ycols[i]+'.'+xcols[j]+'.'+imgSuffix+'.png"/>'
+                          +'  </div>'
+                          +'  <div style="font-size:80%; text-align:center;">'
+                          +     (xcols[j]!==ycols[i]?(m_f?files[f]:'')+(m_p?'['+params[p][0]+':'+params[p][1]+']':''):'&nbsp;')
+                          +'  </div>'
+                          +'</div>';
+                      }  
                     }
                     tbody+='</td>';
                   }
@@ -401,12 +414,12 @@
           multifile: function() {
             this.disable('xmarker', 'all');
             this.disable('ymarker', 'all');
-            this.makeSingle('paramselect');
+            //this.makeSingle('paramselect');
           },
           singlefile: function() {
             this.enable('xmarker');
             this.enable('ymarker');
-            this.makeMulti('paramselect');
+            //this.makeMulti('paramselect');
           },
           disable: function(id) {
             var $_sel = $('#'+id),
@@ -441,7 +454,7 @@
         filetree: {
           init: function(id, tid) {
             $('#'+id).fileTree({
-              root: '/Users/hkim/workspace/Workspace/gofcm/new/Tasks/'+tid+'/',//'../../Tasks/output/',
+              root: '../../Tasks/'+tid+'/', //'/Users/hkim/workspace/Workspace/gofcm/new/Tasks/'+tid+'/',//'../../Tasks/output/',
               script: '../php/fileTree/jqueryFileTree.php',
               expandSpeed: 300,
               collapseSpeed: 200,
