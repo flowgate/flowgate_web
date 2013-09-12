@@ -125,7 +125,7 @@
 
     <script src="../js/jquery.min.js"></script>
     <script src="../js/jqueryFileTree.js"></script>
-    <script src="../js/bootstrap-select.min.js"></script>
+    <script src="../js/bootstrap-select.js"></script>
     <script>
       $(function(){
         $("#nav").load("common.html");
@@ -412,8 +412,8 @@
       var _plugin = {
         selectpicker: {
           multifile: function() {
-            this.disable('xmarker', 'all');
-            this.disable('ymarker', 'all');
+            this.disable('xmarker');
+            this.disable('ymarker');
             //this.makeSingle('paramselect');
           },
           singlefile: function() {

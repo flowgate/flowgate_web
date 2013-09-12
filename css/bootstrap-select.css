@@ -217,3 +217,10 @@
     height: 100% !important;
     opacity: 0;
 }
+
+.bootstrap-select.btn-group .dropdown-menu .selectAll {
+    padding: 3px 20px;
+}
+.bootstrap-select.btn-group .dropdown-menu .selectAll a {
+    cursor: pointer; cursor: hand; 
+}
