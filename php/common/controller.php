@@ -7,7 +7,7 @@
     $_err = "request failed.";
     $message['success'] = false;
 
-    require_once "./pages/common.php";
+    require_once "./common.php";
     if($_job!="u_l" && $_job!="u_s") {
         #session and authentication check
         reqValidation();
@@ -20,19 +20,19 @@
     #assigns correct module according to the passed job type
     $_module = null;
     if($_job[0]=='f') {
-        require_once 'file.php';
+        require_once '../module/file.php';
         $_module = new FileModule();
     } elseif($_job[0]=='p') {
-        require_once 'project.php';
+        require_once '../module/project.php';
         $_module = new ProjectModule();
     } elseif($_job[0]=='t') {
-        require_once 'task.php';
+        require_once '../module/task.php';
         $_module = new TaskModule();    
     } elseif($_job[0]=='r') {
-        require_once 'ras.php';
+        require_once '../module/ras.php';
         $_module = new RASModule();    
     }else {
-        require_once 'login.php';
+        require_once '../module/user.php';
         $_module = new LoginModule();    
     }  
 

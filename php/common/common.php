@@ -1,4 +1,6 @@
 <?php
+  $context = dirname($_SERVER['SCRIPT_NAME']).'/';
+
   function checkSession() {
     $inactive = 3600;
     
