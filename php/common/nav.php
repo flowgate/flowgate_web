@@ -33,12 +33,10 @@
               <li class="dropdown">
                 <a class="dropdown-toggle" href="#" data-toggle="dropdown">Log In <strong class="caret"></strong></a>
                 <div class="dropdown-menu" role="menu" style="padding: 15px; padding-bottom: 0px;">
-                  <form action="<?php echo $context; ?>../index.php" method="post"> 
-                    Username:<br /> 
-                    <input type="text" name="username" value="" /><br/><br/> 
-                    Password:<br /> 
-                    <input type="password" name="password" value="" /> 
-                    <br /><br /> 
+                  <form action="<?php echo $context; ?>controller.php" method="post"> 
+                    Username:<input type="text" name="uname" value="" /><br/> 
+                    Password:<input type="password" name="pass" value="" />
+                    <input type="hidden" name="j" value="u_l" /> 
                     <input type="submit" class="btn btn-info" value="Login" /> 
                   </form> 
                 </div>

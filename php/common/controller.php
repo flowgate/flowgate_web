@@ -6,6 +6,7 @@
     #controller error message
     $_err = "request failed.";
     $message['success'] = false;
+    error_log($_job);
 
     require_once "./common.php";
     if($_job!="u_l" && $_job!="u_s") {
@@ -31,7 +32,7 @@
     } elseif($_job[0]=='r') {
         require_once '../module/ras.php';
         $_module = new RASModule();    
-    }else {
+    } else {
         require_once '../module/user.php';
         $_module = new LoginModule();    
     }  

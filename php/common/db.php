@@ -9,7 +9,7 @@ class DatabaseModule {
 	function connect() {
 		$username = "ifx_gofcm_adm";
         $password = "ifx_gofcm_adm";
-        $hostname = "127.0.0.1:3666"; 
+        $hostname = "genepatt-dev.jcvi.org:3666"; 
 
         //connection to the database
         $con = mysqli_connect($hostname, $username, $password, DatabaseModule::$DBNAME) or die("Unable to connect to MySQL");
@@ -75,7 +75,7 @@ class DatabaseModule {
 
 	//user
 	function findUser($con, $userName) {
-		$query = sprintf("SELECT * FROM ifx_ontology.gofcm_users WHERE u_id='%s'", $userName);
+		$query = sprintf("SELECT * FROM %s.%s WHERE u_id='%s'", $this::$DBNAME, $this::$USERTABLE, $userName);
 		return $this->findOne($con, $query);
 	}
 

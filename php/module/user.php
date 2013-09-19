@@ -6,7 +6,7 @@ class LoginModule{
 
     function dbm() {
         if(is_null($this->dbModule)) {
-            require_once 'db_mongo.php';
+            require_once '../common/db.php';
             $this->dbModule = new DatabaseModule();
         }
     } 
@@ -17,14 +17,15 @@ class LoginModule{
 
     function autheticateUser($userId,$pass) {
         $this->dbm();
-        $result = $this->dbModule->findUser($userId);
 
+        $con = $this->dbModule->connect();
+        $result = $this->dbModule->findUser($con, $userId);
         if(is_null($result)) {
             $this::$RESULT = "User ID does not exist!";    
         } else {
             //hashed password
             $hashed = $this->crypt($userId, $pass);
-            if(!is_null($result) && $hashed == $result['u_pass']) {
+            if(!is_null($result) && $hashed == $result['u_password']) {
                 session_cache_expire( 20 );
                 session_start();
                 ini_set("session.cookie_lifetime","20");
