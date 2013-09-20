@@ -252,7 +252,7 @@
         meta: function(tid) {
           var _this = this;
           $.ajax({
-            url: '../getTaskInfo.php?tid='+tid,
+            url: '../bin/getTaskInfo.php?tid='+tid,
             async: false
           }).done(function(data) {
             if(data) {

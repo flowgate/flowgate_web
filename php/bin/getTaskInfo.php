@@ -1,7 +1,7 @@
 <?php
     $taskId = $_GET['tid'];
 
-    $taskDir = "../Tasks/$taskId";
+    $taskDir = "../../Tasks/$taskId";
 
     $contents = file_get_contents("$taskDir/properties");
     $json = json_decode($contents, true);

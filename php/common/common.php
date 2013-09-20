@@ -14,17 +14,19 @@
     return true;
   }
 
-  function reqValidation() {
+  function isSessionAlive() {
     session_cache_expire( 20 );
     session_start();
+    $rtnVal = false;
 
     if(!checkSession()) {
-      header("Location: pages/logout.php");
+      header("Location: ../view/logout.php");
       exit;
     }
-    if(!isset($_SESSION['authenticated']) || $_SESSION['authenticated']!="true" || !isset($_SESSION['userId'])) {
-      header("Location: pages/logout.php");
-      exit;
+
+    if(isset($_SESSION['authenticated']) && $_SESSION['authenticated']=="true" && isset($_SESSION['userId'])) {
+      $rtnVal = true;
     }
+    return $rtnVal;
   }
 ?>

@@ -1,5 +1,5 @@
 <?php
-class LoginModule{
+class UserModule{
     public static $SUCCESS = false;
     public static $RESULT = null;
     private $dbModule = null; 
@@ -26,13 +26,13 @@ class LoginModule{
             //hashed password
             $hashed = $this->crypt($userId, $pass);
             if(!is_null($result) && $hashed == $result['u_password']) {
-                session_cache_expire( 20 );
                 session_start();
-                ini_set("session.cookie_lifetime","20");
-                ini_set('session.gc-maxlifetime', 20);
+                session_cache_expire(3600);
+                ini_set("session.cookie_lifetime","3600");
+                ini_set("session.gc-maxlifetime", 3600);
 
                 $_SESSION['authenticated'] = 'true';
-                $_SESSION['userId'] = $result['_id'];
+                $_SESSION['userId'] = $result['u_id'];
 
                 $this::$SUCCESS = true;
             } else {

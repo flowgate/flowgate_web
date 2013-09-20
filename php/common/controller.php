@@ -6,12 +6,10 @@
     #controller error message
     $_err = "request failed.";
     $message['success'] = false;
-    error_log($_job);
 
     require_once "./common.php";
-    if($_job!="u_l" && $_job!="u_s") {
-        #session and authentication check
-        reqValidation();
+    if(strpos($_job, "u_")===false) {
+        isSessionAlive();
     }
 
 	//session_start();
@@ -34,7 +32,7 @@
         $_module = new RASModule();    
     } else {
         require_once '../module/user.php';
-        $_module = new LoginModule();    
+        $_module = new UserModule();    
     }  
 
     switch($_job) {
@@ -100,9 +98,12 @@
             $message['s_a'] = checkSession();
             $_module::$SUCCESS = true;
             break;
-        default: //default user login
+        case "u_l":
             $_module->autheticateUser($_POST['uname'], $_POST['pass']);
-        
+            header("Location: ../../index.html");
+            die("Redirecting to: index.html");    
+        default: 
+            $_module::$SUCCESS = isSessionAlive();
     }
 
     if(!$_module::$SUCCESS){
