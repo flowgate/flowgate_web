@@ -7,7 +7,7 @@
 
         function dbm() {
             if(is_null($this->dbModule)) {
-                require_once 'db_mongo.php';
+                require_once 'db.php';
                 $this->dbModule = new DatabaseModule();
             }
         } 
@@ -15,13 +15,20 @@
         function addProject($_pname, $_pdesc, $_uid) {
             if($_pname && $_uid) {
                 $this->dbm();
-                $result = $this->dbModule->addProject($_pname, $_pdesc, $_uid);
-                if(isset($result)) {
-                    $this::$SUCCESS = true;
-                    $this::$RESULT = "Added project '".$_pname."'";
-                    $this::$CURRID = $result;
+                $con = $this->dbModule->connect();
+                $duplicate = $this->dbModule->findProject($con, $_pname);
+                error_log(print_r($duplicate, 1));
+                if($duplicate) {
+                    $this::$RESULT = "'$_pname' already exists!";
                 } else {
-                    $this::$RESULT = $result;
+                    $result = $this->dbModule->addProject($con, $_pname, $_pdesc, $_uid);
+                    if(isset($result)) {
+                        $this::$SUCCESS = true;
+                        $this::$RESULT = "Added project '".$_pname."'";
+                        $this::$CURRID = $result;
+                    } else {
+                        $this::$RESULT = $result;
+                    }
                 }
             } else {
                 $this::$RESULT = "Project name or user information is missing.";
@@ -30,9 +37,10 @@
 
         function getUserProject($_uid) {
             $this->dbm();
-            $result = $this->dbModule->findUserProject($_uid);
+            $con = $this->dbModule->connect();
+            $result = $this->dbModule->findUserProject($con, $_uid);
             if(!is_null($result) && count($result)>0) {
-                $this::$RESULT = $result[0]['u_projects'];
+                $this::$RESULT = $result;
                 $this::$SUCCESS = true;
             }
         }
