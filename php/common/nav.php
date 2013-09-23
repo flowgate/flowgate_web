@@ -89,7 +89,7 @@
       </div>
     </div>
 
-    <!-- login modal -->
+    <!-- error modal -->
     <div id="errorModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="title" aria-hidden="true">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -99,7 +99,7 @@
         <h5 id="desc"></h5>
       </div>
       <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true" onclic="">Close</button>
+        <button id="errmClose" class="btn" data-dismiss="modal" aria-hidden="true" onclick="">Close</button>
       </div>
     </div>
 
@@ -124,8 +124,12 @@
             success: function (obj, textstatus) {
               loggedIn = obj['success'];
               if(!loggedIn) {
-                if(ismodal)
-                  common.modal.error('Login Required!', 'Please login or register to gofcm.');  
+                if(ismodal) {
+                  var cf = function() {
+                    window.location = '<?php echo $context; ?>../../index.html';
+                  }
+                  common.modal.error('Login Required!', 'Please login or register to gofcm.', cf);  
+                }
               }
             },
             error: function() {
@@ -135,9 +139,12 @@
           return loggedIn;
         },
         modal: {
-          error: function(t,d) {
+          error: function(t,d, cf) {
             $('#errorModal #title').html(t);
             $('#errorModal #desc').html(d);
+            if(cf) {
+              $('#errmClose').click(cf);
+            }
             this.open('errorModal');
           },
           open: function(id) {
