@@ -6,7 +6,10 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="30a1623c-b601-43a8-b264-dece87be815d" name="Default" comment="" />
+    <list default="true" id="30a1623c-b601-43a8-b264-dece87be815d" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../php/common/common.php" afterPath="$PROJECT_DIR$/../../../php/common/common.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../index.html" afterPath="$PROJECT_DIR$/../../../index.html" />
+    </list>
     <ignored path="flock.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
