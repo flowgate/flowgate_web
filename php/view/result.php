@@ -458,7 +458,7 @@
           init: function(id, tid) {
             $('#'+id).fileTree({
               root: '../../Tasks/'+tid+'/', //'/Users/hkim/workspace/Workspace/gofcm/new/Tasks/'+tid+'/',//'../../Tasks/output/',
-              script: '../fileTree/jqueryFileTree.php',
+              script: '../bin/jqueryFileTree.php',
               expandSpeed: 300,
               collapseSpeed: 200,
               multiFolder: true

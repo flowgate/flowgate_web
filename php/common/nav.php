@@ -11,6 +11,9 @@
     <link href="<?php echo $context; ?>../../css/merged.css" rel="stylesheet">
     <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
     <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+    <style>
+      .hero-unit { padding: 10px 60px !important; }
+    </style>
   </head>
 
   <body>
@@ -26,8 +29,8 @@
           <div class="nav-collapse collapse">
             <ul class="nav">
               <li><a href="javascript:common.menu.boot('project');">Project</a></li>
-              <li id="menuFile"><a href="#about">File</a></li>
-              <li id="menuResult"><a href="javascript:common.menu.boot('result');">FLOCK Result</a></li>
+              <li id="menuFile"><a href="javascript:common.menu.boot('file');">File</a></li>
+              <li id="menuResult"><a href="javascript:common.menu.boot('result');">Result</a></li>
             </ul>
             <ul id="logged" class="nav pull-right" style="display:none;">
               <li id="logout"><a href="<?php echo $context; ?>../view/logout.php">LogOut</a></li>
@@ -51,7 +54,8 @@
       </div>
     </div>
 
-    <!-- project modals -->
+    <!-- MODALS -->
+    <!-- project -->
     <div id="projectSelectModal" class="modal hide fade">
       <div class="modal-header">
         <a href="#" class="close" data-dismiss="modal">&times;</a>
@@ -89,7 +93,7 @@
       </div>
     </div>
 
-    <!-- error modal -->
+    <!-- error -->
     <div id="errorModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="title" aria-hidden="true">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -102,7 +106,7 @@
         <button id="errmClose" class="btn" data-dismiss="modal" aria-hidden="true" onclick="">Close</button>
       </div>
     </div>
-
+    <!-- END MODALS -->
 
     <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
     <script>
@@ -161,11 +165,16 @@
                 project.get();
               } else if(t==='result') {
                 this.result();
+              } else if(t==='file') {
+                this.file();
               }
             }
           },
           result: function() {
             window.location ='<?php echo $context; ?>../view/result.php?taskId=777';
+          },
+          file: function() {
+            window.location ='<?php echo $context; ?>../view/file.php'; 
           }
         }
       };
@@ -234,7 +243,7 @@
       var c_p = document.URL;
       //highlight current menu
       c_p = c_p.substring(c_p.lastIndexOf("/")+1, c_p.lastIndexOf("."));
-      $("#menu" + (c_p==="result"?"Result":c_p==="files"?"File":c_p==="register"?"Register":"")).addClass("active");
+      $("#menu" + (c_p==="result"?"Result":c_p==="file"?"File":c_p==="register"?"Register":"")).addClass("active");
 
       //show/hide login/register menus
       $(function(){

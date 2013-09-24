@@ -121,11 +121,11 @@ class DatabaseModule {
 	}
 
 	//file
-	function addFile($con, $name, $pid, $org, $uid) {
+	function addFile($con, $pid, $name, $org, $uid) {
 		$query = sprintf(
-			"INSERT INTO %s.%s (f_name, f_status, f_project_id, f_org_name, f_user_id) values ('%s', 1, %d, '%s', '%s')", 
+			"INSERT INTO %s.%s (f_name, f_org_name, f_status, f_project_id, f_user_id) values ('%s', '%s', 1, %d, '%s')", 
 			$this::$DBNAME, $this::$FILETABLE,
-			$name, $pid, $org, $uid
+			$name, $org, $pid, $uid
 		);
 		return $this->add($con, $query);	
 	}

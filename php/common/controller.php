@@ -39,8 +39,8 @@
     	case "f_a": //add file
             $_fname = $_POST['fname'];
             $_pid = $_POST['pid'];
-    		$_module->addFile($_fname, $_pid, $_uid, $_FILES['uploadFile']['name'], $_FILES['uploadFile']['tmp_name']);
-            $message['file'] = $_FILES['uploadFile']['name'];
+    		$_module->addFile($_fname, $_pid, $_uid, '');
+            //$message['file'] = $_FILES['uploadFile']['name'];
     		break;
     	case "f_u": //get user files
             $_module->getFiles($_uid, (isset($_SESSION['currpId'])?$_SESSION['currpId']:null), null);

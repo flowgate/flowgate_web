@@ -8,29 +8,15 @@ class FileModule {
 
     function dbm() {
         if(is_null($this->dbModule)) {
-            require_once 'db_mongo.php';
+            require_once 'db.php';
             $this->dbModule = new DatabaseModule();
         }
     }
 
-    function addFile($_name, $_pid, $_uid, $_org, $_tmp) {
+    function addFile($_name, $_pid, $_uid, $_org) {
     	$this->dbm();
-        $file = array(
-            "_id" => new MongoId().'',
-            "f_name" => $_name,
-            "f_status" => 1,
-            "f_project_id" => $_pid,
-            "f_org_name" => $_org,
-            "f_user_id" => $_uid,
-            "f_tasks" => array()
-        );
-        $destDir = $this::$FILELOC.$file['_id']."/";
-		mkdir($destDir);
-
-		//$target_path = $destDir . basename($_FILES['uploadFile']['name']);
-		$target_path = $destDir . 'fcs.txt';
-	    $_uploaded = move_uploaded_file($_tmp, $target_path);
-        $this::$SUCCESS = $this->dbModule->addFile($file);
+        $con = $this->dbModule->connect();
+        $this::$SUCCESS = $this->dbModule->addFile($con, $_pid, $_name, $_org, $_uid);
     } 
 
 	function getFiles($_uid, $_pid, $_fid) {
