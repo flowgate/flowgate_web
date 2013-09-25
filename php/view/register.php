@@ -19,12 +19,16 @@
     <div class="container hero-unit">
         <h3>Register</h3>
         <form action="register.php" method="post"> 
-            <label>Username:</label> 
-            <input type="text" name="username" value="" /> 
+            <label>Name:<strong style="color:darkred;">*</strong></label> 
+            <input type="text" name="uname" value="" /> 
             <label>Email: <strong style="color:darkred;">*</strong></label> 
-            <input type="text" name="email" value="" /> 
-            <label>Password:</label> 
-            <input type="password" name="password" value="" /> <br /><br />
+            <input type="text" name="uemail" value="" />
+            <label>ID:<strong style="color:darkred;">*</strong></label> 
+            <input type="text" name="uid" value="" />  
+            <label>Password:<strong style="color:darkred;">*</strong></label> 
+            <input type="password" name="pass" value="" />
+            <label>Affilate:</label> 
+            <input type="text" name="uaffil" value="" /> <br /><br />
             <input type="submit" class="btn btn-info" value="Register" /> 
         </form>
     </div>
