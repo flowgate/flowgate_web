@@ -21,36 +21,27 @@ class FileModule {
 
 	function getFiles($_uid, $_pid, $_fid) {
         $this->dbm();
+        $con = $this->dbModule->connect();
 
-        $result = $this->dbModule->getFile($_uid, $_pid, $_fid);
+        $result = $this->dbModule->getFile($con, $_uid, $_pid, $_fid);
         $json = null;
         if(!is_null($result)) {
-            $fields = array("f_num","f_name","f_org_name", "_id","f_status","p_name");
-            $headers = array("Sequence", "Name", "File Name", "File ID", "Status", "Project Name");
-            $columns = array();
-            for($i=0;$i<count($headers);$i++) {
-                $column['header'] = $headers[$i];
-                $column['dataIndex'] = $fields[$i];
-                array_push($columns, $column);
-            }
-            
+            $fields = array("f_id","f_name","f_org_name","f_status","p_name");
             $rows = array();
-            $i=1;
             foreach ($result as $file) {
-                $row['f_num']=$i++;
+                $row;
                 foreach(array_keys($file) as $key) {
                     $row[$key]=($key=='f_status'?($file[$key]=='1'?"Loaded":"N/A"):$file[$key]);
                 }
                 array_push($rows, $row);
             }
-
-            $json["columns"] = $columns;
-            $json["fields"] = $fields;
-            $json["rows"]=$rows;
+            $json["files"]=$rows;
 
             $this::$RESULT = $json;
             $this::$SUCCESS = true;
         }
-	}
+
+        $this->dbModule->close($con);
+    }
 }
 ?>

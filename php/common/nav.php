@@ -1,6 +1,8 @@
 <?php
   $context = dirname($_SERVER['SCRIPT_NAME']).'/';
   header('Content-Type: text/html; charset=utf-8');
+  session_start();
+  $loggedin = (isset($_SESSION['authenticated']) && $_SESSION['authenticated']=="true" && isset($_SESSION['userId']));
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -28,9 +30,9 @@
           <a class="brand" href="#">gofcm</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li><a href="javascript:common.menu.boot('project');">Project</a></li>
-              <li id="menuFile"><a href="javascript:common.menu.boot('file');">File</a></li>
-              <li id="menuResult"><a href="javascript:common.menu.boot('result');">Result</a></li>
+              <li><a href="javascript:nav.menu.boot('project');">Project</a></li>
+              <li id="menuFile"><a href="javascript:nav.menu.boot('file');">File</a></li>
+              <li id="menuResult"><a href="javascript:nav.menu.boot('result');">Result</a></li>
             </ul>
             <ul id="logged" class="nav pull-right" style="display:none;">
               <li id="logout"><a href="<?php echo $context; ?>../view/logout.php">LogOut</a></li>
@@ -108,32 +110,27 @@
     </div>
     <!-- END MODALS -->
 
-    <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+    <script src="<?php echo $context;?>../../js/bootstrap.min.js"></script>
+    <script src="<?php echo $context;?>../../js/shared.js"></script>
     <script>
-      var common = {
-        error: function(t,id,d) {
-          var type = t==='e'?'alert':'warning';
-          $(id).prepend('<div class="'+type+'">'+
-              '<button type="button" class="close" data-dismiss="'+type+'">&times;</button>'+
-              '<strong>'+d+'</strong></div>');
-        },
-        login: function(ismodal) {
+      var nav = {
+        ct: '<?php echo $context;?>',
+        contr: '<?php echo $context;?>controller.php?j=',
+        login: function() {
           var loggedIn = false;
           $.ajax({
             type: "POST",
             async: false,
-            url: "<?php echo $context; ?>controller.php",
+            url: nav.contr+'u_',
             dataType: 'json',
-            data: {j: 'u_'},
-            success: function (obj, textstatus) {
+            data: {},
+            success: function (obj, ts) {
               loggedIn = obj['success'];
               if(!loggedIn) {
-                if(ismodal) {
-                  var cf = function() {
-                    window.location = '<?php echo $context; ?>../../index.html';
-                  }
-                  common.modal.error('Login Required!', 'Please login or register to gofcm.', cf);  
+                var cf = function() {
+                  window.location = nav.ct+'../../index.html';
                 }
+                common.modal.error('Login Required!', 'Please login or register to gofcm.', cf);  
               }
             },
             error: function() {
@@ -142,59 +139,32 @@
           });
           return loggedIn;
         },
-        modal: {
-          error: function(t,d, cf) {
-            $('#errorModal #title').html(t);
-            $('#errorModal #desc').html(d);
-            if(cf) {
-              $('#errmClose').click(cf);
-            }
-            this.open('errorModal');
-          },
-          open: function(id) {
-            $('#'+id).modal('show');
-          },
-          hide: function(id) {
-            $('#'+id).modal('hide');
-          }
-        },
         menu: {
           boot: function(t) {
-            if(common.login(true)) {
+            if(nav.login()) {
               if(t==='project') {
                 project.get();
-              } else if(t==='result') {
-                this.result();
-              } else if(t==='file') {
-                this.file();
+              } else {
+                project.forceSelect();
+                if(t==='result') {
+                  this.result();
+                } else if(t==='file') {
+                  this.file();
+                }
               }
             }
           },
           result: function() {
-            window.location ='<?php echo $context; ?>../view/result.php?taskId=777';
+            window.location =nav.ct+'../view/result.php?taskId=777';
           },
           file: function() {
-            window.location ='<?php echo $context; ?>../view/file.php'; 
+            window.location =nav.ct+'../view/file.php'; 
           }
         }
       };
       var project = {
         mid_s: 'projectSelectModal',
         mid_n: 'newProjectModal',
-        pajax: function(t, d, cb) {
-          $.ajax({
-            type: "POST",
-            async: false,
-            url: "<?php echo $context; ?>controller.php?j=p_"+t,
-            dataType: 'json',
-            data: d,
-            success: function (obj, ts) {
-              if(cb)
-                cb(obj, ts);
-            },
-            error: function() {}
-          });
-        },
         add: function() {
           var errId = '#'+this.mid_n+' .divDialogElements';
           var cb = function(obj, ts) {
@@ -206,7 +176,7 @@
           };
           var pname = $('#newPname').val(), pdesc = $('#newPdesc').val();
           if(pname && pname.length>0) {
-            this.pajax('a', {pname:pname, pdesc:pdesc}, cb);
+            common.ajax(nav.contr+'p_a', {pname:pname, pdesc:pdesc}, cb);
           } else {
             common.error('e', errId, 'Project name is empty!');
           }
@@ -222,9 +192,8 @@
               common.modal.hide(project.mid_s);  
             }
           }
-          sessionStorage.setItem('gofcm.pid', $currp.val());
-          sessionStorage.setItem('gofcm.pname', $currp.text());
-          this.pajax('s', {pname:$currp.text(), pid:$currp.val()}, cb);
+          common.p.set($currp.val(),$currp.text());
+          common.ajax(nav.contr+'p_s', {pname:$currp.text(), pid:$currp.val()}, cb);
         },
         get: function() {
           var cb = function(obj, ts) {
@@ -235,8 +204,13 @@
             });
             $ps.html(opts);  
           };
-          this.pajax('u', {}, cb);
+          common.ajax(nav.contr+'p_u', {}, cb);
           common.modal.open(this.mid_s);  
+        },
+        forceSelect: function() { //force user to select a project
+          if(!common.ispset()) {
+            this.get(); 
+          }
         }
       };
 
@@ -247,14 +221,15 @@
 
       //show/hide login/register menus
       $(function(){
-        if(common.login(false)) {
+        var loggedIn = "<?php echo $loggedin;?>";
+        if(loggedIn && loggedIn==='1') {
           $('#logged').show();
           $('#nologged').hide();
+          project.forceSelect();
         } else {
           $('#nologged').show();
-          $('#logged').hide(); 
-          sessionStorage.removeItem("gofcm.pid");
-          sessionStorage.removeItem("gofcm.pname");
+          $('#logged').hide();
+          common.p.drop(); 
         } 
       });
     </script>

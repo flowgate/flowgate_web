@@ -43,9 +43,9 @@
             //$message['file'] = $_FILES['uploadFile']['name'];
     		break;
     	case "f_u": //get user files
-            $_module->getFiles($_uid, (isset($_SESSION['currpId'])?$_SESSION['currpId']:null), null);
+            $_pid = $_POST['pid'];
+            $_module->getFiles($_uid, $_pid, null);
             $message = $_module::$RESULT;
-            $message['currp'] = $_SESSION['currp'];
     		break;
         case "p_a": //add new project
             $_pname = (isset($_POST['pname'])?$_POST['pname']:null);

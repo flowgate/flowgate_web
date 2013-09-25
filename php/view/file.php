@@ -65,7 +65,23 @@
     <div id="nav"></div>
     <div class="container hero-unit">
         <h3>File</h3>
-        <a href="#fileUploadModal" role="button" class="btn" data-toggle="modal">Upload file</a>
+        <div >
+          <a href="#fileUploadModal" role="button" class="btn btn-info" data-toggle="modal">Upload file</a>
+          <select id="projectFilter" style="margin-top:10px;"></select>
+        </div>
+        <div id="fileTableDiv" style="padding-top:10px;">
+          <table id="fileTable" class="table table-bordered tablesorter">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>File Name</th>
+                <th>Project</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
     </div>
 
     <!-- upload modal -->
@@ -100,24 +116,42 @@
     <script src="../../js/jquery.ui.widget.js"></script>
     <script src="../../js/jquery.iframe-transport.js"></script>
     <script src="../../js/jquery.fileupload.js"></script>
+    <script src="../../js/jquery.tablesorter.min.js"></script>
     <script>
+      var pageUtil = {
+        fajax: function(t,d,cb) {
+          $.ajax({
+            type: "POST",
+            async: false,
+            url: "../common/controller.php?j=f_"+t,
+            dataType: 'json',
+            data: d,
+            success: function (obj, ts) {
+              if(cb) {
+                cb(obj);
+              }
+            },
+            error: function() {}
+          }); 
+        },
+        getFiles: function() {
+          var renderFiles = function(obj) {
+            if(obj && obj.files) {
+              $.each(obj.files, function(i,f) {
+                $('#fileTable tbody').append('<tr><td>'+(i+1)+'</td><td>'+f.f_name+'</td><td>'+f.p_name+'</td><td>'+f.f_status+'</td>');
+              });
+              $("#fileTable").tablesorter();
+            }
+          }
+          this.fajax('u',{pid:sessionStorage.getItem("gofcm.pid")}, renderFiles);
+        }
+      };
       var uploadDone = function(file) {
-        $.ajax({
-          type: "POST",
-          async: false,
-          url: "../common/controller.php?j=f_a",
-          dataType: 'json',
-          data: {fname:file.name, pid:sessionStorage.getItem("gofcm.pid")},
-          success: function (obj, ts) {},
-          error: function() {}
-        });
+        pageUtil.fajax('a', {fname:file.name, pid:sessionStorage.getItem("gofcm.pid")}, null);
       };
 
       $(function(){
         $("#nav").load("../common/nav.php");
-      });
-      $(function () {
-        'use strict';
         $('#fileupload').fileupload({
             url: '../bin/upload.php',
             dataType: 'json',
@@ -135,13 +169,10 @@
             },
             progressall: function (e, data) {
               var progress = parseInt(data.loaded / data.total * 100, 10);
-              $('#progress .progress-bar').css(
-                  'width',
-                  progress + '%'
-              );
+              $('#progress .progress-bar').css('width', progress + '%');
             }
-        }).prop('disabled', !$.support.fileInput)
-            .parent().addClass($.support.fileInput ? undefined : 'disabled');
+        }).prop('disabled', !$.support.fileInput).parent().addClass($.support.fileInput ? undefined : 'disabled');
+        pageUtil.getFiles();
       });
     </script>
 </body>
