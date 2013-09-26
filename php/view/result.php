@@ -322,7 +322,7 @@
                         tbody+=
                           '<div style="width:'+divW+'%;display:inline-block;">'
                           +'  <div>'
-                          +'    <img src="../Tasks/'+taskId+'/'+paramPath+ycols[i]+'.'+xcols[j]+'.'+imgSuffix+'.png"/>'
+                          +'    <img src="../../Tasks/'+taskId+'/'+paramPath+ycols[i]+'.'+xcols[j]+'.'+imgSuffix+'.png"/>'
                           +'  </div>'
                           +'  <div style="font-size:80%; text-align:center;">'
                           +     (xcols[j]!==ycols[i]?(m_f?files[f]:'')+(m_p?'['+params[p][0]+':'+params[p][1]+']':''):'&nbsp;')
