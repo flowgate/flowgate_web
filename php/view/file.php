@@ -118,7 +118,7 @@
     <script src="../../js/jquery.fileupload.js"></script>
     <script src="../../js/jquery.tablesorter.min.js"></script>
     <script>
-      var pageUtil = {
+      var _page = {
         fajax: function(t,d,cb) {
           $.ajax({
             type: "POST",
@@ -147,7 +147,7 @@
         }
       };
       var uploadDone = function(file) {
-        pageUtil.fajax('a', {fname:file.name, pid:sessionStorage.getItem("gofcm.pid")}, null);
+        _page.fajax('a', {fname:file.name, pid:sessionStorage.getItem("gofcm.pid")}, null);
       };
 
       $(function(){
@@ -172,7 +172,7 @@
               $('#progress .progress-bar').css('width', progress + '%');
             }
         }).prop('disabled', !$.support.fileInput).parent().addClass($.support.fileInput ? undefined : 'disabled');
-        pageUtil.getFiles();
+        _page.getFiles();
       });
     </script>
 </body>

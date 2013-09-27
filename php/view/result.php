@@ -52,7 +52,26 @@
 
   <body>
     <div id="nav"></div>
-    <div class="row-fluid">
+    <div id="tableDiv" class="container hero-unit">
+        <h3>Results</h3>
+        <div>
+          Filter by Project: <select id="projectFilter" style="margin-top:10px;"></select>
+        </div>
+        <div id="resultsTableDiv" style="padding-top:10px;">
+          <table id="resultsTable" class="table table-bordered tablesorter">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Input Name</th>
+                <th>Parameters</th>
+                <th>Project</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+    </div>
+    <div id="resultDiv" class="row-fluid" style="display:block;">
       <div class="span3" style="height:100%;">
         <div class="well" id="files" style="height:100%;overflow:auto;">
           <div class="row-fluid span12">
@@ -129,6 +148,7 @@
     <script src="../../js/jquery.min.js"></script>
     <script src="../../js/jqueryFileTree.js"></script>
     <script src="../../js/bootstrap-select.js"></script>
+    <script src="../../js/jquery.tablesorter.min.js"></script>
     <script>
       $(function(){
         $("#nav").load("../common/nav.php");
@@ -142,10 +162,7 @@
             taskId = pair[1];
           }
         } 
-        _data.meta(taskId);
-        $('.selectpicker').selectpicker();
-        _plugin.filetree.init('fileNav', taskId);
-        _page.event.trigger();
+        _data.results({results:[{input:'input.zip',par:'bins:10-12, density:11-13',p:'SomeProject'}]});
       });
 
       var _page = {
@@ -164,6 +181,12 @@
           opt_dc: "<option data-content='<span class=\"$c$\">&nbsp;&nbsp;&nbsp;</span>$t$'>$v$</option>",
           opt_vt: "<option value='$v$'>$t$</option>",
           opt_vv: "<option value='$v$'>$v$</option>"
+        },
+        view: function(id) {
+          _data.meta(taskId);
+          $('.selectpicker').selectpicker();
+          _plugin.filetree.init('fileNav', taskId);
+          _page.event.trigger();
         },
         event: {
           trigger: function() {
@@ -249,6 +272,20 @@
         }
       }; 
       var _data = {
+        results: function(obj) {
+          var renderResults = function(obj) {
+            var $table = $('#resultsTable');
+            if(obj && obj.results) {
+              $.each(obj.results, function(i,r) {
+                $table.find('tbody').append(
+                  '<tr><td>'+(i+1)+'</td><td><a href="javascript:_page.view(\'777\');">'+r.input+'</a></td><td>'+r.par+'</td><td>'+r.p+'</td></tr>'
+                );
+              });
+              $table.tablesorter();
+            }
+          };
+          renderResults(obj);
+        },
         meta: function(tid) {
           var _this = this;
           $.ajax({
@@ -412,6 +449,8 @@
           $("#paramselect").append(opts).selectpicker();
         }
       };
+
+      //functions to handle behaviors of plugins
       var _plugin = {
         selectpicker: {
           multifile: function() {
