@@ -3,6 +3,8 @@ package org.immport.flock.utils;
 import org.immport.flock.commons.Zipper;
 import org.junit.Test;
 
+import java.util.Arrays;
+
 /**
  * User: hkim
  * Date: 8/22/13
@@ -17,13 +19,13 @@ public class FlockRunnerTest {
     public void run() throws Exception {
         Integer[] bins = new Integer[] {10, 11, 12};
         Integer[] dens = new Integer[] {11, 12, 13};
-        /*runner.execute(
-                testDir + "inputs3.zip",
+        runner.execute(
+                testDir + "input2_1.zip",
                 Arrays.asList(bins),
                 Arrays.asList(dens),
-                20,
+                13,
                 testDir,
-                "flock1_gp_osx");*/
+                "flock1_gp_osx");
 
         Zipper.extract(testDir + "results.zip", testDir + "output");
     }

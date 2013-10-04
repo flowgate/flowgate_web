@@ -76,44 +76,61 @@ public class FlockRunner {
 
     public void execute(String zipInput, List<Integer> bins, List<Integer> densities, int population, String workDir, String flock) throws Exception {
         URI flockUri = null;
+        if(!workDir.endsWith(File.separator)) {
+            workDir += File.separator;
+        }
+
         if(flock==null) {
             flockUri = this.getFlockFile();
         } else {
-            File flockFile = new File(workDir + File.separator + flock);
+            File flockFile = new File(workDir + flock);
             flockUri = flockFile.toURI();
         }
 
-        File inputDir = new File(workDir==null?"":workDir+"inputs");
-        inputDir.mkdir();
+        if(bins.size()>0 && densities.size()>0){
+            File inputDir = new File(workDir + "inputs");
+            inputDir.mkdir();
+            Zipper.extract(zipInput, inputDir.getAbsolutePath());
+            File resultDir = new File(workDir + "results");
+            resultDir.mkdir();
 
-        Zipper.extract(zipInput, inputDir.getAbsolutePath());
+            this.executeHelper(flockUri, inputDir, resultDir, bins, densities, population);
 
-        //this.extract(zipInput, null, inputDir.getAbsolutePath());
-        String[] inputArr = inputDir.list();
+            Zipper.buildNestedZip(resultDir.getAbsolutePath());
+        }
+    }
 
-        File resultDir = new File(workDir==null?"":workDir+"results");
-        resultDir.mkdir();
+    private void executeHelper(URI flockUri, File in, File out, List<Integer> bins, List<Integer> densities, int population) throws Exception {
 
-        if(inputArr!=null && inputArr.length>0 && bins.size()>0 && densities.size()>0) {
-            for(String inputName : inputArr) {
-                String inputFileName = inputDir.getAbsolutePath() + File.separator + inputName;
-                String fileOutName = inputName + "_out";
+        String[] files = in.list();
+        if(files!=null && files.length>0) {
+            for(String file : files) {
+                String inputFileName = in.getAbsolutePath() + File.separator + file;
+                File inputFile = new File(inputFileName);
+                if(inputFile.isDirectory()) {
+                    File newOut = new File(out.getAbsolutePath() + File.separator + file);
+                    this.executeHelper(flockUri, inputFile, newOut, bins, densities, population);
+                } else {
 
-                for(int aBin : bins) {
-                    for(int aDensity : densities) {
-                        String currName = resultDir.getAbsolutePath() +
-                                File.separator +
-                                fileOutName +
-                                File.separator +
-                                fileOutName + "_" + aBin + "_" + aDensity;
-                        File outputDir = new File(currName);
-                        outputDir.mkdirs();
-                        this.runFlock(flockUri, outputDir, inputFileName, aBin, aDensity, population);
+                    if(!inputFile.isHidden()) { //skips hidden files: UNIX(.), Windows(check file property)
+                        String fileOutName = file + "_out";
+
+                        for(int aBin : bins) {
+                            for(int aDensity : densities) {
+                                String currName = out.getAbsolutePath() +
+                                        File.separator +
+                                        fileOutName +
+                                        File.separator +
+                                        fileOutName + "_" + aBin + "_" + aDensity;
+                                File outputDir = new File(currName);
+                                outputDir.mkdirs();
+                                this.runFlock(flockUri, outputDir, inputFileName, aBin, aDensity, population);
+                            }
+                        }
                     }
                 }
             }
         }
-        Zipper.buildNestedZip(resultDir.getAbsolutePath());
     }
 
     public URI getFlockFile() throws Exception {
