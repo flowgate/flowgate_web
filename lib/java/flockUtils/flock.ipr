@@ -227,15 +227,11 @@
   <component name="libraryTable">
     <library name="flockLib">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/lib/commons-io-1.4.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/commons-logging.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/log4j-1.2.15.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/zip4j_1.3.1.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/mongo-java-driver-2.11.2.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/gson-2.2.4.jar!/" />
+        <root url="file://$PROJECT_DIR$/lib" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
+      <jarDirectory url="file://$PROJECT_DIR$/lib" recursive="false" />
     </library>
   </component>
 </project>
