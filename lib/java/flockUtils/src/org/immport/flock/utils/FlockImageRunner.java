@@ -1,6 +1,7 @@
 package org.immport.flock.utils;
 
 import org.immport.flock.commons.FlockAdapterFile;
+import org.immport.flock.commons.ProcessParameter;
 import org.immport.flock.commons.Zipper;
 
 import java.io.File;
@@ -41,17 +42,38 @@ public class FlockImageRunner {
                 this.execute(type, child.getAbsolutePath());
             }
         }
-
-        List<String> childrenList = Arrays.asList(children);
-        if(childrenList.contains(FlockAdapterFile.INPUT_DATA)
-                && childrenList.contains(FlockAdapterFile.PERCENTAGE_TXT)
-                && childrenList.contains(FlockAdapterFile.PROFILE_TXT)
-                && childrenList.contains(FlockAdapterFile.POPULATION_ID_COL)
-                && childrenList.contains(FlockAdapterFile.POPULATION_CENTER)
-                && childrenList.contains(FlockAdapterFile.MFI)
-                && childrenList.contains(FlockAdapterFile.PARAMETERS)) {
-            String[] args = { type, workingPath, workingPath };
-            FlockImageGenerator.main(args);
+        List<String> files = Arrays.asList(children);
+        if(files.contains(FlockAdapterFile.INPUT_DATA)
+                && files.contains(FlockAdapterFile.PERCENTAGE_TXT)
+                && files.contains(FlockAdapterFile.PROFILE_TXT)
+                && files.contains(FlockAdapterFile.POPULATION_ID_COL)
+                && files.contains(FlockAdapterFile.POPULATION_CENTER)
+                && files.contains(FlockAdapterFile.MFI)
+                && files.contains(FlockAdapterFile.PARAMETERS)) {
+            File workingDir = new File(workingPath + File.separator +"images");
+            FlockImageGenerator fig = new FlockImageGenerator(0l, new File(workingPath), workingDir);
+            fig.processFlockOutput();
+            for(int i=1;i<=fig.getPopulationSize();i++) {
+                ProcessParameter pp = new ProcessParameter("a", "m", true, false, null);
+                fig.generate(pp);
+            }
+            this.helper(workingDir.getAbsolutePath());
         }
+    }
+
+
+    private void helper(String workingPath) throws Exception {
+        File workingDir = new File(workingPath);
+        List<String> files = Arrays.asList(workingDir.list());
+
+        File outputDir = new File(workingPath + File.separator +"images");
+        if(!outputDir.exists()) {
+            outputDir.mkdirs();
+        }
+        FlockImageGenerator fig = null;
+
+        fig = new FlockImageGenerator(0l, new File(workingPath), outputDir);
+        fig.processFlockOutput();
+
     }
 }

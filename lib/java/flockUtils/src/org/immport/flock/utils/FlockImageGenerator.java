@@ -61,6 +61,7 @@ public class FlockImageGenerator {
             profile = adapter.getProfile();
             markers = profile.getMarkers();
             populations = profile.getPopulations();
+            System.out.println(populations);
             //minMax = adapter.getMinMaxAll();
             minMax = adapter.getMinMaxFile();
             events = adapter.getEvents();
@@ -133,25 +134,7 @@ public class FlockImageGenerator {
                         Color[][] allEvents = flockEvents.getAllEvents();
                         byte[] imgBytes = null;
 
-                        if(pp.getMarker().equals("a") && pp.getPopulation().equals("a")) { //overview
-                            /*BufferedImage img = new BufferedImage(width, height,BufferedImage.TYPE_INT_RGB);
-                            Graphics2D g2d = img.createGraphics();
-                            g2d.setColor(Color.LIGHT_GRAY);
-                            g2d.fillRect(0, 0, width, height);
-
-                            for (int k = 0; k < height; k++) {
-                                for (int l = 0; l < height; l++) {
-                                    if (allEvents[k][l] != null) {
-                                        if (pp.isBw()) {
-                                            g2d.setColor(Color.BLACK);
-                                        } else {
-                                            g2d.setColor(allEvents[k][l]);
-                                        }
-                                        g2d.drawLine(k, l, k, l);
-                                    }
-                                }
-                            }
-                            imgBytes = getImageAsByteArray(img);*/
+                        if(pp.getMarker().equals("a") && pp.getPopulation().equals("o")) { //overview
                             imgBytes = generatePopulations(flockEvents, true, pp.getParams(), pp.isBw(), false);
                         } else if(pp.getMarker().equals("a") && pp.getPopulation().equals("s")) { //single population for all marker sets
                             imgBytes = generatePopulations(flockEvents, false, pp.getParams(), pp.isBw(), pp.isHighlighted());
@@ -241,7 +224,7 @@ public class FlockImageGenerator {
 
     /*
       * For every population and every marker combination, create an image
-      *
+    *
     public void genMarkerByMarkerPopulations(int width, int height, boolean bw, boolean highlighted) throws FlockAdapterException {
         int numMarkers = markers.size();
         long startTime = System.currentTimeMillis();
@@ -583,6 +566,7 @@ public class FlockImageGenerator {
     }
 
 
+
     public static void main(String[] args) throws Exception {
         String errorMsg = "Usage: command \n"
                 +"<Type: all_images, overview(_color,_bw), all_markers, all_populations, marker_populations, single_population, gen_propsfile> \n"
@@ -631,12 +615,9 @@ public class FlockImageGenerator {
 
         ProcessParameter pp = null;
         if (type.equals("all_images")) {
-            //fig.genMarkerByMarkerImages(300, 300, false);
-            //fig.genMarkerByMarkerImages(300, 300, true);
-            //fig.genMarkerByMarkerPopulations(300, 300, false,true);
-            //fig.genMarkerByMarkerPopulations(300, 300, false,false);
+
         } else if (type.startsWith("overview")) {
-            pp = new ProcessParameter("a", "a", true, type.endsWith("bw"), null);
+            pp = new ProcessParameter("a", "o", true, type.endsWith("bw"), null);
         } else if (type.equals("all_markers")) {
             //fig.genMarkerByMarkerImages(300, 300, false);
             //fig.genOverviewImages(300,300,false);
@@ -673,4 +654,7 @@ public class FlockImageGenerator {
         fig.generate(pp);
     }
 
+    public int getPopulationSize() {
+        return populations==null?0:populations.size();
+    }
 }
