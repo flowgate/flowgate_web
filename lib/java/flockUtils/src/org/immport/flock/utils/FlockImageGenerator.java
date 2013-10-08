@@ -61,7 +61,6 @@ public class FlockImageGenerator {
             profile = adapter.getProfile();
             markers = profile.getMarkers();
             populations = profile.getPopulations();
-            System.out.println(populations);
             //minMax = adapter.getMinMaxAll();
             minMax = adapter.getMinMaxFile();
             events = adapter.getEvents();
@@ -121,12 +120,9 @@ public class FlockImageGenerator {
                     int idx2 = markers.get(j).getIndex();
                     String name2 = markers.get(j).getName();
 
-                    String imageName = name1 + "." + name2 + pp.getImageName();
+                    String imageName = name1 + "." + name2;
 
-                    if (name1.equals(name2)) {
-                        byte [] b4 = generateSolidImage(300,300);
-                        adapter.saveDotPlotImage(imageName, new ByteArrayInputStream(b4));
-                    } else {
+                    if(i != j) {
                         int width = pp.getWidth();
                         int height = pp.getHeight();
 
@@ -142,11 +138,21 @@ public class FlockImageGenerator {
                         } else if(pp.getMarker().equals("a") && pp.getPopulation().equals("m")) {
                             imgBytes = generatePopulations(flockEvents, false, pp.getParams(), pp.isBw(), pp.isHighlighted());
                         }
-                        adapter.saveDotPlotImage(imageName, new ByteArrayInputStream(imgBytes));
+                        adapter.saveDotPlotImage(imageName + pp.getImageName(), new ByteArrayInputStream(imgBytes));
                     }
                 }
             }
 
+        } catch (Exception e) {
+            System.out.println("E: " + e);
+            throw new FlockAdapterException(e);
+        }
+    }
+
+    public void generateGrey() throws FlockAdapterException { //generate empty grey image
+        try {
+            byte [] b4 = generateSolidImage(300,300);
+            adapter.saveDotPlotImage("empty.png", new ByteArrayInputStream(b4));
         } catch (Exception e) {
             System.out.println("E: " + e);
             throw new FlockAdapterException(e);
@@ -222,141 +228,11 @@ public class FlockImageGenerator {
         System.out.println("genMarkerByMarkerImages TEST " + (stopTime - startTime) / 1000);
     }
 
-    /*
-      * For every population and every marker combination, create an image
-    *
-    public void genMarkerByMarkerPopulations(int width, int height, boolean bw, boolean highlighted) throws FlockAdapterException {
-        int numMarkers = markers.size();
-        long startTime = System.currentTimeMillis();
-        try {
-
-            for (int i = 0; i < numMarkers; i++) {
-                for (int j = 0; j < numMarkers; j++) {
-
-                    int idx1 = markers.get(i).getIndex();
-                    String name1 = markers.get(i).getName();
-                    int idx2 = markers.get(j).getIndex();
-                    String name2 = markers.get(j).getName();
-
-                    FlockEvents flockEvents = genEventsMatrix(width, height, idx1, idx2);
-                    Color[][] allEvents = flockEvents.getAllEvents();
-                    Map<Byte, boolean[][]> popEvents = flockEvents.getPopEvents();
-                    for (Population population : populations) {
-                        Byte popId = population.getPopulation();
-                        String imageName = "";
-                        if (highlighted) {
-                            imageName = name1 + "." + name2 + "." + popId + ".color.highlighted.png";
-
-                            if (name1.equals(name2)){
-                                byte [] b4 = generateSolidImage(300,300);
-                                adapter.saveDotPlotImage(imageName, new ByteArrayInputStream(b4));
-                            } else {
-                                byte[] b4 = generatePopHighlighted(allEvents, popEvents.get(popId), ColorUtils.getColor(popId), bw);
-                                adapter.saveDotPlotImage(imageName,new ByteArrayInputStream(b4));
-                            }
-
-                        } else {
-                            imageName = name1 + "." + name2 + "." + popId + ".color.only.png";
-
-                            if (name1.equals(name2)){
-                                byte [] b4 = generateSolidImage(300,300);
-                                adapter.saveDotPlotImage(imageName, new ByteArrayInputStream(b4));
-                            } else {
-                                byte[] b4 = generatePopColorOnly(allEvents, popEvents.get(popId), ColorUtils.getColor(popId), bw);
-
-                                adapter.saveDotPlotImage(imageName, new ByteArrayInputStream(b4));
-                            }
-                        }
-                    }
-
-                }
-            }
-
-        } catch (Exception e) {
-            System.out.println("E: " + e);
-            throw new FlockAdapterException(e);
-        }
-        long stopTime = System.currentTimeMillis();
-        System.out.println("genMarkerByMarkerPopulations " + (stopTime - startTime) / 1000);
-
-    }
-
-    /*
-      * For 2 markers, create all the images for every population
-      *
-    public void genMarker2MarkerPopulations(int index1, int index2, int width,
-                                            int height, boolean bw, boolean highlighted) throws FlockAdapterException {
-
-        long startTime = System.currentTimeMillis();
-        try {
-
-            int idx1 = markers.get(index1).getIndex();
-            String name1 = markers.get(index1).getName();
-            int idx2 = markers.get(index2).getIndex();
-            String name2 = markers.get(index2).getName();
-
-            FlockEvents flockEvents = genEventsMatrixPop(width, height, idx1, idx2);
-            Color[][] allEvents = flockEvents.getAllEvents();
-            Map<Byte, boolean[][]> popEvents = flockEvents.getPopEvents();
-            for (Population population : populations) {
-                Byte popId = population.getPopulation();
-                String imageName = "";
-                if (highlighted) {
-                    imageName = name1 + "." + name2 + "." + popId + ".color.highlighted.png";
-
-                    if (name1.equals(name2)){
-                        byte [] b4 = generateSolidImage(300,300);
-                        adapter.saveDotPlotImage(imageName, new ByteArrayInputStream(b4));
-                    } else {
-                        byte[] b4 = generatePopHighlighted(allEvents, popEvents.get(popId), ColorUtils.getColor(popId), bw);
-
-                        adapter.saveDotPlotImage(imageName, new ByteArrayInputStream(b4));
-                    }
-
-                } else {
-                    imageName = name1 + "." + name2 + "." + popId + ".color.only.png";
-
-                    if (name1.equals(name2)){
-                        byte [] b4 = generateSolidImage(300,300);
-                        adapter.saveDotPlotImage(imageName, new ByteArrayInputStream(b4));
-                    } else {
-                        byte[] b4 = generatePopColorOnly(allEvents, popEvents.get(popId), ColorUtils.getColor(popId), bw);
-
-                        adapter.saveDotPlotImage(imageName, new ByteArrayInputStream(b4));
-                    }
-                }
-
-            }
-
-        } catch (Exception e) {
-            System.out.println("E: " + e);
-            throw new FlockAdapterException(e);
-        }
-        long stopTime = System.currentTimeMillis();
-        System.out.println("genMarker2MarkerPopulations " + (stopTime - startTime) / 1000);
-
-    }
-    */
-
     private FlockEvents genEventsMatrix(int width, int height, int idx1, int idx2) {
 
         FlockEvents flockEvents = new FlockEvents();
         Color[][] allEvents = new Color[width][height];
-        //Map<Byte, boolean[][]> popEvents = new HashMap<Byte, boolean[][]>();
-        //for (Population population : populations) {
-        //	popEvents.put(population.getPopulation(),
-        //			new boolean[width][height]);
-        //}
-
-        /*
-          float minX = minMax.getMinX();
-          float maxX = minMax.getMaxX();
-          float range = maxX - minX;
-
-          int max = (int) ((maxX/range) * 300);
-          */
         int max = 299;
-
 
         for (int k = 0; k < events.length; k++) {
             int x = coordinates[k][idx1];

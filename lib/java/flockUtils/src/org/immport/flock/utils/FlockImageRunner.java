@@ -7,6 +7,8 @@ import org.immport.flock.commons.Zipper;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * User: hkim
@@ -15,18 +17,19 @@ import java.util.List;
  * org.immport.flock.utils
  */
 public class FlockImageRunner {
-    public static void main(String[] args) throws Exception {
-        String errorMsg = "Usage: command <Type: all_images, overview(_color,_bw)> <input_zip_file> <OUTPUT_DIR>";
+    private static final int MAX_POOL_SIZE = 50;
 
-        if (args.length < 3) {
+    public static void main(String[] args) throws Exception {
+        String errorMsg = "Usage: command <Type: all_images, overview(_color,_bw)> <input_zip_file>";
+
+        if (args.length < 2) {
             throw new Exception(errorMsg);
         }
 
         String type = args[0];
         String inputPath = args[1];
-        String outputPath = args[2];
 
-        String results = outputPath + File.separator + "results";
+        String results = "result";
         Zipper.extract(inputPath, results);
 
         FlockImageRunner runner = new FlockImageRunner();
@@ -53,27 +56,69 @@ public class FlockImageRunner {
             File workingDir = new File(workingPath + File.separator +"images");
             FlockImageGenerator fig = new FlockImageGenerator(0l, new File(workingPath), workingDir);
             fig.processFlockOutput();
-            for(int i=1;i<=fig.getPopulationSize();i++) {
-                ProcessParameter pp = new ProcessParameter("a", "m", true, false, null);
-                fig.generate(pp);
+
+            fig.generateGrey(); //generates single empty grey image
+
+            int totalPopulation = fig.getPopulationSize();
+            ExecutorService executor = Executors.newFixedThreadPool(MAX_POOL_SIZE);
+            for(int i=1;i<=totalPopulation;i++) {
+                int[] res = new int[i];
+                for (int j = 0; j < res.length; j++) {
+                    res[j] = j + 1;
+                }
+                boolean done = false;
+                String populationParam = null;
+                while (!done) {
+                    populationParam = Arrays.toString(res).replaceAll("\\s+","");
+                    populationParam = populationParam.substring(1, populationParam.length()-1);
+                    ProcessParameter pp = new ProcessParameter("a", "m", true, false, populationParam);
+                    Runnable worker = new ImageRunner(fig, pp);
+                    executor.execute(worker);
+                    //fig.generate(pp);
+                    done = getNext(res, totalPopulation, i);
+                }
             }
-            this.helper(workingDir.getAbsolutePath());
+            executor.shutdown();
+            while (!executor.isTerminated()) {}
         }
     }
 
-
-    private void helper(String workingPath) throws Exception {
-        File workingDir = new File(workingPath);
-        List<String> files = Arrays.asList(workingDir.list());
-
-        File outputDir = new File(workingPath + File.separator +"images");
-        if(!outputDir.exists()) {
-            outputDir.mkdirs();
+    public static final boolean getNext(final int[] num, final int n, final int r) {
+        int target = r - 1;
+        num[target]++;
+        if (num[target] > ((n - (r - target)) + 1)) {
+            // Carry the One
+            while (num[target] > ((n - (r - target)))) {
+                target--;
+                if (target < 0) {
+                    break;
+                }
+            }
+            if (target < 0) {
+                return true;
+            }
+            num[target]++;
+            for (int i = target + 1; i < num.length; i++) {
+                num[i] = num[i - 1] + 1;
+            }
         }
-        FlockImageGenerator fig = null;
+        return false;
+    }
 
-        fig = new FlockImageGenerator(0l, new File(workingPath), outputDir);
-        fig.processFlockOutput();
+    public class ImageRunner implements Runnable {
+        FlockImageGenerator generator;
+        ProcessParameter pp;
+        public ImageRunner(FlockImageGenerator generator, ProcessParameter pp) {
+            this.generator = generator;
+            this.pp = pp;
+        }
 
+        public void run() {
+            try {
+                generator.generate(pp);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
     }
 }
