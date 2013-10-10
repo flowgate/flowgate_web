@@ -7,6 +7,7 @@ import org.immport.flock.commons.Zipper;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -17,24 +18,27 @@ import java.util.concurrent.Executors;
  * org.immport.flock.utils
  */
 public class FlockImageRunner {
-    private static final int MAX_POOL_SIZE = 50;
+    private static final int MAX_POOL_SIZE = 20;
 
     public static void main(String[] args) throws Exception {
-        String errorMsg = "Usage: command <Type: all_images, overview(_color,_bw)> <input_zip_file>";
+        String errorMsg = "Usage: command <Type: all_images, overview(_color,_bw)> <input_zip_file> <output path>";
 
-        if (args.length < 2) {
+        if (args.length < 3) {
             throw new Exception(errorMsg);
         }
 
         String type = args[0];
         String inputPath = args[1];
+        String outputPath = args[2];
+        outputPath += outputPath.endsWith(File.separator) ? "" : File.separator;
 
-        String results = "result";
+        UUID uuid = UUID.randomUUID();
+        String results = outputPath + uuid;
         Zipper.extract(inputPath, results);
 
         FlockImageRunner runner = new FlockImageRunner();
         runner.execute(type, results);
-        Zipper.buildNestedZip(results);
+        //Zipper.buildNestedZip(results);
     }
 
     public void execute(String type, String workingPath) throws Exception {
@@ -83,7 +87,7 @@ public class FlockImageRunner {
         }
     }
 
-    public static final boolean getNext(final int[] num, final int n, final int r) {
+    private final boolean getNext(final int[] num, final int n, final int r) {
         int target = r - 1;
         num[target]++;
         if (num[target] > ((n - (r - target)) + 1)) {

@@ -2,6 +2,7 @@ package org.immport.flock.utils;
 
 import org.apache.commons.io.IOUtils;
 import org.immport.flock.commons.Zipper;
+import org.json.JSONObject;
 
 import java.io.*;
 import java.net.URI;
@@ -21,60 +22,26 @@ import java.util.zip.ZipFile;
  */
 public class FlockRunner {
     private final String flockName = "flock1"; //"flock1", "flock1_gp_osx";
+    public final String errorMsg = "Usage: (d:integer) command <zipFile> <# of bin(d) OR range of # of bins(d-d)> <density(d) OR range of density(d-d)>";
 
     public static void main(final String[] args) throws Exception {
-        String errorMsg = "Usage: (d:integer) command <zipFile> <# of bin(d) OR range of # of bins(d-d)> <density(d) OR range of density(d-d)>";
-        String rangePattern = "\\d+-\\d+";
+        FlockRunner runner = new FlockRunner();
 
         if (args.length < 4) {
-            throw new Exception(errorMsg);
+            throw new Exception(runner.errorMsg);
         }
 
         String binStr = args[1];
         String densityStr = args[2];
         String population = args[3];
 
-        List<Integer> bins = new ArrayList<Integer>();
-        if(binStr!=null && binStr.length()>0) {
-            if(!binStr.matches("\\d+") && !binStr.matches(rangePattern)) { //validation
-                throw new Exception(errorMsg);
-            }
-            if(binStr.contains("-")) { //range
-                String[] binsArr = binStr.split("-");
-                int binLow = Integer.parseInt(binsArr[0]);
-                int binHigh = Integer.parseInt(binsArr[1]);
-                for(int i=binLow;i<=binHigh;i++) {
-                    bins.add(i);
-                }
-            } else { //single integer value
-                bins.add(Integer.parseInt(binStr));
-            }
-        }
-        List<Integer> densities = new ArrayList<Integer>();
-        if(densityStr!=null && densityStr.length()>0) {
-            if(!densityStr.matches("\\d+") && !densityStr.matches(rangePattern)) { //validation
-                throw new Exception(errorMsg);
-            }
-            if(densityStr.contains("-")) {
-                String[] densitiesArr = densityStr.split("-");
-                int densityLow = Integer.parseInt(densitiesArr[0]);
-                int densityHigh = Integer.parseInt(densitiesArr[1]);
-                for(int i=densityLow;i<=densityHigh;i++) {
-                    densities.add(i);
-                }
-            } else {
-                densities.add(Integer.parseInt(densityStr));
-            }
-        }
-
         String zipInput = args[0];
         if(zipInput!=null) {
-            FlockRunner runner = new FlockRunner();
-            runner.execute(zipInput, bins, densities, Integer.parseInt(population), null, null);
+            runner.execute(zipInput, binStr, densityStr, Integer.parseInt(population), null, null);
         }
     }
 
-    public void execute(String zipInput, List<Integer> bins, List<Integer> densities, int population, String workDir, String flock) throws Exception {
+    public void execute(String zipInput, String binStr, String densityStr, int population, String workDir, String flock) throws Exception {
         URI flockUri = null;
         if(workDir == null) {
             workDir = "";
@@ -91,21 +58,69 @@ public class FlockRunner {
             flockUri = flockFile.toURI();
         }
 
-        if(bins.size()>0 && densities.size()>0){
+        if(binStr != null && densityStr != null){
+            String rangePattern = "\\d+-\\d+";
+
+            //parse integer or range parameters
+            List<Integer> bins = new ArrayList<Integer>();
+            if(binStr!=null && binStr.length()>0) {
+                if(!binStr.matches("\\d+") && !binStr.matches(rangePattern)) { //validation
+                    throw new Exception(errorMsg);
+                }
+                if(binStr.contains("-")) { //range
+                    String[] binsArr = binStr.split("-");
+                    int binLow = Integer.parseInt(binsArr[0]);
+                    int binHigh = Integer.parseInt(binsArr[1]);
+                    for(int i=binLow;i<=binHigh;i++) {
+                        bins.add(i);
+                    }
+                } else { //single integer value
+                    bins.add(Integer.parseInt(binStr));
+                }
+            }
+            List<Integer> densities = new ArrayList<Integer>();
+            if(densityStr!=null && densityStr.length()>0) {
+                if(!densityStr.matches("\\d+") && !densityStr.matches(rangePattern)) { //validation
+                    throw new Exception(errorMsg);
+                }
+                if(densityStr.contains("-")) {
+                    String[] densitiesArr = densityStr.split("-");
+                    int densityLow = Integer.parseInt(densitiesArr[0]);
+                    int densityHigh = Integer.parseInt(densitiesArr[1]);
+                    for(int i=densityLow;i<=densityHigh;i++) {
+                        densities.add(i);
+                    }
+                } else {
+                    densities.add(Integer.parseInt(densityStr));
+                }
+            }
+
             File inputDir = new File(workDir + "input");
             inputDir.mkdir();
             Zipper.extract(zipInput, inputDir.getAbsolutePath());
             File resultDir = new File(workDir + "result");
             resultDir.mkdir();
 
-            this.executeHelper(flockUri, inputDir, resultDir, bins, densities, population);
+            List<String> markers = new ArrayList<String>();
+            this.executeHelper(flockUri, inputDir, resultDir, bins, densities, population, markers);
+
+            //create json data file
+            JSONObject jsonProp = new JSONObject();
+            jsonProp.put("markers", markers);
+            jsonProp.put("population", population);
+            JSONObject jsonParam = new JSONObject();
+            jsonParam.put("bins", binStr);
+            jsonParam.put("density", densityStr);
+            jsonProp.put("params", jsonParam);
+            PrintWriter writer = new PrintWriter(new File(resultDir.getAbsolutePath() + File.separator + "prop"));
+            writer.println(jsonProp.toString());
+            writer.close();
 
             Zipper.buildNestedZip(resultDir.getAbsolutePath());
         }
     }
 
-    private void executeHelper(URI flockUri, File in, File out, List<Integer> bins, List<Integer> densities, int population) throws Exception {
-
+    private void executeHelper(URI flockUri, File in, File out, List<Integer> bins, List<Integer> densities, int population, List<String> markers) throws Exception {
         String[] files = in.list();
         if(files!=null && files.length>0) {
             for(String file : files) {
@@ -113,10 +128,21 @@ public class FlockRunner {
                 File inputFile = new File(inputFileName);
                 if(inputFile.isDirectory()) {
                     File newOut = new File(out.getAbsolutePath() + File.separator + file);
-                    this.executeHelper(flockUri, inputFile, newOut, bins, densities, population);
+                    this.executeHelper(flockUri, inputFile, newOut, bins, densities, population, markers);
                 } else {
 
                     if(!inputFile.isHidden()) { //skips hidden files: UNIX(.), Windows(check file property)
+                        BufferedReader br = new BufferedReader(new FileReader(inputFile));
+                        String line = br.readLine();
+                        String[] markerArr = line.split("\t");
+                        for(String marker : markerArr) {
+                            if(!markers.contains(marker)) {
+                                markers.add(marker);
+                            }
+                        }
+                        br.close();
+
+
                         String fileOutName = file + "_out";
 
                         for(int aBin : bins) {
