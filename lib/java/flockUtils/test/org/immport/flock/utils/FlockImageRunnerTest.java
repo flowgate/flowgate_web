@@ -2,8 +2,6 @@ package org.immport.flock.utils;
 
 import org.junit.Test;
 
-import java.util.Arrays;
-
 /**
  * User: hkim
  * Date: 10/4/13
@@ -24,13 +22,15 @@ public class FlockImageRunnerTest {
         //print_nCr(25, 3);
 
         int max = 25;
+        int count = 0;
         for(int i=1;i<=max;i++) {
-            print_nCr(max, i);
+            count += print_nCr(max, i);
         }
+        System.err.println(count);
     }
 
 
-    public static final void print_nCr(final int n, final int r) {
+    public static final int print_nCr(final int n, final int r) {
         int[] res = new int[r];
         for (int i = 0; i < res.length; i++) {
             res[i] = i + 1;
@@ -38,12 +38,12 @@ public class FlockImageRunnerTest {
         boolean done = false;
         int count = 0;
         while (!done) {
-            System.err.println(Arrays.toString(res).replaceAll("\\s+",""));
+            //System.err.println(Arrays.toString(res).replaceAll("\\s+",""));
             done = getNext(res, n, r);
-            System.err.println("----------");
+            //System.err.println("----------");
             count++;
         }
-        System.out.println(count);
+        return count;
     }
 
     public static final boolean getNext(final int[] num, final int n, final int r) {
