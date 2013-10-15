@@ -17,10 +17,10 @@ public class FlockRunnerTest {
         Integer[] bins = new Integer[] {10};
         Integer[] dens = new Integer[] {11};
         runner.execute(
-                testDir + "input2_1.zip",
+                testDir + "input1.zip",
                 "10",
                 "11",
-                20,
+                10,
                 testDir,
                 "flock1_gp_osx");
 

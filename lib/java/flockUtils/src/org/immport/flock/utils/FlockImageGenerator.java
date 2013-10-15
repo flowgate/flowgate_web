@@ -533,4 +533,8 @@ public class FlockImageGenerator {
     public int getPopulationSize() {
         return populations==null?0:populations.size();
     }
+
+    public int getMarkerSize() {
+        return markers.size();
+    }
 }

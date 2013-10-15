@@ -7,7 +7,6 @@ import org.immport.flock.commons.Zipper;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -21,27 +20,41 @@ public class FlockImageRunner {
     private static final int MAX_POOL_SIZE = 20;
 
     public static void main(String[] args) throws Exception {
-        String errorMsg = "Usage: command <Type: all_images, overview(_color,_bw)> <input_zip_file> <output path>";
+        String errorMsg = "Usage: command <Type: all_images, overview(_color,_bw)> <input_zip_file> <job_id> <output_path>";
 
-        if (args.length < 3) {
+        if (args.length < 4) {
             throw new Exception(errorMsg);
         }
 
         String type = args[0];
         String inputPath = args[1];
-        String outputPath = args[2];
-        outputPath += outputPath.endsWith(File.separator) ? "" : File.separator;
-
-        UUID uuid = UUID.randomUUID();
-        String results = outputPath + uuid;
-        Zipper.extract(inputPath, results);
+        String jobId = args[2];
+        String outputPath = args[3];
 
         FlockImageRunner runner = new FlockImageRunner();
-        runner.execute(type, results);
-        //Zipper.buildNestedZip(results);
+        runner.begin(type, inputPath, jobId, outputPath);
     }
 
-    public void execute(String type, String workingPath) throws Exception {
+    public void begin(String type, String inputPath, String jobId, String outputPath) throws Exception {
+        outputPath += outputPath.endsWith(File.separator) ? "" : File.separator;
+
+        //UUID uuid = UUID.randomUUID();
+        String results = outputPath + jobId;
+
+        File resultDir = new File(results);
+        if(resultDir.exists()) {
+            throw new Exception("Failed: Result directory already exists!");
+        }
+
+        //extract flock result files
+        Zipper.extract(inputPath, results);
+
+        this.execute(type, results);
+        //Zipper.buildNestedZip(results);
+
+    }
+
+    private void execute(String type, String workingPath) throws Exception {
         String[] children = new File(workingPath).list();
         for(String childName : children) {
             File child = new File(workingPath + File.separator + childName);
