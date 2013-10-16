@@ -2,8 +2,6 @@ package org.immport.flock.utils;
 
 import org.junit.Test;
 
-import java.util.UUID;
-
 /**
  * User: hkim
  * Date: 10/4/13
@@ -16,11 +14,13 @@ public class FlockImageRunnerTest {
 
     @Test
     public void run() throws Exception {
-        String results = testDir + "result";
-        String jobId = UUID.randomUUID().toString();
+        String results = testDir + "out";
+        String jobId = "_"; //UUID.randomUUID().toString();
+        String[] args = {"overview_color", "i", testDir + "result.zip", jobId, results};
 
-        runner.begin("overview_color", testDir + "result.zip", jobId, results);
+        runner.main(args);
 
+        System.out.println("JOB ID: " + jobId);
         //print_nCr(25, 3);
 
         /*int max = 25;

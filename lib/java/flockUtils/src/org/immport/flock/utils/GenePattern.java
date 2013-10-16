@@ -18,6 +18,7 @@ public class GenePattern {
     private final String GP_USER = "genepattern.user";
     private final String GP_FLOCK_MODULE = "genepattern.flock";
     private final String GP_IMAGE_MODULE = "genepattern.image";
+    private final String GP_GOFCM_RESULT_PATH = "genepattern.gofcm";
 
     public static void main(String[] args) throws Exception {
         if (args.length < 8) {
@@ -33,19 +34,19 @@ public class GenePattern {
 
         String type = args[5];
         String jobId = args[6];
-        String gofcmPath = args[7];
+        //String gofcmPath = args[7];
 
         GenePattern gp = new GenePattern();
         gp.executePipeline(
                 user, input, bins, density,
-                population, type, jobId, gofcmPath
+                population, type, jobId//, gofcmPath
         );
     }
 
 
     public void executePipeline(
             String user, String input, String bins, String density,
-            String population, String type, String jobId, String gofcmPath) throws Exception {
+            String population, String type, String jobId/*, String gofcmPath*/) throws Exception {
         ResourceBundle rb = ResourceBundle.getBundle("flock");
         String gpAddress = rb.getString(this.GP_ADDRESS);
         if(user == null) {
@@ -77,8 +78,9 @@ public class GenePattern {
                 new Parameter[]{
                         new Parameter("input", results[0].getURL("zip").toString()),
                         new Parameter("image_type", type == null?"color":type),
-                        //new Parameter("jobId", "UUID"),
-                        //new Parameter("gofcmPath", "Path")
+                        new Parameter("jobId", jobId),
+                        new Parameter("population", "i"),
+                        new Parameter("output_path", "results")
                 }
         );
     }
