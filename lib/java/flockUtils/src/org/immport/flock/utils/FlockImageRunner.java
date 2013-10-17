@@ -18,7 +18,7 @@ import java.util.concurrent.Executors;
  * org.immport.flock.utils
  */
 public class FlockImageRunner {
-    private static final int MAX_POOL_SIZE = 40;
+    private static final int MAX_POOL_SIZE = 20;
 
     public static void main(String[] args) throws Exception {
         String errorMsg = "Usage: command <type: overview_color or overview_bw)> " +

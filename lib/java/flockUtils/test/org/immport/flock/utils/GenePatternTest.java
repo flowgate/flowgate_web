@@ -25,8 +25,7 @@ public class GenePatternTest {
                 "11",
                 "10",
                 null,
-                UUID.randomUUID().toString(),
-                gpdev_export
+                UUID.randomUUID().toString()
         );
     }
 }
