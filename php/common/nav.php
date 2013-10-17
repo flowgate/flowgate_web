@@ -155,7 +155,7 @@
             }
           },
           result: function() {
-            window.location =nav.ct+'../view/result.php?taskId=777';
+            window.location =nav.ct+'../view/result.php';
           },
           file: function() {
             window.location =nav.ct+'../view/file.php'; 

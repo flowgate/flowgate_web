@@ -1,4 +1,6 @@
 <?php
+    require("../common/constants.php");
+
 	$taskId = $_GET['tid'];
 	$file = rtrim($_GET['f'], ",");
     $popIds = rtrim($_GET['pp'], ",");
@@ -7,8 +9,8 @@
     $ymarker = $_GET['y'];
     $param = rtrim($_GET['pr'], ",");
 
+    $taskDir = "$RESULT_DIR$taskId/";
     $dirSuffix = "_out";
-    $taskDir = "../../Tasks/$taskId/";
 
     //handles file parameter
     $fileArr = array();
@@ -29,24 +31,32 @@
     	array_push($paramArr, explode(":", $param));
     }
 
+    /*
     $type = "color";
     $popIds_arr = explode(",", $popIds);
     if(intval($popCount)!=count($popIds_arr)) {
         $type = "pop";
     } 
+    */
+
+    $popIds_arr = explode(",", $popIds);
+
+    $type = "pop";
     $currentRun = (
-        $type == "color"?
-            "overview_color":($type=="bw"?
-                "overview_bw":((strpos($popIds, ",")?"multi":"single")."_population")
-            )
+        $type == "color"?"overview_color":($type=="bw"?"overview_bw":((strpos($popIds, ",")?"multi":"single")."_population"))
     );
 
     $dirs = array();
     foreach($fileArr as $eachFile) {
     	$currResult = $eachFile.$dirSuffix; //"file_out"
     	foreach($paramArr as $eachParam) {
-    		$currDir = "$currResult/$currResult"."_$eachParam[0]_$eachParam[1]/";
-    		run($type, $taskDir.$currDir, $currentRun, $popIds);
+    		$currDir = "$currResult/$currResult"."_$eachParam[0]_$eachParam[1]";
+
+            $totalPopulation = countPopulation($taskDir.$currDir);
+            if(count($popIds_arr) != $totalPopulation && strpos($popIds, ",")) { 
+                //skip overview and individual population, since they are pre-generated
+                run($type, $taskDir.$currDir, $currentRun, $popIds);
+            }
     		array_push($dirs, $currDir);
     	}
     }
@@ -66,6 +76,18 @@
     $json['m_p'] = count($paramArr)>1;
     print json_encode($json);	
 
+    function countPopulation($dir) { 
+        //count lines of population_center file to get the number of population for a result
+        $file="$dir/population_center.txt";
+        $linecount = 0;
+        $handle = fopen($file, "r");
+        while(!feof($handle)){
+            $line = fgets($handle, 4096);
+            $linecount = $linecount + substr_count($line, PHP_EOL);
+        }
+        fclose($handle);
+        return $linecount;
+    }
 
     function run($type, $taskDir, $currentRun, $popIds) {
     	$historyFile = $taskDir."history.txt";
@@ -88,6 +110,7 @@
 		} else {
 		    $createHistory = true;
 		}
+
 		//only runs a bin if it never run
 		if($runBin) {
 		    runJar($type, $taskDir, $currentRun, $popIds); 
@@ -103,9 +126,9 @@
 	        //" -Djava.awt.headless=true".
 	        " org.immport.flock.utils.FlockImageGenerator ";
 	    if(strpos($_currentRun, "Overview")>0) {
-	        shell_exec($executor."$_currentRun $_taskDir $_taskDir/$_type");
+	        shell_exec($executor."$_currentRun $_taskDir $_taskDir/images");
 	    } else {
-	        shell_exec($executor."$_currentRun $_taskDir $_taskDir$_type $_popIds");
+	        shell_exec($executor."$_currentRun $_taskDir $_taskDir/images $_popIds");
 	    }
 	}
 ?>

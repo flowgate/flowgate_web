@@ -182,7 +182,7 @@
           opt_vt: "<option value='$v$'>$t$</option>",
           opt_vv: "<option value='$v$'>$v$</option>"
         },
-        view: function(id) {
+        view: function(taskId) {
           _data.meta(taskId);
           $('.selectpicker').selectpicker();
           _plugin.filetree.init('fileNav', taskId);
@@ -278,7 +278,7 @@
             if(obj && obj.results) {
               $.each(obj.results, function(i,r) {
                 $table.find('tbody').append(
-                  '<tr><td>'+(i+1)+'</td><td><a href="javascript:_page.view(\'777\');">'+r.input+'</a></td><td>'+r.par+'</td><td>'+r.p+'</td></tr>'
+                  '<tr><td>'+(i+1)+'</td><td><a href="javascript:_page.view(\'469d4890-19e2-4b16-bba4-2c76e346f230\');">'+r.input+'</a></td><td>'+r.par+'</td><td>'+r.p+'</td></tr>'
                 );
               });
               $table.tablesorter();
@@ -294,11 +294,11 @@
           }).done(function(data) {
             if(data) {
               data = $.parseJSON(data);
-              if(data.success==='true' && data.markers && data.populations) {
+              if(data.success==='true' && data.markers && data.population) {
                 var markers = data.markers, 
                     taskId = data.taskId,
-                    pops = data.populations;
-
+                    pops = data.population;
+                console.log(_page.init); 
                 if(!_page.init) {
                   _page.data.taskId = taskId;
                   _this.popul(pops);
@@ -335,7 +335,7 @@
                     files = data.files,
                     params = data.params,
                     m_p = data.m_p,
-                    imgSuffix = (type=='pop'?popIds.replace(/,/g,'.'):'all') + '.color.highlighted',
+                    imgSuffix = popIds.replace(/,/g,'.') + '.color.highlighted',
                     thead = '<thead><tr><th id="name" style="width:7%;"></th>', 
                     tbody = '<tbody>';
 
@@ -350,19 +350,22 @@
 
                 for(var i=0;i<ycols.length;i++) {
                   tbody+='<tr><th id="'+ycols[i]+'_y" headers="name">'+ycols[i]+'</th>';
+
                   for(var j=0;j<xcols.length;j++) {
                     tbody+='<td headers="'+xcols[j]+'_x">';
+
                     for(var f=0;f<files.length;f++) {
                       var divW = 100/params.length, filePath = files[f]+'_out';
+
                       for(var p=0;p<params.length;p++) {
-                        var paramPath = filePath+'/'+filePath+'_'+params[p][0]+'_'+params[p][1]+'/'+type+'/';
+                        var paramPath = filePath+'/'+filePath+'_'+params[p][0]+'_'+params[p][1]+'/images/';
                         tbody+=
-                          '<div style="width:'+divW+'%;display:inline-block;">'
+                          '<div style="width:'+divW+'%;display:inline-block; text-align:center;">'
                           +'  <div>'
-                          +'    <img src="../../Tasks/'+taskId+'/'+paramPath+ycols[i]+'.'+xcols[j]+'.'+imgSuffix+'.png"/>'
+                          +'    <img src="../../results/'+taskId+'/'+paramPath+(xcols[j]===ycols[i]?'empty':ycols[i]+'.'+xcols[j]+'.'+imgSuffix)+'.png"/>'
                           +'  </div>'
                           +'  <div style="font-size:80%; text-align:center;">'
-                          +     (xcols[j]!==ycols[i]?(m_f?files[f]:'')+(m_p?'['+params[p][0]+':'+params[p][1]+']':''):'&nbsp;')
+                          +     (xcols[j]!==ycols[i]?(m_f?files[f]:'')+(m_p?'['+params[p][0]+':'+params[p][1]+']':''):'')
                           +'  </div>'
                           +'</div>';
                       }  
@@ -496,7 +499,7 @@
         filetree: {
           init: function(id, tid) {
             $('#'+id).fileTree({
-              root: '../../Tasks/'+tid+'/', //'/Users/hkim/workspace/Workspace/gofcm/new/Tasks/'+tid+'/',//'../../Tasks/output/',
+              root: '/export/data/results/'+tid+'/', //'../../Tasks/'+tid+'/', //'/Users/hkim/workspace/Workspace/gofcm/new/Tasks/'+tid+'/',//'../../Tasks/output/',
               script: '../bin/jqueryFileTree.php',
               expandSpeed: 300,
               collapseSpeed: 200,

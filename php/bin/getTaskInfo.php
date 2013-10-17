@@ -1,9 +1,11 @@
 <?php
+    include("../common/constants.php");
+
     $taskId = $_GET['tid'];
 
-    $taskDir = "../../Tasks/$taskId";
+    $taskDir = $RESULT_DIR.$taskId; //../../Tasks/$taskId";
 
-    $contents = file_get_contents("$taskDir/properties");
+    $contents = file_get_contents("$taskDir/prop");
     $json = json_decode($contents, true);
 
     // $fp = fopen("$taskDir/profile.txt",'r');
