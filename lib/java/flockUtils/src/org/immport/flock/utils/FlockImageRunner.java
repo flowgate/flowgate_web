@@ -66,6 +66,9 @@ public class FlockImageRunner {
         Zipper.extract(inputPath, results);
 
         this.execute(type, population, results);
+
+        Process chmodProcess = Runtime.getRuntime().exec("chmod -R a+rw " + results);
+        chmodProcess.waitFor();
         //Zipper.buildNestedZip(results);
 
     }

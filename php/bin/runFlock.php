@@ -43,6 +43,7 @@
         $type == "color"?"overview_color":($type=="bw"?"overview_bw":((strpos($popIds, ",")?"multi":"single")."_population"))
     );
 
+
     $dirs = array();
     foreach($fileArr as $eachFile) {
     	$currResult = $eachFile.$dirSuffix; //"file_out"
@@ -50,7 +51,8 @@
     		$currDir = "$currResult/$currResult"."_$eachParam[0]_$eachParam[1]/";
 
             $totalPopulation = countPopulation($taskDir.$currDir);
-            if($currentRun == "multi_population" && strpos($popIds, ",")) { 
+            
+            if($currentRun == "multi_population" && $totalPopulation > count($popIds_arr)) { 
                 //skip overview and individual population, since they are pre-generated
                 run($type, $taskDir.$currDir, $currentRun, $popIds);
             }
@@ -122,10 +124,6 @@
 	        " -classpath ../../lib/java/flockUtils.jar".
 	        //" -Djava.awt.headless=true".
 	        " org.immport.flock.utils.FlockImageGenerator ";
-	    if(strpos($_currentRun, "Overview")>0) {
-	        shell_exec($executor."$_currentRun $_taskDir $_taskDir/images");
-	    } else {
-	        shell_exec($executor."$_currentRun $_taskDir $_taskDir/images $_popIds");
-	    }
+        shell_exec($executor."$_currentRun $_taskDir $_taskDir/images".(strpos($_currentRun, "Overview")>0?"":" $_popIds"));
 	}
 ?>

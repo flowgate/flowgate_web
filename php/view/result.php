@@ -277,8 +277,8 @@
             var $table = $('#resultsTable');
             if(obj && obj.results) {
               $.each(obj.results, function(i,r) {
-                $table.find('tbody').append( //469d4890-19e2-4b16-bba4-2c76e346f230
-                  '<tr><td>'+(i+1)+'</td><td><a href="javascript:_page.view(\'75b05242-69df-4fc7-8bf3-91581b9580f8\');">'+r.input+'</a></td><td>'+r.par+'</td><td>'+r.p+'</td></tr>'
+                $table.find('tbody').append(
+                  '<tr><td>'+(i+1)+'</td><td><a href="javascript:_page.view(\'160faccc-4c24-42c2-93e8-bd8c48c0f7e6\');">'+r.input+'</a></td><td>'+r.par+'</td><td>'+r.p+'</td></tr>'
                 );
               });
               $table.tablesorter();
