@@ -38,7 +38,7 @@ public class ProcessParameter {
 
     public String getImageName() {
         String imageName = ".";
-        if(population.equals("a")) {
+        if(population.equals("o")) {
             imageName += "all.";
         } else {
             if(population.equals("m")) {

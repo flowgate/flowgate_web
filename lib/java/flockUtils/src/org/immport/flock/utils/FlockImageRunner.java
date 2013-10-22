@@ -126,7 +126,7 @@ public class FlockImageRunner {
                     executor.execute(worker);
                 }
                 //overview
-                ProcessParameter pp = new ProcessParameter("a", "m", true, isBW, allPopulationString);
+                ProcessParameter pp = new ProcessParameter("a", "o", true, isBW, allPopulationString);
                 Runnable worker = new ImageRunner(fig, pp);
                 executor.execute(worker);
 

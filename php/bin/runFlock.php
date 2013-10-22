@@ -31,17 +31,14 @@
     	array_push($paramArr, explode(":", $param));
     }
 
-    /*
     $type = "color";
     $popIds_arr = explode(",", $popIds);
     if(intval($popCount)!=count($popIds_arr)) {
         $type = "pop";
-    } 
-    */
+    } else {
+        $popIds = "all"; //overview
+    }
 
-    $popIds_arr = explode(",", $popIds);
-
-    $type = "pop";
     $currentRun = (
         $type == "color"?"overview_color":($type=="bw"?"overview_bw":((strpos($popIds, ",")?"multi":"single")."_population"))
     );
@@ -50,10 +47,10 @@
     foreach($fileArr as $eachFile) {
     	$currResult = $eachFile.$dirSuffix; //"file_out"
     	foreach($paramArr as $eachParam) {
-    		$currDir = "$currResult/$currResult"."_$eachParam[0]_$eachParam[1]";
+    		$currDir = "$currResult/$currResult"."_$eachParam[0]_$eachParam[1]/";
 
             $totalPopulation = countPopulation($taskDir.$currDir);
-            if(count($popIds_arr) != $totalPopulation && strpos($popIds, ",")) { 
+            if($currentRun == "multi_population" && strpos($popIds, ",")) { 
                 //skip overview and individual population, since they are pre-generated
                 run($type, $taskDir.$currDir, $currentRun, $popIds);
             }
@@ -78,7 +75,7 @@
 
     function countPopulation($dir) { 
         //count lines of population_center file to get the number of population for a result
-        $file="$dir/population_center.txt";
+        $file= $dir."population_center.txt";
         $linecount = 0;
         $handle = fopen($file, "r");
         while(!feof($handle)){
@@ -89,8 +86,8 @@
         return $linecount;
     }
 
-    function run($type, $taskDir, $currentRun, $popIds) {
-    	$historyFile = $taskDir."history.txt";
+    function run($type, $dir, $currentRun, $popIds) {
+    	$historyFile = $dir."history.txt";
 		$runBin = true;
 		$createHistory = false;
 		//check the history file to run bins only once
@@ -113,7 +110,7 @@
 
 		//only runs a bin if it never run
 		if($runBin) {
-		    runJar($type, $taskDir, $currentRun, $popIds); 
+		    runJar($type, $dir, $currentRun, $popIds); 
 		    $fp = fopen($historyFile, ($createHistory?"w":"a"));  
 		    fwrite($fp, $currentRun.($type=="pop"?$popIds:"")."\n\r");  
 		    fclose($fp);    

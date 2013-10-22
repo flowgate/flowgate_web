@@ -1,5 +1,5 @@
 <?php
-  
+  include("../common/constants.php");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -277,8 +277,8 @@
             var $table = $('#resultsTable');
             if(obj && obj.results) {
               $.each(obj.results, function(i,r) {
-                $table.find('tbody').append(
-                  '<tr><td>'+(i+1)+'</td><td><a href="javascript:_page.view(\'469d4890-19e2-4b16-bba4-2c76e346f230\');">'+r.input+'</a></td><td>'+r.par+'</td><td>'+r.p+'</td></tr>'
+                $table.find('tbody').append( //469d4890-19e2-4b16-bba4-2c76e346f230
+                  '<tr><td>'+(i+1)+'</td><td><a href="javascript:_page.view(\'75b05242-69df-4fc7-8bf3-91581b9580f8\');">'+r.input+'</a></td><td>'+r.par+'</td><td>'+r.p+'</td></tr>'
                 );
               });
               $table.tablesorter();
@@ -499,7 +499,7 @@
         filetree: {
           init: function(id, tid) {
             $('#'+id).fileTree({
-              root: '/export/data/results/'+tid+'/', //'../../Tasks/'+tid+'/', //'/Users/hkim/workspace/Workspace/gofcm/new/Tasks/'+tid+'/',//'../../Tasks/output/',
+              root: '<?php echo $RESULT_DIR;?>'+tid+'/', //'../../Tasks/'+tid+'/', //'/Users/hkim/workspace/Workspace/gofcm/new/Tasks/'+tid+'/',//'../../Tasks/output/',
               script: '../bin/jqueryFileTree.php',
               expandSpeed: 300,
               collapseSpeed: 200,

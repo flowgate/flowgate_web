@@ -10,11 +10,11 @@ import org.junit.Test;
  */
 public class FlockImageRunnerTest {
     FlockImageRunner runner = new FlockImageRunner();
-    private final String testDir = "/Users/hkim/Stuffs/test/gofcm/";
+    private final String testDir = "/Users/movence/works/test/gofcm/";//"/Users/hkim/Stuffs/test/gofcm/";
 
     @Test
     public void run() throws Exception {
-        String results = testDir + "out";
+        String results = "/export/data/results/";
         String jobId = "_"; //UUID.randomUUID().toString();
         String[] args = {"overview_color", "i", testDir + "result.zip", jobId, results};
 
