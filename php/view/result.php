@@ -298,7 +298,6 @@
                 var markers = data.markers, 
                     taskId = data.taskId,
                     pops = data.population;
-                console.log(_page.init); 
                 if(!_page.init) {
                   _page.data.taskId = taskId;
                   _this.popul(pops);
@@ -355,16 +354,17 @@
                     tbody+='<td headers="'+xcols[j]+'_x">';
 
                     for(var f=0;f<files.length;f++) {
-                      var divW = 100/params.length, filePath = files[f]+'_out';
+                      var param_l = params.length;
+                      var divW = (param_l>1?100/param_l:0), filePath = files[f]+'_out';
 
-                      for(var p=0;p<params.length;p++) {
+                      for(var p=0;p<param_l;p++) {
                         var paramPath = filePath+'/'+filePath+'_'+params[p][0]+'_'+params[p][1]+'/images/';
                         tbody+=
-                          '<div style="width:'+divW+'%;display:inline-block; text-align:center;">'
+                          '<div style="'+(divW>0?'width:'+divW+'%;':'')+'display:inline-block; text-align:left;">'
                           +'  <div>'
                           +'    <img src="../../results/'+taskId+'/'+paramPath+(xcols[j]===ycols[i]?'empty':ycols[i]+'.'+xcols[j]+'.'+imgSuffix)+'.png"/>'
                           +'  </div>'
-                          +'  <div style="font-size:80%; text-align:center;">'
+                          +'  <div style="font-size:80%; text-align:left;">'
                           +     (xcols[j]!==ycols[i]?(m_f?files[f]:'')+(m_p?'['+params[p][0]+':'+params[p][1]+']':''):'')
                           +'  </div>'
                           +'</div>';
