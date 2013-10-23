@@ -161,8 +161,8 @@
           if(pair[0]==='taskId') {
             taskId = pair[1];
           }
-        } 
-        _data.results({results:[{input:'input.zip',par:'bins:10-12, density:11-13',p:'SomeProject'}]});
+        }
+        _data.results(); 
       });
 
       var _page = {
@@ -284,7 +284,7 @@
               $table.tablesorter();
             }
           };
-          renderResults(obj);
+          renderResults({results:[{input:'input72.zip',par:'bins:8-11, density:4-6',p:'SomeProject'}]});
         },
         meta: function(tid) {
           var _this = this;
