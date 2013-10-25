@@ -100,7 +100,7 @@
         </div>
         <div class="row-fluid">
           <div class="span12 centerSub" id="overview">
-            <div class="row-fluid" id="r_alert"></div>
+            <div class="row-fluid" id="ralert"></div>
             <div class="row-fluid">
               <div class="span12" style="margin-left:5px;">
                 <div class="row-fluid">
@@ -247,11 +247,11 @@
             }
           }
         },
-        alert: function(w,t,e) { //w-where(page, result), t-message, e-boolean error or alert
-          $('#'+(w?w:'')+'alert').html(
+        alert: function(w,e,m) { //w-where(page, result), t-message, e-boolean error or alert
+          $('#'+(w?'r':'')+'alert').html(
             '<div class="alert '+(e?'alert-error':'')+'">'+
               '<button type="button" class="close" data-dismiss="alert">&times;</button>'+
-              '<strong>Warning!</strong> ' + t +
+              '<strong>Warning!</strong> ' + m +
             '</div>');
         },
         validation: function() {
@@ -267,7 +267,7 @@
             && data.params!=null && data.params.length>0) {
             return true;
           } else {
-            this.alert('r', 'Please select file(s) or Parameter(s).', false);
+            this.alert(true, false, 'Please select file(s) or Parameter(s).');
             return false;
           }
         }
@@ -279,7 +279,7 @@
             if(obj && obj.results) {
               $.each(obj.results, function(i,r) {
                 $table.find('tbody').append(
-                  '<tr><td>'+(i+1)+'</td><td><a href="javascript:_page.view(\'160faccc-4c24-42c2-93e8-bd8c48c0f7e6\');">'+r.input+'</a></td><td>'+r.par+'</td><td>'+r.p+'</td></tr>'
+                  '<tr><td>'+(i+1)+'</td><td><a href="javascript:_page.view(\'75b05242-69df-4fc7-8bf3-91581b9580f8\');">'+r.input+'</a></td><td>'+r.par+'</td><td>'+r.p+'</td></tr>'
                 );
               });
               $table.tablesorter();
@@ -308,7 +308,7 @@
                   _page.init = true;
                 }
               } else {
-                _page.alert(null, data.err, true);
+                _page.alert(false, true, data.err);
               }
             }
           });  
