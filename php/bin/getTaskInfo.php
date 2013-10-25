@@ -5,8 +5,18 @@
 
     $taskDir = $RESULT_DIR.$taskId; //../../Tasks/$taskId";
 
-    $contents = file_get_contents("$taskDir/prop");
-    $json = json_decode($contents, true);
+    $propFile = "$taskDir/prop";
+    $json = array();
+    $success = true;
+    $err = null;
+
+    if(file_exists($propFile)) {
+        $contents = file_get_contents($propFile);
+        $json = json_decode($contents, true);
+    } else {
+        $success = false;
+        $err = "The result or prop file does not exist!";
+    }
 
     // $fp = fopen("$taskDir/profile.txt",'r');
     // if (!$fp) {
@@ -27,9 +37,10 @@
     // $pops = readPopulations($taskDir);
 
     // $json = array();
-    $json['success'] = 'true';
+    $json['success'] = $success;
     // $json['pops'] = $pops;
     $json['taskId'] = $taskId;
+    $json['err'] = $err;
     // $json['columns'] = $markers;
     // $json['params'] = $params;
 

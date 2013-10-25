@@ -54,6 +54,7 @@
     <div id="nav"></div>
     <div id="tableDiv" class="container hero-unit">
         <h3>Results</h3>
+        <div class="row-fluid" id="alert"></div>
         <div>
           Filter by Project: <select id="projectFilter" style="margin-top:10px;"></select>
         </div>
@@ -99,7 +100,7 @@
         </div>
         <div class="row-fluid">
           <div class="span12 centerSub" id="overview">
-            <div class="row-fluid" id="alert"></div>
+            <div class="row-fluid" id="r_alert"></div>
             <div class="row-fluid">
               <div class="span12" style="margin-left:5px;">
                 <div class="row-fluid">
@@ -246,9 +247,9 @@
             }
           }
         },
-        alert: function(t) {
-          $('#alert').append(
-            '<div class="alert">'+
+        alert: function(w,t,e) { //w-where(page, result), t-message, e-boolean error or alert
+          $('#'+(w?w:'')+'alert').html(
+            '<div class="alert '+(e?'alert-error':'')+'">'+
               '<button type="button" class="close" data-dismiss="alert">&times;</button>'+
               '<strong>Warning!</strong> ' + t +
             '</div>');
@@ -266,7 +267,7 @@
             && data.params!=null && data.params.length>0) {
             return true;
           } else {
-            this.alert('Please select file(s) or Parameter(s).');
+            this.alert('r', 'Please select file(s) or Parameter(s).', false);
             return false;
           }
         }
@@ -294,7 +295,7 @@
           }).done(function(data) {
             if(data) {
               data = $.parseJSON(data);
-              if(data.success==='true' && data.markers && data.population) {
+              if(data.success===true && data.markers && data.population) {
                 var markers = data.markers, 
                     taskId = data.taskId,
                     pops = data.population;
@@ -306,6 +307,8 @@
 
                   _page.init = true;
                 }
+              } else {
+                _page.alert(null, data.err, true);
               }
             }
           });  
