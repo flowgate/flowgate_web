@@ -189,7 +189,10 @@
           var $ps = $('#projectSelect'), $currp = $('option:selected', $ps);
           var cb = function(obj, ts) {
             if(obj['success']==true) {
-              common.modal.hide(project.mid_s);  
+              common.modal.hide(project.mid_s);
+              if($('li.active').attr('id') === 'menuFile') { //update file list after changing project
+                _page.getFiles();
+              }  
             }
           }
           common.p.set($currp.val(),$currp.text());
