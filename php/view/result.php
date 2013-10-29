@@ -53,7 +53,7 @@
   <body>
     <div id="nav"></div>
     <div id="tableDiv" class="container hero-unit">
-        <h3>Results</h3>
+        <h3>Result</h3>
         <div class="row-fluid" id="alert"></div>
         <div>
           Filter by Project: <select id="projectFilter" style="margin-top:10px;"></select>
@@ -72,71 +72,76 @@
           </table>
         </div>
     </div>
-    <div id="resultDiv" class="row-fluid" style="display:block;">
-      <div class="span3" style="height:100%;">
-        <div class="well" id="files" style="height:100%;overflow:auto;">
-          <div class="row-fluid span12">
-            <button class="btn btn-mini btn-warning" type="button" id="fileAllButton">Select All</button>
-            <button class="btn btn-mini btn-inverse" type="button" id="fileNoneButton">Deselect All</button>
-            <!--<p><span class="label label-important">Collapsing a directory deselects files under it!</span></p>-->
-          </div>
-          <div class="row-fluid span12" id="fileNav" style="overflow:auto;"></div>
-        </div>
+    <div id="resultDiv" class="row-fluid" style="display:none;">
+      <div style="padding: 5px 15px;">
+        <button class="btn btn-mini" type="button" onclick="_page.toggle();">back to results</button>
       </div>
-      <div class="span9" style="">
-        <div class="row-fluid">
-          <div class="span12 centerSub">
-            <div class="span11 offset1" id="details">
-              <table>
-                <tr>
-                  <td><strong>Method Name</strong></td><td>FLOCK</td>
-                </tr>
-                <tr>
-                  <td><strong>Method Version</strong></td><td>v0.1</td>
-                </tr>
-              </table>
+      <div>
+        <div class="span3">
+          <div class="well" id="files" style="height:100%;overflow:auto;">
+            <div class="row-fluid span12">
+              <button class="btn btn-mini btn-warning" type="button" id="fileAllButton">Select All</button>
+              <button class="btn btn-mini btn-inverse" type="button" id="fileNoneButton">Deselect All</button>
+              <!--<p><span class="label label-important">Collapsing a directory deselects files under it!</span></p>-->
+            </div>
+            <div class="row-fluid span12" id="fileNav" style="overflow:auto;"></div>
+          </div>
+        </div>
+        <div class="span9" style="">
+          <div class="row-fluid">
+            <div class="span12 centerSub">
+              <div class="span11 offset1" id="details">
+                <table>
+                  <tr>
+                    <td><strong>Method Name</strong></td><td>FLOCK</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Method Version</strong></td><td>v0.1</td>
+                  </tr>
+                </table>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="row-fluid">
-          <div class="span12 centerSub" id="overview">
-            <div class="row-fluid" id="ralert"></div>
-            <div class="row-fluid">
-              <div class="span12" style="margin-left:5px;">
-                <div class="row-fluid">
-                  <div class="span3">
-                    <h6>Population</h6>
-                    <select id="populselect" class="selectpicker" rel="populations" multiple data-selected-text-format="count>1" data-count-selected-text="{0} of {1} populations">
-                    </select>
-                  </div>
-                  <div class="span2 markerSelect">
-                    <h6>X-axis</h6>
-                    <select id="xmarker" class="selectpicker"></select>
-                  </div>
-                  <div class="span2 markerSelect">
-                    <h6>Y-axis</h6>
-                    <select id="ymarker" class="selectpicker"></select>
-                  </div>
-                  <div class="span3">
-                    <h6>Parameters</h6>
-                    <select id="paramselect" class="selectpicker" multiple data-selected-text-format="count>1" data-count-selected-text="{0} of {1}"></select>
+          <div class="row-fluid">
+            <div class="span12 centerSub" id="overview">
+              <div class="row-fluid" id="ralert"></div>
+              <div class="row-fluid">
+                <div class="span12" style="margin-left:5px;">
+                  <div class="row-fluid">
+                    <div class="span3">
+                      <h6>Population</h6>
+                      <select id="populselect" class="selectpicker" rel="populations" multiple data-selected-text-format="count>1" data-count-selected-text="{0} of {1} populations">
+                      </select>
+                    </div>
+                    <div class="span2 markerSelect">
+                      <h6>X-axis</h6>
+                      <select id="xmarker" class="selectpicker"></select>
+                    </div>
+                    <div class="span2 markerSelect">
+                      <h6>Y-axis</h6>
+                      <select id="ymarker" class="selectpicker"></select>
+                    </div>
+                    <div class="span3">
+                      <h6>Parameters</h6>
+                      <select id="paramselect" class="selectpicker" multiple data-selected-text-format="count>1" data-count-selected-text="{0} of {1}"></select>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="row-fluid">
-              <div class="span2">
-                <button class="btn btn-primary" type="button" id="updateButton">Show Result</button>
+              <div class="row-fluid">
+                <div class="span2">
+                  <button class="btn btn-primary" type="button" id="updateButton">Show Result</button>
+                </div>
+                <div class="span10">
+                  <img src="../../images/ajax-loader.gif" id="loading-indicator" style="display:none;"/>
+                </div>
               </div>
-              <div class="span10">
-                <img src="../../images/ajax-loader.gif" id="loading-indicator" style="display:none;"/>
-              </div>
-            </div>
-            <div class="row-fluid" style="margin-top:5px;">
-              <div class="span12">
-                <div id="flock_main">
-                  <div id="flock_content">
-                    <table id="overviewTable" style="width:100%;"></table>
+              <div class="row-fluid" style="margin-top:5px;">
+                <div class="span12">
+                  <div id="flock_main">
+                    <div id="flock_content">
+                      <table id="overviewTable" style="width:100%;"></table>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -183,14 +188,17 @@
           opt_vt: "<option value='$v$'>$t$</option>",
           opt_vv: "<option value='$v$'>$v$</option>"
         },
+        toggle: function() {
+          $('#tableDiv, #resultDiv').toggle();
+        },
         view: function(taskId) {
           _data.meta(taskId);
           $('.selectpicker').selectpicker();
           _plugin.filetree.init('fileNav', taskId);
-          _page.event.trigger();
+          _page.event.init();
         },
         event: {
-          trigger: function() {
+          init: function() {
             this.button.file();
             this.button.update();
             this.file.checkbox();
@@ -279,13 +287,22 @@
             if(obj && obj.results) {
               $.each(obj.results, function(i,r) {
                 $table.find('tbody').append(
-                  '<tr><td>'+(i+1)+'</td><td><a href="javascript:_page.view(\'75b05242-69df-4fc7-8bf3-91581b9580f8\');">'+r.input+'</a></td><td>'+r.par+'</td><td>'+r.p+'</td></tr>'
+                  '<tr>' +
+                    '<td>'+(i+1)+'</td>'+
+                    '<td><a href="javascript:_page.view(\''+r.id+'\');">'+r.input+'</a></td>' +
+                    '<td>'+r.par+'</td><td>'+r.p+'</td>' +
+                  '</tr>'
                 );
               });
               $table.tablesorter();
             }
           };
-          renderResults({results:[{input:'input72.zip',par:'bins:8-11, density:4-6',p:'SomeProject'}]});
+          renderResults(
+            {results:[
+              {input:'input2_1.zip',par:'bins:8-11, density:4-6',p:'SomeProject',id:'160faccc-4c24-42c2-93e8-bd8c48c0f7e6'},
+              {input:'input2_2.zip',par:'bins:8-11, density:4-6',p:'SomeProject',id:'f25c08f4-a36b-4309-8692-2e67c9f64b0c'}
+            ]}
+          );
         },
         meta: function(tid) {
           var _this = this;
@@ -296,6 +313,7 @@
             if(data) {
               data = $.parseJSON(data);
               if(data.success===true && data.markers && data.population) {
+                _page.toggle();
                 var markers = data.markers, 
                     taskId = data.taskId,
                     pops = data.population;
