@@ -92,6 +92,7 @@
       </div>
       <div class="modal-body">
         <div class="divDialogElements">
+          <div id="fileAlert"></div>
           <div class="divPopupMenu">
             <span class="btn btn-success fileinput-button">
               <i class="glyphicon glyphicon-plus"></i>
@@ -164,8 +165,9 @@
                   } else {
                     fileMsg = file.error;
                   }
-                  $('<p/>').text(fileMsg).appendTo('#files');
+                  $('<p/>').text(fileMsg + ' is uploaded').appendTo('#files');
               });
+              _page.getFiles();
             },
             progressall: function (e, data) {
               var progress = parseInt(data.loaded / data.total * 100, 10);
