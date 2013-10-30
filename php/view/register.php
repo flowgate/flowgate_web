@@ -1,5 +1,5 @@
 <?php 
-    require("../common/common.php"); 
+    require("../common/session.php"); 
 ?>
 
 <!DOCTYPE html>

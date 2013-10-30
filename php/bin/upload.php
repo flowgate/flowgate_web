@@ -1,6 +1,6 @@
 <?php
 	error_reporting(E_ALL | E_STRICT);
-	require_once '../common/common.php';
+	require_once '../common/session.php';
 	if(isSessionAlive()) {
 		require('uploadHandler.php');
 		$upload_handler = new UploadHandler();

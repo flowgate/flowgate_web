@@ -7,7 +7,7 @@
     $_err = "request failed.";
     $message['success'] = false;
 
-    require_once "./common.php";
+    require_once "./session.php";
     if(strpos($_job, "u_")===false) {
         isSessionAlive();
     }
