@@ -21,7 +21,7 @@ public class GenePattern {
     private final String GP_GOFCM_RESULT_PATH = "genepattern.gofcm";
 
     public static void main(String[] args) throws Exception {
-        if (args.length < 8) {
+        if (args.length < 7) {
             throw new Exception("Failed: (" + GenePattern.class + ") missing input parameters!");
         }
 
@@ -80,7 +80,7 @@ public class GenePattern {
                         new Parameter("image_type", type == null?"color":type),
                         new Parameter("jobId", jobId),
                         new Parameter("population", "i"),
-                        new Parameter("output_path", "results")
+                        new Parameter("output_path", rb.getString(this.GP_GOFCM_RESULT_PATH))
                 }
         );
     }
