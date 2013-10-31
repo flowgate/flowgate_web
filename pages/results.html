@@ -275,7 +275,7 @@
           var _this = this,
               _data = _page.data;
           $.ajax({
-            url: '../php/bin/runFlock.php?tid='+_data.taskId+
+            url: '../php/bin/imageGenerator.php?tid='+_data.taskId+
                   '&f='+_data.files+'&ppl='+_data.ppl+'&pp='+_data.populs+
                   '&x='+_data.xmarker+'&y='+_data.ymarker+'&pr='+_data.params
           }).done(function(data) {

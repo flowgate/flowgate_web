@@ -9,7 +9,7 @@
     $ymarker = $_GET['y'];
     $param = rtrim($_GET['pr'], ",");
 
-    $taskDir = "$RESULT_DIR$taskId/";
+    $taskDir = "$RESULT_DIR/$taskId/";
     $dirSuffix = "_out";
 
     //handles file parameter

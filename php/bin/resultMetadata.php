@@ -3,7 +3,7 @@
 
     $taskId = $_GET['tid'];
 
-    $taskDir = $RESULT_DIR.$taskId; //../../Tasks/$taskId";
+    $taskDir = "$RESULT_DIR/$taskId"; //../../Tasks/$taskId";
 
     $propFile = "$taskDir/prop";
     $json = array();

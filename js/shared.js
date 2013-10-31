@@ -21,10 +21,19 @@ var common = {
       $('#'+id).modal('hide');
     }
   },
-  ajax: function(u,d,cb) {
+  alert:function(id,t,m) { //w-where(page, result), t-message, e-boolean error or alert
+    var type = 'alert-';
+    type += (t==='e'?'error':t==='i'?'info':t==='s'?'success':'block');
+    $('#'+id).html(
+      '<div class="alert ' + type + '">' +
+        '<button type="button" class="close" data-dismiss="alert">&times;</button>'+
+        /*'<strong>Warning!</strong> ' +*/ m +
+      '</div>');
+  },
+  ajax: function(t,u,d,cb) {
     $.ajax({
-      type: "POST",
-      async: false,
+      type: t==='p'?"POST":"GET",
+      async: true,
       url: u,
       dataType: 'json',
       data: d,

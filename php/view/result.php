@@ -275,7 +275,7 @@
             && data.params!=null && data.params.length>0) {
             return true;
           } else {
-            this.alert(true, false, 'Please select file(s) or Parameter(s).');
+            common.alert('ralert', 'a', 'Please select file(s) or Parameter(s).');
             return false;
           }
         }
@@ -307,7 +307,7 @@
         meta: function(tid) {
           var _this = this;
           $.ajax({
-            url: '../bin/getTaskInfo.php?tid='+tid,
+            url: '../bin/resultMetadata.php?tid='+tid,
             async: false
           }).done(function(data) {
             if(data) {
@@ -326,7 +326,7 @@
                   _page.init = true;
                 }
               } else {
-                _page.alert(false, true, data.err);
+                common.alert('alert', 'e', data.err);
               }
             }
           });  
@@ -335,7 +335,7 @@
           var _this = this,
               _data = _page.data;
           $.ajax({
-            url: '../bin/runFlock.php?tid='+_data.taskId+
+            url: '../bin/imageGenerator.php?tid='+_data.taskId+
                   '&f='+_data.files+'&ppl='+_data.ppl+'&pp='+_data.populs+
                   '&x='+_data.xmarker+'&y='+_data.ymarker+'&pr='+_data.params
           }).done(function(data) {
@@ -520,7 +520,7 @@
         filetree: {
           init: function(id, tid) {
             $('#'+id).fileTree({
-              root: '<?php echo $RESULT_DIR;?>'+tid+'/', //'../../Tasks/'+tid+'/', //'/Users/hkim/workspace/Workspace/gofcm/new/Tasks/'+tid+'/',//'../../Tasks/output/',
+              root: '<?php echo $RESULT_DIR;?>/'+tid+'/', //'../../Tasks/'+tid+'/', //'/Users/hkim/workspace/Workspace/gofcm/new/Tasks/'+tid+'/',//'../../Tasks/output/',
               script: '../bin/jqueryFileTree.php',
               expandSpeed: 300,
               collapseSpeed: 200,

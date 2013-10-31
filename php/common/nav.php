@@ -176,7 +176,7 @@
           };
           var pname = $('#newPname').val(), pdesc = $('#newPdesc').val();
           if(pname && pname.length>0) {
-            common.ajax(nav.contr+'p_a', {pname:pname, pdesc:pdesc}, cb);
+            common.ajax('p', nav.contr+'p_a', {pname:pname, pdesc:pdesc}, cb);
           } else {
             common.error('e', errId, 'Project name is empty!');
           }
@@ -196,7 +196,7 @@
             }
           }
           common.p.set($currp.val(),$currp.text());
-          common.ajax(nav.contr+'p_s', {pname:$currp.text(), pid:$currp.val()}, cb);
+          common.ajax('p', nav.contr+'p_s', {pname:$currp.text(), pid:$currp.val()}, cb);
         },
         get: function() {
           var cb = function(obj, ts) {
@@ -207,7 +207,7 @@
             });
             $ps.html(opts);  
           };
-          common.ajax(nav.contr+'p_u', {}, cb);
+          common.ajax('g', nav.contr+'p_u', {}, cb);
           common.modal.open(this.mid_s);  
         },
         forceSelect: function() { //force user to select a project
