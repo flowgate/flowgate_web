@@ -94,13 +94,14 @@
       <div class="modal-body">
         <div class="divDialogElements">
           <div class="divPopupMenu">
-            <span class="btn btn-success fileinput-button">
-              <i class="glyphicon glyphicon-plus"></i>
-              <span>Select files...</span>
-              <input id="fileupload" type="file" name="files[]" multiple>
-            </span>
-            <br>
-            <br>
+            <div>
+              <span class="btn btn-success fileinput-button">
+                <i class="glyphicon glyphicon-plus"></i>
+                <span>Select files...</span>
+                <input id="fileupload" type="file" name="files[]" multiple>
+              </span>
+              <p style="padding-top: 15px;" class="text-info">OR drag & drop files into this popup.</p>  
+            </div>
             <div id="progress" class="progress">
               <div class="progress-bar progress-bar-success"></div>
             </div>
