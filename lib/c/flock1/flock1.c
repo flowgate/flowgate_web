@@ -16,7 +16,10 @@
     Changes made July 23, 2010: made errors to STDERR
 	Changes made Nov 4, 2010: added one more error (select_num_bin<min_grid) || (select_num_bin>max_grid) to STDERR;
 	                          MAX_GRID changed to 50 as larger than 50 seems not useful for any file we have got
-	
+  
+  ADDED by hkim 11-5-13
+  gcc -Wall flock1.c find_connected.c -o flock1 -lm	
+
 ******************************************************************************/
 #include <time.h>
 #include <stdio.h>
@@ -2247,8 +2250,9 @@ int main (int argc, char **argv)
   fprintf(f_parameters,"Max=%d\n",max);
   fprintf(f_parameters,"Populations=%d\n",num_population);
   fprintf(f_parameters,"Events=%d\n",file_Len);
-  fprintf(f_parameters,"Markers=%d\n",num_dm);
-  fprintf(f_parameters,"Dots=\t%d\n",num_nonempty);
+  fprintf(f_parameters,"TotalMarkers=%d\n",num_dm);
+  fprintf(f_parameters,"Markers=[%s]\n",para_name_string);
+  fprintf(f_parameters,"Dots=%d\n",num_nonempty);
   fclose(f_properties);
 
 
