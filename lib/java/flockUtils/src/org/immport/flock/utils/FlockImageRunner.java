@@ -85,6 +85,10 @@ public class FlockImageRunner {
         System.out.println("Processing image generation: " + workingPath);
 
         List<String> files = Arrays.asList(children);
+        boolean hasAllFlockResults = false;
+        for(String output : FlockAdapterFile.FLOCK_RESULTS) {
+            hasAllFlockResults |= files.contains(output);
+        }
         if(files.contains(FlockAdapterFile.INPUT_DATA)
                 && files.contains(FlockAdapterFile.PERCENTAGE_TXT)
                 && files.contains(FlockAdapterFile.PROFILE_TXT)
