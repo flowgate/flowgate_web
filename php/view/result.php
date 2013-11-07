@@ -299,7 +299,7 @@
           };
           renderResults(
             {results:[
-              {input:'input2_1.zip',par:'bins:8-11, density:4-6',p:'SomeProject',id:'160faccc-4c24-42c2-93e8-bd8c48c0f7e6'},
+              {input:'input2_1.zip',par:'bins:8-11, density:4-6',p:'SomeProject',id:'3671b885-6e8d-4274-b510-33b8d8f2f480'},
               {input:'input2_2.zip',par:'bins:8-11, density:4-6',p:'SomeProject',id:'f25c08f4-a36b-4309-8692-2e67c9f64b0c'}
             ]}
           );
@@ -312,11 +312,11 @@
           }).done(function(data) {
             if(data) {
               data = $.parseJSON(data);
-              if(data.success===true && data.markers && data.population) {
+              if(data.success===true && data.markers && data.populations) {
                 _page.toggle();
                 var markers = data.markers, 
                     taskId = data.taskId,
-                    pops = data.population;
+                    pops = data.populations;
                 if(!_page.init) {
                   _page.data.taskId = taskId;
                   _this.popul(pops);
@@ -406,22 +406,13 @@
         popul: function(cnt) {
           var $selecObj = $('#populselect'),
               count = 0;
-          for(var i=1;i<=cnt;i++) {
+          for(var i=1;i<=parseInt(cnt);i++) {
             $selecObj.append(
               _page.html.opt_dc.replace("$c$", "popul"+(i>24?i%25+1:i))
                 .replace("$t$", "Population "+i)
                 .replace("$v$",i)
             );  
           }
-
-          // $.each(pops, function(i,pop){
-          //   $selecObj.append(
-          //     _page.html.opt_dc.replace("$c$", "popul"+(i>24?i%25+1:i))
-          //       .replace("$t$", "Population "+i+"("+pop+")")
-          //       .replace("$v$",i)
-          //     );
-          //   count++;
-          // });
           $selecObj.selectpicker('selectAll');
           _page.data.ppl = cnt;
         },
@@ -434,7 +425,17 @@
           _page.data.cols = markers;
         },
         params: function(params) {
-          var opts = '', param_keys = Object.keys(params), param_vals = [], opts_arr=[];
+          var opts = ''; //, param_keys = Object.keys(params), param_vals = [], opts_arr=[];
+          var bins = params.bins;
+          var density = params.density;
+          $.each(bins, function(bi, bv) {
+            $.each(density, function(di, dv) {
+              opts+=_page.html.opt_vt.replace('$v$', bv+':'+dv).replace('$t$', 'bins['+bv+']:density['+dv+']');  
+            })
+          });
+
+          /* 
+          * use code below for arbitrary parameter pairs other than bins and density
 
           $.each(param_keys, function(i,v) { //range or single value
             var val = params[v], vals = [], tokens;
@@ -444,7 +445,9 @@
                 vals.push(i);
               }
             } else {
-              vals.push(parseInt(val));
+              $.each(val, function(i,v) {
+                vals.push(parseInt(v));
+              });
             }
             param_vals.push(vals);
           });
@@ -470,6 +473,8 @@
             })
             opts+=_page.html.opt_vt.replace('$v$', opts_arr[i]).replace('$t$', t);    
           });
+          */
+
           $("#paramselect").append(opts).selectpicker();
         }
       };

@@ -482,7 +482,7 @@ class UploadHandler
     protected function upcount_name_callback($matches) {
         $index = isset($matches[1]) ? intval($matches[1]) + 1 : 1;
         $ext = isset($matches[2]) ? $matches[2] : '';
-        return ' ('.$index.')'.$ext;
+        return '_'.$index.$ext; //' ('.$index.')'.$ext;
     }
 
     protected function upcount_name($name) {
