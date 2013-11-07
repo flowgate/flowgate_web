@@ -17,6 +17,7 @@ public class FlockAdapterFile implements FlockAdapter {
     public final static String POPULATION_CENTER = "population_center.txt";
     public final static String MFI = "MFI.txt";
     public final static String PARAMETERS = "parameters.txt";
+    public final static String FCS = "fcs.properties";
     public final static String[] FLOCK_RESULTS = {
         INPUT_DATA,
         PERCENTAGE_TXT,
@@ -24,7 +25,8 @@ public class FlockAdapterFile implements FlockAdapter {
         POPULATION_ID_COL,
         POPULATION_CENTER,
         MFI,
-        PARAMETERS
+        PARAMETERS,
+        FCS
     };
     private File outputDir;
     private File inputDir;

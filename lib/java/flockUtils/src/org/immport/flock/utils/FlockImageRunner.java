@@ -3,11 +3,13 @@ package org.immport.flock.utils;
 import org.immport.flock.commons.FlockAdapterFile;
 import org.immport.flock.commons.ProcessParameter;
 import org.immport.flock.commons.Zipper;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.io.FileReader;
+import java.io.PrintWriter;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -18,7 +20,8 @@ import java.util.concurrent.Executors;
  * org.immport.flock.utils
  */
 public class FlockImageRunner {
-    private static final int MAX_POOL_SIZE = 20;
+    private static final int MAX_POOL_SIZE = 15;
+    private static final String[] KEYS_FOR_PROP = {"bins", "density", "markers", "populations"};
 
     public static void main(String[] args) throws Exception {
         String errorMsg = "Usage: command <type: overview_color or overview_bw)> " +
@@ -65,37 +68,99 @@ public class FlockImageRunner {
         //extract flock result files
         Zipper.extract(inputPath, results);
 
-        this.execute(type, population, results);
+        Map<String, List<String>> info = new HashMap<String, List<String>>();
+
+        this.execute(type, population, results, info);
+
+        //sort population values
+        List<String> populations = info.get("populations");
+        Collections.sort(populations, new Comparator<String>() {
+            public int compare(String s1, String s2) {
+                return Integer.valueOf(s1).compareTo(Integer.valueOf(s2));
+            }
+        });
+
+        //create json data file
+        JSONObject jsonProp = new JSONObject();
+        jsonProp.put("markers", info.get("markers"));
+        jsonProp.put("populations", populations.get(populations.size()-1)); //records only the largest
+        JSONObject jsonParam = new JSONObject();
+        jsonParam.put("bins", info.get("bins"));
+        jsonParam.put("density", info.get("density"));
+        jsonProp.put("params", jsonParam);
+        PrintWriter writer = new PrintWriter(new File(resultDir.getAbsolutePath() + File.separator + "prop"));
+        writer.println(jsonProp.toString());
+        writer.close();
 
         Process chmodProcess = Runtime.getRuntime().exec("chmod -R a+rw " + results);
         chmodProcess.waitFor();
+
+        //no need to build zip since all outputs now go to common result area
         //Zipper.buildNestedZip(results);
 
     }
 
-    private void execute(String type, String population, String workingPath) throws Exception {
+    private void execute(String type, String population, String workingPath, Map<String, List<String>> info) throws Exception {
         String[] children = new File(workingPath).list();
         for(String childName : children) {
             File child = new File(workingPath + File.separator + childName);
             if(child.isDirectory()) {
-                this.execute(type, population, child.getAbsolutePath());
+                this.execute(type, population, child.getAbsolutePath(), info);
             }
         }
 
         System.out.println("Processing image generation: " + workingPath);
 
+        //checks if current directory has all flock result files
         List<String> files = Arrays.asList(children);
-        boolean hasAllFlockResults = false;
+        boolean hasAllFlockResults = true;
         for(String output : FlockAdapterFile.FLOCK_RESULTS) {
-            hasAllFlockResults |= files.contains(output);
+            if(!files.contains(output)) {
+                hasAllFlockResults = false;
+                break;
+            }
+
+            //read flock results to generate prop file
+            if(output.equals(FlockAdapterFile.FCS)) {
+                BufferedReader br = new BufferedReader(new FileReader(workingPath + File.separator + FlockAdapterFile.FCS));
+                String line = null;
+                while((line = br.readLine()) != null) {
+                    if(line.startsWith("Bins") || line.startsWith("Density") || line.startsWith("Populations") || line.startsWith("Markers")) {
+                        String[] tempArr = line.split("=");
+
+                        if(tempArr.length == 2 && tempArr[0] != null && tempArr[1] != null) {
+                            String key = tempArr[0].toLowerCase();
+                            String value = tempArr[1];
+
+                            List<String> values = null;
+                            if(info.containsKey(key)) {
+                                values = info.get(key);
+                            } else {
+                                values = new ArrayList<String>();
+                                info.put(key, values);
+                            }
+
+                            if(key.equals("markers")) {
+                                String onlyMarkers = value.substring(value.indexOf("[") + 1, value.indexOf("]"));
+                                String[] markers = onlyMarkers.split("\\t");
+                                for(String marker : markers) {
+                                    if(!values.contains(marker)) {
+                                        values.add(marker);
+                                    }
+                                }
+                            } else {
+                                if(!values.contains(value)) {
+                                    values.add(value);
+                                }
+                            }
+                        }
+                    }
+                }
+                br.close();
+            }
         }
-        if(files.contains(FlockAdapterFile.INPUT_DATA)
-                && files.contains(FlockAdapterFile.PERCENTAGE_TXT)
-                && files.contains(FlockAdapterFile.PROFILE_TXT)
-                && files.contains(FlockAdapterFile.POPULATION_ID_COL)
-                && files.contains(FlockAdapterFile.POPULATION_CENTER)
-                && files.contains(FlockAdapterFile.MFI)
-                && files.contains(FlockAdapterFile.PARAMETERS)) {
+
+        if(hasAllFlockResults) {
             File workingDir = new File(workingPath + File.separator +"images");
             FlockImageGenerator fig = new FlockImageGenerator(0l, new File(workingPath), workingDir);
             fig.processFlockOutput();

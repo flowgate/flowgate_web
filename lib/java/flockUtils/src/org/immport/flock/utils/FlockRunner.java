@@ -2,7 +2,6 @@ package org.immport.flock.utils;
 
 import org.apache.commons.io.IOUtils;
 import org.immport.flock.commons.Zipper;
-import org.json.JSONObject;
 
 import java.io.*;
 import java.net.URI;
@@ -21,7 +20,7 @@ import java.util.zip.ZipFile;
  * org.immport.flock.utils
  */
 public class FlockRunner {
-    private final String flockName = "flock1"; //"flock1", "flock1_gp_osx";
+    private final String flockName = "flock1_gp";
     public final String errorMsg = "Usage: (d:integer) command <zipFile> <# of bin(d) OR range of # of bins(d-d)> <density(d) OR range of density(d-d)>";
 
     public static void main(final String[] args) throws Exception {
@@ -101,26 +100,13 @@ public class FlockRunner {
             File resultDir = new File(workDir + "result");
             resultDir.mkdir();
 
-            List<String> markers = new ArrayList<String>();
-            this.executeHelper(flockUri, inputDir, resultDir, bins, densities, population, markers);
-
-            //create json data file
-            JSONObject jsonProp = new JSONObject();
-            jsonProp.put("markers", markers);
-            jsonProp.put("population", population);
-            JSONObject jsonParam = new JSONObject();
-            jsonParam.put("bins", binStr);
-            jsonParam.put("density", densityStr);
-            jsonProp.put("params", jsonParam);
-            PrintWriter writer = new PrintWriter(new File(resultDir.getAbsolutePath() + File.separator + "prop"));
-            writer.println(jsonProp.toString());
-            writer.close();
+            this.executeHelper(flockUri, inputDir, resultDir, bins, densities, population);
 
             Zipper.buildNestedZip(resultDir.getAbsolutePath());
         }
     }
 
-    private void executeHelper(URI flockUri, File in, File out, List<Integer> bins, List<Integer> densities, int population, List<String> markers) throws Exception {
+    private void executeHelper(URI flockUri, File in, File out, List<Integer> bins, List<Integer> densities, int population) throws Exception {
         String[] files = in.list();
         if(files!=null && files.length>0) {
             for(String file : files) {
@@ -128,21 +114,10 @@ public class FlockRunner {
                 File inputFile = new File(inputFileName);
                 if(inputFile.isDirectory()) {
                     File newOut = new File(out.getAbsolutePath() + File.separator + file);
-                    this.executeHelper(flockUri, inputFile, newOut, bins, densities, population, markers);
+                    this.executeHelper(flockUri, inputFile, newOut, bins, densities, population);
                 } else {
 
                     if(!inputFile.isHidden()) { //skips hidden files: UNIX(.), Windows(check file property)
-                        BufferedReader br = new BufferedReader(new FileReader(inputFile));
-                        String line = br.readLine();
-                        String[] markerArr = line.split("\t");
-                        for(String marker : markerArr) {
-                            if(!markers.contains(marker)) {
-                                markers.add(marker);
-                            }
-                        }
-                        br.close();
-
-
                         String fileOutName = file + "_out";
 
                         for(int aBin : bins) {
@@ -154,6 +129,7 @@ public class FlockRunner {
                                         fileOutName + "_" + aBin + "_" + aDensity;
                                 File outputDir = new File(currName);
                                 outputDir.mkdirs();
+
                                 this.runFlock(flockUri, outputDir, inputFileName, aBin, aDensity, population);
                             }
                         }

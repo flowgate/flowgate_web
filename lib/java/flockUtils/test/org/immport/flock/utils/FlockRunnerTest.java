@@ -1,5 +1,6 @@
 package org.immport.flock.utils;
 
+import org.immport.flock.commons.Zipper;
 import org.junit.Test;
 
 /**
@@ -24,6 +25,6 @@ public class FlockRunnerTest {
                 testDir,
                 "flock1_gp_osx");
 
-        //Zipper.extract(testDir + "result.zip", testDir + "output");
+        Zipper.extract(testDir + "result.zip", testDir + "output");
     }
 }
