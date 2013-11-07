@@ -155,7 +155,7 @@ class DatabaseModule {
 	
 	//task
 	function addTask($fid, $task) {
-		error_log($fid);
+		
 		$fileColl = $this->getCollection($this->FILE_TABLE);
 		$result = $fileColl->update(
 			array("_id" => $fid),
@@ -167,7 +167,6 @@ class DatabaseModule {
 
 	function getTasks($uid, $pid) {
 		$project_names = $this->getProjectNames($uid);
-		error_log(print_r($project_names, true));
 
 		$search = array(
 			"f_user_id" => $uid,

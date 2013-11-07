@@ -24,7 +24,7 @@
       exit;
     }
 
-    if(isset($_SESSION['authenticated']) && $_SESSION['authenticated']=="true" && isset($_SESSION['userId'])) {
+    if(isset($_SESSION['authenticated']) && $_SESSION['authenticated']=="true" && isset($_SESSION['userId']) && isset($_SESSION['userIdx'])) {
       $rtnVal = true;
     }
     return $rtnVal;

@@ -7,7 +7,7 @@
 
         function dbm() {
             if(is_null($this->dbModule)) {
-                require_once 'db.php';
+                require_once 'db_new.php';
                 $this->dbModule = new DatabaseModule();
             }
         } 
@@ -17,7 +17,7 @@
                 $this->dbm();
                 $con = $this->dbModule->connect();
                 $duplicate = $this->dbModule->findProject($con, $_pname);
-                error_log(print_r($duplicate, 1));
+                
                 if($duplicate) {
                     $this::$RESULT = "'$_pname' already exists!";
                 } else {

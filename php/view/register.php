@@ -18,7 +18,8 @@
     <div id="nav"></div>
     <div class="container hero-unit">
         <h3>Register</h3>
-        <form action="register.php" method="post"> 
+        <form action="../common/controller.php" method="post"> 
+            <input type="hidden" name="j" value="u_r" />
             <label>Name:<strong style="color:darkred;">*</strong></label> 
             <input type="text" name="uname" value="" /> 
             <label>Email: <strong style="color:darkred;">*</strong></label> 

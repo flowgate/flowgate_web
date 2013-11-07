@@ -14,6 +14,7 @@
 
 	//session_start();
     $_uid = isset($_SESSION['authenticated'],$_SESSION['userId'])?$_SESSION['userId']:null;
+    $_uidx = isset($_SESSION['authenticated'],$_SESSION['userIdx'])?$_SESSION['userIdx']:null;
 
 
     #assigns correct module according to the passed job type
@@ -50,13 +51,13 @@
         case "p_a": //add new project
             $_pname = (isset($_POST['pname'])?$_POST['pname']:null);
             $_pdesc = (isset($_POST['pdesc'])?$_POST['pdesc']:null);
-            $_module->addProject($_pname, $_pdesc, $_uid);
+            $_module->addProject($_pname, $_pdesc, $_uidx);
             $message['msg'] = $_module::$RESULT;
             $_SESSION['currp'] = $_pname;
             $_SESSION['currpId'] = $_module::$CURRID;
             break;
         case "p_u": //get user projects
-            $_module->getUserProject($_uid);
+            $_module->getUserProject($_uidx);
             $message['projects'] = $_module::$RESULT;
             break;
         case "p_g": //get current session project
@@ -88,20 +89,17 @@
             $message['currp'] = $_SESSION['currp'];
             break;
         case "u_r": //register user
-            if(isset($_POST['uemail'], $_POST['uname'], $_POST['pass'])) {
-                $_module->register($_uid, $_POST['pass'], $_POST['uname'], $_POST['uemail']);
-            } else {
-                //error message?
+            if(isset($_POST['uemail'], $_POST['uname'], $_POST['pass'], $_POST['uid'])) {
+                $_module->registerUser($_POST['uid'], $_POST['pass'], $_POST['uname'], $_POST['uemail'], $_POST['uaffil']);
             }
+            break;
+        case "u_l":
+            $_module->authenticateUser($_POST['uname'], $_POST['pass']);
             break;
         case "u_s":
             $message['s_a'] = checkSession();
             $_module::$SUCCESS = true;
-            break;
-        case "u_l":
-            $_module->autheticateUser($_POST['uname'], $_POST['pass']);
-            header("Location: ../../index.html");
-            die("Redirecting to: index.html");    
+            break;    
         default: 
             $_module::$SUCCESS = isSessionAlive();
     }
@@ -109,8 +107,17 @@
     if(!$_module::$SUCCESS){
         $message['error']['reason'] = (isset($_module::$RESULT)?$_module::$RESULT:$_err);
     } else {
-        $message['success'] = true;
+        if($_job == "u_l") {
+            redirectMain();
+        } else {
+            $message['success'] = true;
+        }
     }
     echo json_encode($message);
+
+    function redirectMain() {
+        header("Location: ../../index.html");
+        die("Redirecting to: index.html");    
+    }
 
 ?>

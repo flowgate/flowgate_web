@@ -203,7 +203,7 @@
             var $ps = $('#projectSelect'),
                 opts='<option value="0">Select Project</option>';
             $.each(obj.projects, function(i, p) {
-              opts+='<option value="'+p.p_id+'">'+p.p_name+'</option>';
+              opts+='<option value="'+p.datasetID+'">'+p.datasetName+'</option>';
             });
             $ps.html(opts);  
           };

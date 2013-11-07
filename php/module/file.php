@@ -8,7 +8,7 @@ class FileModule {
 
     function dbm() {
         if(is_null($this->dbModule)) {
-            require_once 'db.php';
+            require_once 'db_new.php';
             $this->dbModule = new DatabaseModule();
         }
     }
