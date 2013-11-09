@@ -39,10 +39,14 @@
             $this->dbm();
             $con = $this->dbModule->connect();
             $result = $this->dbModule->findUserProject($con, $_uid);
-            if(!is_null($result) && count($result)>0) {
-                $this::$RESULT = $result;
-                $this::$SUCCESS = true;
+            if(!is_null($result)) {
+                if(count($result)>0) {
+                    $this::$RESULT = $result;
+                } else {
+                    $this::$RESULT = array();
+                }
             }
+            $this::$SUCCESS = true;
         }
     }
 ?>

@@ -10,7 +10,7 @@ class DatabaseModule {
 	function connect() {
 		$username = "ifx_gofcm_adm";
         $password = "ifx_gofcm_adm";
-        $hostname = "genepatt-dev.jcvi.org:3666"; 
+        $hostname = "genepatt-dev.jcvi.org:3666"; //"localhost:3306"; //"genepatt-dev.jcvi.org:3666"; 
 
         //connection to the database
         $con = mysqli_connect($hostname, $username, $password, DatabaseModule::$DBNAME) or die("Unable to connect to MySQL");
@@ -112,7 +112,7 @@ class DatabaseModule {
 			$result = 'project name already exsits!';
 		} else {
 			$query = sprintf(
-				"INSERT INTO %s.%s (datasetName, datasetDesc, userIdx) values ('%s', '%s', '%s')", 
+				"INSERT INTO %s.%s (datasetName, datasetDesc, userIdx) values ('%s', '%s', %d)", 
 				$this::$DBNAME, $this::$PROJECTTABLE,
 				$pname, $pdesc, $uid
 			);
@@ -125,32 +125,33 @@ class DatabaseModule {
 	}
 
 	//file
-	function addFile($con, $pid, $name, $org, $uid) {
+	function addFile($con, $name, $pid, $uid) {
 		$query = sprintf(
-			"INSERT INTO %s.%s (f_name, f_org_name, f_status, f_project_id, f_user_id) values ('%s', '%s', 1, %d, '%s')", 
+			"INSERT INTO %s.%s (dataInputFileName, datasetID, userIdx) values ('%s', %d, %d)", 
 			$this::$DBNAME, $this::$FILETABLE,
-			$name, $org, $pid, $uid
+			$name, $pid, $uid
 		);
+		error_log($query);
 		return $this->add($con, $query);	
 	}
 
 	function getFile($con, $uid, $pid, $fid) {
-		$query = sprintf("SELECT * FROM %s.%s f, %s.%s p WHERE f.f_user_id='%s' AND f_project_id=p.p_id", 
+		$query = sprintf("SELECT * FROM %s.%s f, %s.%s p WHERE f.userIdx=%d AND f.datasetID=p.datasetID", 
 			$this::$DBNAME, $this::$FILETABLE, $this::$DBNAME, $this::$PROJECTTABLE, $uid);
 		if(isset($fid)) {
-			$query = $query." AND f.f_id=".$fid;
+			$query = $query." AND f.dataInputFileID=".$fid;
 		} elseif(isset($pid)) {
-			$query = $query." AND f.f_project_id=".$pid;	
+			$query = $query." AND f.datasetID=".$pid;	
 		}
 		return $this->findMany($con, $query);
 	}
 
 	//task
-	function addTask($con, $tname, $tbin, $tden, $fid, $pid, $uid) {
+	function addTask($con, $tid, $pid, $fid, $uid) {
 		$query = sprintf(
-			"INSERT INTO %s.%s (t_name, t_bin, t_density, t_status, t_file_id, t_project_id, t_user_id) values ('%s', %d, %d, %d, %d, %d, '%s')",
+			"INSERT INTO %s.%s (analysisName, datasetID, dataInputFileID, userIdx) values ('%s', %d, %d, %d)",
 				$this::$DBNAME, $this::$TASKTABLE,
-				$tname, $tbin, $tden, 1, $fid, $pid, $uid);
+				$tid, $pid, $fid, $uid);
 		return $this->add($con, $query);
 	}
 

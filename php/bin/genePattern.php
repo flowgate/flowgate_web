@@ -13,6 +13,7 @@
 
     //user id
     $uid = isset($_SESSION['authenticated'],$_SESSION['userId'])?$_SESSION['userId']:null;
+    $uidx = isset($_SESSION['authenticated'],$_SESSION['userIdx'])?$_SESSION['userIdx']:null;
     //job id
     $jid = v3UUID($uid);
 

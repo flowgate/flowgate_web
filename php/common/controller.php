@@ -40,12 +40,12 @@
     	case "f_a": //add file
             $_fname = $_POST['fname'];
             $_pid = $_POST['pid'];
-    		$_module->addFile($_fname, $_pid, $_uid, '');
+    		$_module->addFile($_fname, $_pid, $_uidx, '');
             //$message['file'] = $_FILES['uploadFile']['name'];
     		break;
     	case "f_u": //get user files
             $_pid = $_POST['pid'];
-            $_module->getFiles($_uid, $_pid, null);
+            $_module->getFiles($_uidx, $_pid, null);
             $message = $_module::$RESULT;
     		break;
         case "p_a": //add new project
@@ -73,15 +73,15 @@
             $_SESSION['currpId'] = $_POST['pid'];
             $_module::$SUCCESS = true;
             break;
-        case "t_a":
-            $_tname = $_POST['tname'];
-            $_tbin = $_POST['tbin'];
-            $_tden = $_POST['tden'];
-            $_fid = $_POST['fid'];
-            $_pid = $_SESSION['currpId'];
+        case "t_s":
+            $pid = $_POST['pid'];
+            $fid = $_POST['fid'];
+            $bins = $_POST['bins'];
+            $density = $_POST['density'];
+            $population = $_POST['pop'];
             
-            $_module->runAnalysis($_tname,$_tbin,$_tden,$_fid,$_pid,$_uid);
-            $message['tname'] = $_tname;
+            $jid = $_module->submit($pid, $fid, $_uidx, $bins, $density, $pop);
+            $message['jid'] = $jid;
             break;
         case "t_u": //get user files
             $_module->getTasks($_uid, (isset($_SESSION['currpId'])?$_SESSION['currpId']:null), null);
@@ -107,7 +107,7 @@
     if(!$_module::$SUCCESS){
         $message['error']['reason'] = (isset($_module::$RESULT)?$_module::$RESULT:$_err);
     } else {
-        if($_job == "u_l") {
+        if($_job == "u_l" || $_job == "u_r") {
             redirectMain();
         } else {
             $message['success'] = true;

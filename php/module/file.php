@@ -16,7 +16,7 @@ class FileModule {
     function addFile($_name, $_pid, $_uid, $_org) {
     	$this->dbm();
         $con = $this->dbModule->connect();
-        $this::$SUCCESS = $this->dbModule->addFile($con, $_pid, $_name, $_org, $_uid);
+        $this::$SUCCESS = $this->dbModule->addFile($con, $_name, $_pid, $_uid);
     } 
 
 	function getFiles($_uid, $_pid, $_fid) {

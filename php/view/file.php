@@ -77,7 +77,7 @@
                 <th>#</th>
                 <th>File Name</th>
                 <th>Project</th>
-                <th>Status</th>
+                <!--<th>Status</th>-->
               </tr>
             </thead>
             <tbody></tbody>
@@ -198,9 +198,9 @@
                 $list.append(
                   '<tr>' +
                     '<td>'+(i+1)+'</td>' +
-                    '<td><a href="#" onclick="_page.fileClick(\'' + f.f_name+ '\');">'+f.f_name+'</a></td>' +
-                    '<td>'+f.p_name+'</td>' +
-                    '<td>'+f.f_status+'</td>' +
+                    '<td><a href="#" onclick="_page.fileClick(\'' + f.dataInputFileID+ '\');">'+f.dataInputFileName+'</a></td>' +
+                    '<td>'+f.datasetName+'</td>' +
+                    //'<td>'+f.f_status+'</td>' +
                   '</tr>'
                 );
               });
@@ -246,7 +246,7 @@
             density: density,
             pop: pop
           }
-          common.ajax('p', '../bin/genePattern.php', jobParam, ran);
+          common.ajax('p', '../common/controller.php?j=t_s', jobParam, ran);
         }
       };
     </script>
