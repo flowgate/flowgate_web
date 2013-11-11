@@ -14,10 +14,6 @@ class DatabaseModule {
 
         //connection to the database
         $con = mysqli_connect($hostname, $username, $password, DatabaseModule::$DBNAME) or die("Unable to connect to MySQL");
-
-        /*$con = new Mongo("mongodb://gofcm_user:gofcm_user@localhost:27017/gofcm");
-        $dbname = 'gofcm';
-        $userColl = 'users';*/
         if (mysqli_connect_error()) {
 		    die('Connect Error ('.mysqli_connect_errno().') '.mysqli_connect_error());
 		} else {
@@ -99,15 +95,15 @@ class DatabaseModule {
 		return $this->findMany($con, $query);	
 	}
 
-	function findProject($con, $pname) {
-		$query = sprintf("SELECT * FROM %s.%s WHERE datasetName='%s'", $this::$DBNAME, $this::$PROJECTTABLE, $pname);
+	function findProject($con, $pname, $uid) {
+		$query = sprintf("SELECT * FROM %s.%s WHERE datasetName='%s' and userIdx=%d", $this::$DBNAME, $this::$PROJECTTABLE, $pname, $uid);
 		return $this->findOne($con, $query);
 	}
 
 	function addProject($con, $pname, $pdesc, $uid) {
 		$result = 'loading project failed!';
 
-		$old = $this->findProject($con, $pname);
+		$old = $this->findProject($con, $pname, $uid);
 		if(!is_null($old)) {
 			$result = 'project name already exsits!';
 		} else {
@@ -131,7 +127,6 @@ class DatabaseModule {
 			$this::$DBNAME, $this::$FILETABLE,
 			$name, $pid, $uid
 		);
-		error_log($query);
 		return $this->add($con, $query);	
 	}
 

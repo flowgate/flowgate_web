@@ -22,10 +22,13 @@
                     $this::$RESULT = "'$_pname' already exists!";
                 } else {
                     $result = $this->dbModule->addProject($con, $_pname, $_pdesc, $_uid);
-                    if(isset($result)) {
-                        $this::$SUCCESS = true;
-                        $this::$RESULT = "Added project '".$_pname."'";
-                        $this::$CURRID = $result;
+                    if(isset($result) && $result == "success") {
+                        $result = $this->dbModule->findProject($con, $_pname, $_uid); 
+                        if(!is_null($result)) {
+                            $this::$CURRID = $result['datasetID']; 
+                            $this::$SUCCESS = true;
+                            $this::$RESULT = "Added project '".$_pname."'";   
+                        }
                     } else {
                         $this::$RESULT = $result;
                     }

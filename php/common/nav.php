@@ -169,9 +169,10 @@
           var errId = '#'+this.mid_n+' .divDialogElements';
           var cb = function(obj, ts) {
             if(obj && obj['success']==true) {
+              common.p.set(obj['newpid'], obj['newpname']);
               common.modal.hide('newProjectModal');
             } else {
-              common.error('e', errId, obj['msg']);
+              common.error('e', errId, obj['error']['msg']);
             }
           };
           var pname = $('#newPname').val(), pdesc = $('#newPdesc').val();

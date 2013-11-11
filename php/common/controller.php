@@ -52,9 +52,13 @@
             $_pname = (isset($_POST['pname'])?$_POST['pname']:null);
             $_pdesc = (isset($_POST['pdesc'])?$_POST['pdesc']:null);
             $_module->addProject($_pname, $_pdesc, $_uidx);
-            $message['msg'] = $_module::$RESULT;
-            $_SESSION['currp'] = $_pname;
-            $_SESSION['currpId'] = $_module::$CURRID;
+
+            if($_module::$SUCCESS){
+                $message['newpname'] = $_pname;
+                $message['newpid'] = $_module::$CURRID;
+                $_SESSION['currp'] = $_pname;
+                $_SESSION['currpId'] = $_module::$CURRID;
+            }
             break;
         case "p_u": //get user projects
             $_module->getUserProject($_uidx);
@@ -105,7 +109,7 @@
     }
 
     if(!$_module::$SUCCESS){
-        $message['error']['reason'] = (isset($_module::$RESULT)?$_module::$RESULT:$_err);
+        $message['error']['msg'] = (isset($_module::$RESULT)?$_module::$RESULT:$_err);
     } else {
         if($_job == "u_l" || $_job == "u_r") {
             redirectMain();
