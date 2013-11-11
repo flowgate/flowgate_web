@@ -78,19 +78,20 @@
             $_module::$SUCCESS = true;
             break;
         case "t_s":
+            set_time_limit(0);
+
             $pid = $_POST['pid'];
             $fid = $_POST['fid'];
             $bins = $_POST['bins'];
             $density = $_POST['density'];
-            $population = $_POST['pop'];
+            $pop = $_POST['pop'];
             
             $jid = $_module->submit($pid, $fid, $_uidx, $bins, $density, $pop);
             $message['jid'] = $jid;
             break;
         case "t_u": //get user files
-            $_module->getTasks($_uid, (isset($_SESSION['currpId'])?$_SESSION['currpId']:null), null);
-            $message = $_module::$RESULT;
-            $message['currp'] = $_SESSION['currp'];
+            $_module->getTasks($_uidx, (isset($_SESSION['currpId'])?$_SESSION['currpId']:null), null);
+            $message['results'] = $_module::$RESULT;
             break;
         case "u_r": //register user
             if(isset($_POST['uemail'], $_POST['uname'], $_POST['pass'], $_POST['uid'])) {
@@ -110,6 +111,11 @@
 
     if(!$_module::$SUCCESS){
         $message['error']['msg'] = (isset($_module::$RESULT)?$_module::$RESULT:$_err);
+        if($_job == "u_l") {
+            session_start();
+            $_SESSION['error'] = "Your username or password was incorrect."; 
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
+        }
     } else {
         if($_job == "u_l" || $_job == "u_r") {
             redirectMain();

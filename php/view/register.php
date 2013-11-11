@@ -34,6 +34,7 @@
         </form>
     </div>
 
+    <script src="../../js/shared.js"></script>
     <script src="../../js/jquery.min.js"></script>
     <script>
         $(function(){

@@ -15,7 +15,7 @@
         $json = json_decode($contents, true);
     } else {
         $success = false;
-        $err = "The result or prop file does not exist!";
+        $err = "The result or prop file does not exist or analysis has not been completed!";
     }
 
     // $fp = fopen("$taskDir/profile.txt",'r');

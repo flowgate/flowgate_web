@@ -16,17 +16,22 @@ class TaskModule {
 
 
     function submit($pid, $fid, $uid, $bins, $density, $pop) {
+        require_once("../common/constants.php");
         $this->dbm();
         $con = $this->dbModule->connect();
         $jid = null;
 
         $file = $this->dbModule->getFile($con, $uid, $pid, $fid);
+        
         if(!is_null($file) && count($file) == 1) {
+            $file = reset($file); //gets the first
             //job id
             $jid = $this->v3UUID($uid);
 
-            $filePath = $file["dataInputFilePath"].DIRECTORY_SEPARATOR.$file["dataInputFileName"];
-            $ran = false; //$this->runGenepattern($uid, $jid, $filePath, $bins, $density, $pop);
+            $fileDir = (!is_null($file["dataPath"]) && $file["dataPath"]!="NULL"?$file["dataPath"]:$FILE_DIR);
+            $filePath = $fileDir.DIRECTORY_SEPARATOR.$file["dataInputFileName"];
+            
+            $ran = $this->runGenepattern("hkim", $jid, $filePath, $bins, $density, $pop);
             if($ran) {
                 $this::$SUCCESS = $this->dbModule->addTask($con, $jid, $pid, $fid, $uid);
             } else {
@@ -44,6 +49,7 @@ class TaskModule {
             //" -Djava.awt.headless=true".
             " org.immport.flock.utils.GenePattern ";
         $params = "$uid $input $bins $density $pop color $jid";
+        error_log($executor.$params);
         //exec($executor.$params." > /dev/null 2>&1 &", $rtnVal);
         return shell_exec($executor.$params);
     }
@@ -58,7 +64,7 @@ class TaskModule {
 
         // Convert Namespace UUID to bits
         for($i = 0; $i < strlen($nhex); $i+=2) {
-            $nstr .= chr(hexdec($nhex[$i].$nhex[$i+1]));
+            $nstr .= chr(hexdec($nhex[$i].$nhex[($i < strlen($nhex)?$i:$i+1)]));
         }
 
         // Calculate hash value
@@ -81,37 +87,14 @@ class TaskModule {
         );
     } 
 
-	function getTasks($_uid, $_pid, $_tid) {
+	function getTasks($uid, $pid, $tid) {
         $this->dbm();
-        $result = $this->dbModule->getTasks($_uid, $_pid);
-        $json = null;
+        $con = $this->dbModule->connect();
+        $result = $this->dbModule->getTask($con, $uid, $pid, $tid);
         if(!is_null($result)) {
-            $fields = array("t_num","t_name","t_bin","t_density","t_status","f_name", "p_name", "t_id");
-            $headers = array("Sequence", "Name", "Bin#", "Density", "Status", "File Name","Project Name", "Task ID");
-            $columns = array();
-            for($i=0;$i<count($headers);$i++) {
-                $column['header'] = $headers[$i];
-                $column['dataIndex'] = $fields[$i];
-                array_push($columns, $column);
-            }
-
-            $rows = array();
-            $i=1;
-            foreach ($result as $task) {
-                $row['t_num']=$i;
-                foreach(array_keys($task) as $key) {
-                    $row[$key]=($key=='t_status'?($task[$key]=='1'?"Completed":"N/A"):$task[$key]);
-                }
-                array_push($rows, $row);
-            }
-
-            $json["columns"] = $columns;
-            $json["fields"] = $fields;
-            $json["rows"]=$rows;
-
-            $this::$RESULT = $json;
-            $this::$SUCCESS = true;
+            $this::$RESULT = $result;
         }
+        $this::$SUCCESS = true;
 	}
 }
 ?>

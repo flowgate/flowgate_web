@@ -63,9 +63,10 @@
             <thead>
               <tr>
                 <th>#</th>
+                <th>ID</th>
                 <th>Input Name</th>
-                <th>Parameters</th>
                 <th>Project</th>
+                <th>Status</th>
               </tr>
             </thead>
             <tbody></tbody>
@@ -151,6 +152,7 @@
       </div>  
     </div>
 
+    <script src="../../js/shared.js"></script>
     <script src="../../js/jquery.min.js"></script>
     <script src="../../js/jqueryFileTree.js"></script>
     <script src="../../js/bootstrap-select.js"></script>
@@ -289,20 +291,21 @@
                 $table.find('tbody').append(
                   '<tr>' +
                     '<td>'+(i+1)+'</td>'+
-                    '<td><a href="javascript:_page.view(\''+r.id+'\');">'+r.input+'</a></td>' +
-                    '<td>'+r.par+'</td><td>'+r.p+'</td>' +
+                    '<td><a href="javascript:_page.view(\''+r.analysisName+'\');">'+r.analysisName+'</a></td>' +
+                    '<td>'+r.dataInputFileName+'</td><td>'+r.datasetName+'</td><td>unknown</td>' + //'<td>'+r.par+'</td><td>'+r.p+'</td>' +
                   '</tr>'
                 );
               });
               $table.tablesorter();
             }
           };
-          renderResults(
+          common.ajax('g', '../common/controller.php', {'j':'t_u', 'pid':common.ss_g(common.p.id)}, renderResults);
+          /*renderResults(
             {results:[
               {input:'input2_1.zip',par:'bins:8-11, density:4-6',p:'SomeProject',id:'3671b885-6e8d-4274-b510-33b8d8f2f480'},
               {input:'input2_2.zip',par:'bins:8-11, density:4-6',p:'SomeProject',id:'f25c08f4-a36b-4309-8692-2e67c9f64b0c'}
             ]}
-          );
+          );*/
         },
         meta: function(tid) {
           var _this = this;
@@ -534,8 +537,7 @@
             }); 
           }
         }
-      };        
-
+      };  
     //todo at submission("Show Result") - there should be a validation check on inputs (markers, files, populations and params)
     </script>
   </body>

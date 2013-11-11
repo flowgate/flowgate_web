@@ -111,7 +111,6 @@
     <!-- END MODALS -->
 
     <script src="<?php echo $context;?>../../js/bootstrap.min.js"></script>
-    <script src="<?php echo $context;?>../../js/shared.js"></script>
     <script>
       var nav = {
         ct: '<?php echo $context;?>',
@@ -231,6 +230,14 @@
           $('#nologged').hide();
           project.forceSelect();
         } else {
+
+          <?php 
+            if(isset($_SESSION['error'])) {
+              error_log("common.modal.error('Login Failed!', ".$_SESSION['error'].", null);");
+              echo("common.modal.error('Login Failed!', '".$_SESSION['error']."', null);");
+              unset($_SESSION['error']); 
+            }
+          ?>
           $('#nologged').show();
           $('#logged').hide();
           common.p.drop(); 

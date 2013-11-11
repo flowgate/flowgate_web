@@ -138,6 +138,7 @@
       </div>
     </div>
 
+    <script src="../../js/shared.js"></script>
     <script src="../../js/jquery.min.js"></script>
     <script src="../../js/jquery.ui.widget.js"></script>
     <script src="../../js/jquery.iframe-transport.js"></script>
@@ -224,7 +225,8 @@
           var bins = $('#rbin').val();
           var density = $('#rden').val();
           var pop = $('#rpop').val();
-          var ran = function(obj) {
+          var pid = common.ss_g(common.p.id); //get current project id from sessionStorage
+          var runCB = function(obj) {
             var isError = true;
             if(obj) {
               if(obj.success && obj.jid) {
@@ -241,12 +243,13 @@
           };
 
           var jobParam = {
-            input: fileId,
+            pid: pid,
+            fid: fileId,
             bins: bins,
             density: density,
             pop: pop
           }
-          common.ajax('p', '../common/controller.php?j=t_s', jobParam, ran);
+          common.ajax('p', '../common/controller.php?j=t_s', jobParam, runCB);
         }
       };
     </script>

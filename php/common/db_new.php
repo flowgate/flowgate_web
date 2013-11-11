@@ -151,14 +151,15 @@ class DatabaseModule {
 	}
 
 	function getTask($con, $uid, $pid, $tid) {
-		$query = sprintf("SELECT * FROM %s.%s t, %s.%s p, %s.%s f ".
-			"WHERE t.t_user_id='%s' AND t.t_project_id=p.p_id AND t.t_file_id=f.f_id", 
+		$query = sprintf("SELECT * FROM %s.%s a, %s.%s p, %s.%s f ".
+			"WHERE a.userIdx=%d and a.datasetID=p.datasetID and a.dataInputFileID=f.dataInputFileID", 
 			$this::$DBNAME, $this::$TASKTABLE, $this::$DBNAME, $this::$PROJECTTABLE, $this::$DBNAME, $this::$FILETABLE, $uid);
-		if(isset($tid)) {
-			$query = $query." AND t.t_id=".$tid;
-		} elseif(isset($pid)) {
-			$query = $query." AND t.t_project_id=".$pid;	
+		if(!is_null($tid)) {
+			$query = $query." and a.analysisID=".$tid;
+		} elseif(!is_null($pid)) {
+			$query = $query." and a.datasetID=".$pid;	
 		}
+		error_log($query);
 		return $this->findMany($con, $query);
 	}
 }

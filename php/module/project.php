@@ -16,7 +16,7 @@
             if($_pname && $_uid) {
                 $this->dbm();
                 $con = $this->dbModule->connect();
-                $duplicate = $this->dbModule->findProject($con, $_pname);
+                $duplicate = $this->dbModule->findProject($con, $_pname, $_uid);
                 
                 if($duplicate) {
                     $this::$RESULT = "'$_pname' already exists!";
@@ -43,11 +43,7 @@
             $con = $this->dbModule->connect();
             $result = $this->dbModule->findUserProject($con, $_uid);
             if(!is_null($result)) {
-                if(count($result)>0) {
-                    $this::$RESULT = $result;
-                } else {
-                    $this::$RESULT = array();
-                }
+                $this::$RESULT = $result;
             }
             $this::$SUCCESS = true;
         }
