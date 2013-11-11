@@ -63,8 +63,7 @@ public class GenePattern {
         }
 
         GPClient gpClient = new GPClient(gpAddress, user);
-        JobResult[] results = new JobResult[2];
-        results[0] = gpClient.runAnalysis(
+        JobResult flockResults = gpClient.runAnalysis(
                 flockModule,
                 new Parameter[]{
                         new Parameter("input", new File(input)),
@@ -73,10 +72,10 @@ public class GenePattern {
                         new Parameter("population", population)
                 }
         );
-        results[1] = gpClient.runAnalysis(
+        int imageJob = gpClient.runAnalysisNoWait(
                 imageModule,
                 new Parameter[]{
-                        new Parameter("input", results[0].getURL("zip").toString()),
+                        new Parameter("input", flockResults.getURL("zip").toString()),
                         new Parameter("image_type", type == null?"color":type),
                         new Parameter("jobId", jobId),
                         new Parameter("population", "i"),
