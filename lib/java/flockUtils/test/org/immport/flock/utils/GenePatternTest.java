@@ -20,7 +20,7 @@ public class GenePatternTest {
 
         gp.executePipeline(
                 "hkim",
-                testDir + "input1.zip",
+                testDir + "input36.zip",
                 "10",
                 "11",
                 "10",
