@@ -140,9 +140,9 @@
 
     <script src="../../js/shared.js"></script>
     <script src="../../js/jquery.min.js"></script>
-    <script src="../../js/jquery.ui.widget.js"></script>
-    <script src="../../js/jquery.iframe-transport.js"></script>
-    <script src="../../js/jquery.fileupload.js"></script>
+    <!--<script src="../../js/jquery.ui.widget.js"></script>-->
+    <script src="../../js/jquery.ui.min.js"></script>
+    <script src="../../js/jquery.fileupload.min.js"></script>
     <script src="../../js/jquery.tablesorter.min.js"></script>
     <script>
 

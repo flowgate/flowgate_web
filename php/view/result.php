@@ -10,6 +10,7 @@
   <link href="../../css/jqueryFileTree.css" rel="stylesheet">
   <link href="../../css/merged.css" rel="stylesheet">
   <link href="../../css/bootstrap-select.css" rel="stylesheet">
+  <link href="../../css/jquery.ui.css" rel="stylesheet">
   <style type="text/css">
     .centerSub {
       background-color:#eee; 
@@ -46,6 +47,10 @@
     .markerSelect .bootstrap-select {
       width: 150px;
     }
+
+    .well {
+      margin-bottom: 0px !important;
+    }
   </style>
 
 </head>
@@ -78,7 +83,7 @@
         <button class="btn btn-mini" type="button" onclick="_page.toggle();">back to results</button>
       </div>
       <div>
-        <div class="span3">
+        <div class="span3" id="filesContainer">
           <div class="well" id="files" style="height:100%;overflow:auto;">
             <div class="row-fluid span12">
               <button class="btn btn-mini btn-warning" type="button" id="fileAllButton">Select All</button>
@@ -156,7 +161,7 @@
     <script src="../../js/jquery.min.js"></script>
     <script src="../../js/jqueryFileTree.js"></script>
     <script src="../../js/bootstrap-select.js"></script>
-    <script src="../../js/jquery.tablesorter.min.js"></script>
+    <script src="../../js/jquery.ui.min.js"></script>
     <script>
       $(function(){
         $("#nav").load("../common/nav.php");
@@ -296,7 +301,7 @@
                   '</tr>'
                 );
               });
-              $table.tablesorter();
+              //$table.tablesorter();
             }
           };
           common.ajax('g', '../common/controller.php', {'j':'t_u', 'pid':common.ss_g(common.p.id)}, renderResults);
@@ -535,6 +540,7 @@
               multiFolder: true
             }, function(file) {
             }); 
+              $('#filesContainer').resizable();
           }
         }
       };  
