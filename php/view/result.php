@@ -50,6 +50,7 @@
 
     .well {
       margin-bottom: 0px !important;
+      padding: 0 15px !important;
     }
   </style>
 
@@ -85,7 +86,7 @@
       <div>
         <div class="span3" id="filesContainer">
           <div class="well" id="files" style="height:100%;overflow:auto;">
-            <div class="row-fluid span12">
+            <div class="row-fluid span12" style="margin-top:5px;">
               <button class="btn btn-mini btn-warning" type="button" id="fileAllButton">Select All</button>
               <button class="btn btn-mini btn-inverse" type="button" id="fileNoneButton">Deselect All</button>
               <!--<p><span class="label label-important">Collapsing a directory deselects files under it!</span></p>-->
