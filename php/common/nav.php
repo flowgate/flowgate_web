@@ -11,106 +11,120 @@
     <title>gofcm</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="<?php echo $context; ?>../../css/merged.css" rel="stylesheet">
-    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
-    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
     <style>
-      .hero-unit { padding: 10px 60px !important; }
+      .jumbotron { padding: 10px 60px !important; }
     </style>
   </head>
 
   <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container-fluid">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
-          </a>
-          <a class="brand" href="#">gofcm</a>
-          <div class="nav-collapse collapse">
-            <ul class="nav">
-              <li><a href="javascript:nav.menu.boot('project');">Project</a></li>
-              <li id="menuFile"><a href="javascript:nav.menu.boot('file');">File</a></li>
-              <li id="menuResult"><a href="javascript:nav.menu.boot('result');">Result</a></li>
-            </ul>
-            <ul id="logged" class="nav pull-right" style="display:none;">
-              <li id="logout"><a href="<?php echo $context; ?>../view/logout.php">LogOut</a></li>
-            </ul>
-            <ul id="nologged" class="nav pull-right">
-              <li id="menuRegister"><a href="<?php echo $context; ?>../view/register.php">Register</a></li>
-              <li class="dropdown">
-                <a class="dropdown-toggle" href="#" data-toggle="dropdown">Log In <strong class="caret"></strong></a>
-                <div class="dropdown-menu" role="menu" style="padding: 15px; padding-bottom: 0px;">
-                  <form action="<?php echo $context; ?>controller.php" method="post"> 
-                    Username:<input type="text" name="uname" value="" /><br/> 
-                    Password:<input type="password" name="pass" value="" />
-                    <input type="hidden" name="j" value="u_l" /> 
-                    <input type="submit" class="btn btn-info" value="Login" /> 
-                  </form> 
-                </div>
-              </li>
-            </ul>
-          </div>
+          </button>
+          <a class="navbar-brand" href="#">gofcm</a>
         </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="javascript:nav.menu.boot('project');">Project</a></li>
+            <li id="menuFile"><a href="javascript:nav.menu.boot('file');">File</a></li>
+            <li id="menuResult"><a href="javascript:nav.menu.boot('result');">Result</a></li>
+          </ul>
+          <ul id="logged" class="nav pull-right" style="display:none;">
+            <li id="logout"><a href="<?php echo $context; ?>../view/logout.php">LogOut</a></li>
+          </ul>
+          <ul id="nologged" class="nav navbar-nav pull-right">
+            <li id="menuRegister"><a href="<?php echo $context; ?>../view/register.php">Register</a></li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" href="#" data-toggle="dropdown">Log In <strong class="caret"></strong></a>
+              <div class="dropdown-menu" role="menu" style="padding: 15px;">
+                <form action="<?php echo $context; ?>controller.php" method="post"> 
+                  Username:<input type="text" name="uname" value="" /><br/> 
+                  Password:<input type="password" name="pass" value="" />
+                  <input type="hidden" name="j" value="u_l" /> 
+                  <input type="submit" class="btn btn-info" style="margin-top:5px;" value="Login" /> 
+                </form> 
+              </div>
+            </li>
+          </ul>
+        </div><!--/.nav-collapse -->
       </div>
     </div>
 
     <!-- MODALS -->
     <!-- project -->
-    <div id="projectSelectModal" class="modal hide fade">
-      <div class="modal-header">
-        <a href="#" class="close" data-dismiss="modal">&times;</a>
-        <h3 id="prompt">Select a project:</h3>
-      </div>
-      <div class="modal-body">
-        <div class="divDialogElements">
-          <div class="divPopupMenu">
-            <div class="input">
-              <select class="medium" name="mediumSelect" id="projectSelect"></select>
+    <div class="modal fade" id="projectSelectModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="prompt">Select or Change Project</h4>
+          </div>
+          <div class="modal-body">
+            <div class="divDialogElements">
+              <div class="divPopupMenu">
+                <div class="input">
+                  <select class="form-control" name="projectSelect" id="projectSelect"></select>
+                </div>
+              </div>
             </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+            <a href="#" class="btn btn-primary" onclick="project.new();">Add Project</a>
+            <a href="#" class="btn btn-primary" onclick="project.select();">OK</a>
           </div>
         </div>
       </div>
-      <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-        <a href="#" class="btn btn-primary" onclick="project.new();">Add Project</a>
-        <a href="#" class="btn btn-primary" onclick="project.select();">OK</a>
-      </div>
     </div>
-    <div id="newProjectModal" class="modal hide fade">
-      <div class="modal-header">
-        <a href="#" class="close" data-dismiss="modal">&times;</a>
-        <h3 id="prompt">Create new project </h3>
-      </div>
-      <div class="modal-body">
-        <div class="divDialogElements">
-          Project Name: <input class="xlarge" id="newPname" name="newPname" type="text" /><br/>
-          Description: <input class="xlarge" id="newPdesc" name="newPdesc" type="text" />
+    <div class="modal fade" id="newProjectModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="prompt">Create new project</h4>
+          </div>
+          <div class="modal-body">
+            <div class="divDialogElements">
+                <label for="newPname" class="control-label">Project Name</label>
+                <div><input type="text" class="form-control" id="newPname" placeholder="Project Name"></div>
+                <label for="newPdesc" class="control-label">Description</label>
+                <div><input type="text" class="form-control" id="newPdesc" placeholder="Project Description"></div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+            <a href="#" class="btn btn-primary" onclick="project.add();">Add</a>
+          </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-        <a href="#" class="btn btn-primary" onclick="project.add();">Add</a>
       </div>
     </div>
 
     <!-- error -->
-    <div id="errorModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="title" aria-hidden="true">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="title" class="text-error"></h3>
-      </div>
-      <div class="modal-body">
-        <h5 id="desc"></h5>
-      </div>
-      <div class="modal-footer">
-        <button id="errmClose" class="btn" data-dismiss="modal" aria-hidden="true" onclick="">Close</button>
+    <div class="modal fade" id="errorModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title text-danger" id="title"></h4>
+          </div>
+          <div class="modal-body">
+            <h5 id="desc"></h5>
+          </div>
+          <div class="modal-footer">
+            <button id="errmClose" type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true" onclick="">Close</button>
+          </div>
+        </div>
       </div>
     </div>
     <!-- END MODALS -->
 
-    <script src="<?php echo $context;?>../../js/bootstrap.min.js"></script>
     <script>
       var nav = {
         ct: '<?php echo $context;?>',

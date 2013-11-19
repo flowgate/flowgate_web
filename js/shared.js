@@ -15,6 +15,8 @@ var common = {
       this.open('errorModal');
     },
     open: function(id) {
+      console.log(id);
+      console.log($('#'+id));
       $('#'+id).modal('show');
     },
     hide: function(id) {
@@ -22,10 +24,9 @@ var common = {
     }
   },
   alert:function(id,t,m) { //w-where(page, result), t-message, e-boolean error or alert
-    var type = 'alert-';
-    type += (t==='e'?'error':t==='i'?'info':t==='s'?'success':'block');
+    var type = (t==='e'?'danger':t==='i'?'info':t==='s'?'success':'warning');
     $('#'+id).html(
-      '<div class="alert ' + type + '">' +
+      '<div class="alert alert-' + type + '">' +
         '<button type="button" class="close" data-dismiss="alert">&times;</button>'+
         /*'<strong>Warning!</strong> ' +*/ m +
       '</div>');

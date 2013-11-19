@@ -8,7 +8,6 @@
   <title>mockup with bootstrap</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="../../css/jqueryFileTree.css" rel="stylesheet">
-  <link href="../../css/merged.css" rel="stylesheet">
   <link href="../../css/bootstrap-select.css" rel="stylesheet">
   <link href="../../css/jquery.ui.css" rel="stylesheet">
   <style type="text/css">
@@ -48,19 +47,25 @@
       width: 150px;
     }
 
+    /*
     .well {
-      margin-bottom: 0px !important;
-      padding: 0 15px !important;
+      margin: 0 !important;
+      padding: 0 !important;
     }
+    
+    #filesContainer, #imagesContainer {
+      padding: 0 !important;
+    }
+    */
   </style>
 
 </head>
 
   <body>
     <div id="nav"></div>
-    <div id="tableDiv" class="container hero-unit">
+    <div id="tableDiv" class="container">
         <h3>Result</h3>
-        <div class="row-fluid" id="alert"></div>
+        <div class="row" id="alert"></div>
         <div>
           Filter by Project: <select id="projectFilter" style="margin-top:10px;"></select>
         </div>
@@ -79,25 +84,25 @@
           </table>
         </div>
     </div>
-    <div id="resultDiv" class="row-fluid" style="display:none;">
+    <div id="resultDiv" class="row" style="display:none;">
       <div style="padding: 5px 15px;">
-        <button class="btn btn-mini" type="button" onclick="_page.toggle();">back to results</button>
+        <button class="btn btn-sm" type="button" onclick="_page.toggle();">back to results</button>
       </div>
       <div>
-        <div class="span3" id="filesContainer">
+        <div class="col-md-3" id="filesContainer">
           <div class="well" id="files" style="height:100%;overflow:auto;">
-            <div class="row-fluid span12" style="margin-top:5px;">
-              <button class="btn btn-mini btn-warning" type="button" id="fileAllButton">Select All</button>
-              <button class="btn btn-mini btn-inverse" type="button" id="fileNoneButton">Deselect All</button>
+            <div class="row col-md-12" style="margin-top:5px;">
+              <button class="btn btn-xs btn-primary" type="button" id="fileAllButton">Select All</button>
+              <button class="btn btn-xs btn-warning" type="button" id="fileNoneButton">Deselect All</button>
               <!--<p><span class="label label-important">Collapsing a directory deselects files under it!</span></p>-->
             </div>
-            <div class="row-fluid span12" id="fileNav" style="overflow:auto;"></div>
+            <div class="row col-md-12" id="fileNav" style="overflow:auto;"></div>
           </div>
         </div>
-        <div class="span9" style="">
-          <div class="row-fluid">
-            <div class="span12 centerSub">
-              <div class="span11 offset1" id="details">
+        <div class="col-md-9" id="imagesContainer">
+          <div class="row">
+            <div class="col-md-12 centerSub">
+              <div class="col-md-11 col-md-offset-1" id="details">
                 <table>
                   <tr>
                     <td><strong>Method Name</strong></td><td>FLOCK</td>
@@ -109,42 +114,42 @@
               </div>
             </div>
           </div>
-          <div class="row-fluid">
-            <div class="span12 centerSub" id="overview">
-              <div class="row-fluid" id="ralert"></div>
-              <div class="row-fluid">
-                <div class="span12" style="margin-left:5px;">
-                  <div class="row-fluid">
-                    <div class="span3">
+          <div class="row">
+            <div class="col-md-12 centerSub" id="overview">
+              <div class="row" id="ralert"></div>
+              <div class="row">
+                <div class="col-md-12" style="margin-left:5px;">
+                  <div class="row">
+                    <div class="col-md-3">
                       <h6>Population</h6>
                       <select id="populselect" class="selectpicker" rel="populations" multiple data-selected-text-format="count>1" data-count-selected-text="{0} of {1} populations">
                       </select>
                     </div>
-                    <div class="span2 markerSelect">
+                    <div class="col-md-2 markerSelect">
                       <h6>X-axis</h6>
                       <select id="xmarker" class="selectpicker"></select>
                     </div>
-                    <div class="span2 markerSelect">
+                    <div class="col-md-2 markerSelect">
                       <h6>Y-axis</h6>
                       <select id="ymarker" class="selectpicker"></select>
                     </div>
-                    <div class="span3">
+                    <div class="col-md-3">
                       <h6>Parameters</h6>
                       <select id="paramselect" class="selectpicker" multiple data-selected-text-format="count>1" data-count-selected-text="{0} of {1}"></select>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="row-fluid">
-                <div class="span2">
+              <div class="row">
+                <div class="col-md-2">
                   <button class="btn btn-primary" type="button" id="updateButton">Show Result</button>
                 </div>
-                <div class="span10">
+                <div class="col-md-10">
                   <img src="../../images/ajax-loader.gif" id="loading-indicator" style="display:none;"/>
                 </div>
               </div>
-              <div class="row-fluid" style="margin-top:5px;">
-                <div class="span12">
+              <div class="row" style="margin-top:5px;">
+                <div class="col-md-12">
                   <div id="flock_main">
                     <div id="flock_content">
                       <table id="overviewTable" style="width:100%;"></table>
@@ -160,6 +165,7 @@
 
     <script src="../../js/shared.js"></script>
     <script src="../../js/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
     <script src="../../js/jqueryFileTree.js"></script>
     <script src="../../js/bootstrap-select.js"></script>
     <script src="../../js/jquery.ui.min.js"></script>
@@ -177,6 +183,7 @@
           }
         }
         _data.results(); 
+        $('#imagesContainer').resizable();
       });
 
       var _page = {
@@ -390,6 +397,12 @@
                       for(var p=0;p<param_l;p++) {
                         var paramPath = filePath+'/'+filePath+'_'+params[p][0]+'_'+params[p][1]+'/images/';
                         tbody+=
+                          '<img src="../../results/'+taskId+'/'+paramPath+(xcols[j]===ycols[i]?'empty':ycols[i]+'.'+xcols[j]+'.'+imgSuffix)+'.png"/>' +
+                          (xcols[j]!==ycols[i]?(m_f?files[f]:'')+(m_p?'['+params[p][0]+':'+params[p][1]+']':''):'');
+                          /*
+                          '<p>' + (xcols[j]!==ycols[i]?(m_f?files[f]:'')+(m_p?'['+params[p][0]+':'+params[p][1]+']':''):'') + '</p>';
+                          */
+                          /*
                           '<div style="'+(divW>0?'width:'+divW+'%;':'')+'display:inline-block; text-align:left;">'
                           +'  <div>'
                           +'    <img src="../../results/'+taskId+'/'+paramPath+(xcols[j]===ycols[i]?'empty':ycols[i]+'.'+xcols[j]+'.'+imgSuffix)+'.png"/>'
@@ -398,6 +411,7 @@
                           +     (xcols[j]!==ycols[i]?(m_f?files[f]:'')+(m_p?'['+params[p][0]+':'+params[p][1]+']':''):'')
                           +'  </div>'
                           +'</div>';
+                          */
                       }  
                     }
                     tbody+='</td>';
@@ -541,7 +555,7 @@
               multiFolder: true
             }, function(file) {
             }); 
-              $('#filesContainer').resizable();
+            $('#filesContainer').resizable();
           }
         }
       };  
