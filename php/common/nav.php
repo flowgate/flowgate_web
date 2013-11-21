@@ -129,49 +129,30 @@
       var nav = {
         ct: '<?php echo $context;?>',
         contr: '<?php echo $context;?>controller.php?j=',
-        login: function() {
-          var loggedIn = false;
-          $.ajax({
-            type: "POST",
-            async: false,
-            url: nav.contr+'u_',
-            dataType: 'json',
-            data: {},
-            success: function (obj, ts) {
-              loggedIn = obj['success'];
-              if(!loggedIn) {
+        menu: {
+          boot: function(t) {
+            var cb = function(obj) {
+              var userLogged = obj['success'];
+              if(!userLogged) {
                 var cf = function() {
                   window.location = nav.ct+'../../index.html';
                 }
                 common.modal.error('Login Required!', 'Please login or register to gofcm.', cf);  
-              }
-            },
-            error: function() {
-              loggedIn = false;
-            }
-          });
-          return loggedIn;
-        },
-        menu: {
-          boot: function(t) {
-            if(nav.login()) {
-              if(t==='project') {
-                project.get();
-              } else {
-                project.forceSelect();
-                if(t==='result') {
-                  this.result();
-                } else if(t==='file') {
-                  this.file();
+              } else{
+                if(t==='project') {
+                  project.get();
+                } else {
+                  project.forceSelect(); //force user to select a project
+                  if(t==='result') {
+                    window.location =nav.ct+'../view/result.php';
+                  } else if(t==='file') {
+                    window.location =nav.ct+'../view/file.php'; 
+                  }
                 }
               }
             }
-          },
-          result: function() {
-            window.location =nav.ct+'../view/result.php';
-          },
-          file: function() {
-            window.location =nav.ct+'../view/file.php'; 
+
+            makeAjaxCall('g', nav.contr+'u_', {}, cb);
           }
         }
       };
@@ -190,7 +171,7 @@
           };
           var pname = $('#newPname').val(), pdesc = $('#newPdesc').val();
           if(pname && pname.length>0) {
-            common.ajax('p', nav.contr+'p_a', {pname:pname, pdesc:pdesc}, cb);
+            makeAjaxCall('p', nav.contr+'p_a', {pname:pname, pdesc:pdesc}, cb);
           } else {
             common.error('e', errId, 'Project name is empty!');
           }
@@ -210,7 +191,7 @@
             }
           }
           common.p.set($currp.val(),$currp.text());
-          common.ajax('p', nav.contr+'p_s', {pname:$currp.text(), pid:$currp.val()}, cb);
+          makeAjaxCall('p', nav.contr+'p_s', {pname:$currp.text(), pid:$currp.val()}, cb);
         },
         get: function() {
           var cb = function(obj, ts) {
@@ -221,7 +202,7 @@
             });
             $ps.html(opts);  
           };
-          common.ajax('g', nav.contr+'p_u', {}, cb);
+          makeAjaxCall('g', nav.contr+'p_u', {}, cb);
           common.modal.open(this.mid_s);  
         },
         forceSelect: function() { //force user to select a project

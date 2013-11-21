@@ -31,20 +31,6 @@ var common = {
         /*'<strong>Warning!</strong> ' +*/ m +
       '</div>');
   },
-  ajax: function(t,u,d,cb) {
-    $.ajax({
-      type: t==='p'?"POST":"GET",
-      async: true,
-      url: u,
-      dataType: 'json',
-      data: d,
-      success: function (obj, ts) {
-        if(cb)
-          cb(obj);
-      },
-      error: function() {}
-    });
-  },
   p: {
     id: 'gofcm.pid',
     name: 'gofcm.pname',
@@ -70,3 +56,18 @@ var common = {
     sessionStorage.removeItem(n);
   }
 };
+
+function makeAjaxCall(t,u,d,cb) {
+  $.ajax({
+    type: t==='p'?"POST":"GET",
+    async: true,
+    url: u,
+    dataType: 'json',
+    data: d,
+    success: function (obj, ts) {
+      if(cb)
+        cb(obj);
+    },
+    error: function() {}
+  });
+}

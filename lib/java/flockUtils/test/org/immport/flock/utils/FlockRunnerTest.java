@@ -1,6 +1,5 @@
 package org.immport.flock.utils;
 
-import org.immport.flock.commons.Zipper;
 import org.junit.Test;
 
 /**
@@ -18,13 +17,13 @@ public class FlockRunnerTest {
         Integer[] bins = new Integer[] {10};
         Integer[] dens = new Integer[] {11};
         runner.execute(
-                testDir + "input2.zip",
-                "10-11",
-                "11-12",
-                10,
+                testDir + "input36.zip",
+                "8-11",
+                "3-6",
+                25,
                 testDir,
                 "flock1_gp_osx");
 
-        Zipper.extract(testDir + "result.zip", testDir + "output");
+        //Zipper.extract(testDir + "result.zip", testDir + "output");
     }
 }

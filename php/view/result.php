@@ -15,15 +15,15 @@
       background-color:#eee; 
       border: 1px solid #888; 
       border-radius:3px;
-      padding: 15px;
     }
 
-    UL.jqueryFileTree LI.ext_cb {
-      padding-left:5px;
-    }
+    .caret { margin-top: 10px; }
 
-    #overviewTable td { border: 3px #7f7f7f solid; }
-    #overviewTable th { 
+    UL.jqueryFileTree LI.ext_cb { padding-left:5px; }
+
+    .imageTable { table-layout: fixed; }
+    .imageTable td { border: 3px #7f7f7f solid; }
+    .imageTable th { 
       font-family: Verdana,Arial,Helvetica,sans-serif;
       font-weight: normal;
       font-size: .9em;
@@ -36,27 +36,24 @@
       border: 3px solid #7f7f7f;
       background-color: #f5f5f5;
     }
-    #overviewTable img {
+    .imageTable img {
       width: auto;
       height: auto;
+      max-width: 100px;
+      /*min-width: 50px;
       min-width: 85px;
-      min-height: 85px;
+      min-height: 85px;*/
     }
 
-    .markerSelect .bootstrap-select {
-      width: 150px;
-    }
+    .resultRow { margin: 0 !important;}
+    .resultWell { padding: 3px 0px !important; }
+    .selectorsCol { padding: 0 !important; }
 
-    /*
-    .well {
-      margin: 0 !important;
-      padding: 0 !important;
-    }
-    
-    #filesContainer, #imagesContainer {
-      padding: 0 !important;
-    }
-    */
+    .markerSelect .bootstrap-select { width: 120px; }
+
+    #filesContainer, #imagesContainer { padding: 0 !important; }
+
+    .scrollable { overflow: scroll; overflow-y:hidden; white-space:nowrap;}
   </style>
 
 </head>
@@ -84,13 +81,13 @@
           </table>
         </div>
     </div>
-    <div id="resultDiv" class="row" style="display:none;">
+    <div id="resultDiv" class="row resultRow" style="display:none;">
       <div style="padding: 5px 15px;">
         <button class="btn btn-sm" type="button" onclick="_page.toggle();">back to results</button>
       </div>
       <div>
         <div class="col-md-3" id="filesContainer">
-          <div class="well" id="files" style="height:100%;overflow:auto;">
+          <div class="well resultWell" id="files" style="height:100%;overflow:auto;">
             <div class="row col-md-12" style="margin-top:5px;">
               <button class="btn btn-xs btn-primary" type="button" id="fileAllButton">Select All</button>
               <button class="btn btn-xs btn-warning" type="button" id="fileNoneButton">Deselect All</button>
@@ -100,40 +97,38 @@
           </div>
         </div>
         <div class="col-md-9" id="imagesContainer">
-          <div class="row">
+          <div class="row resultRow">
             <div class="col-md-12 centerSub">
-              <div class="col-md-11 col-md-offset-1" id="details">
-                <table>
-                  <tr>
-                    <td><strong>Method Name</strong></td><td>FLOCK</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Method Version</strong></td><td>v0.1</td>
-                  </tr>
-                </table>
+              <div class="row">
+                <div class="col-md-11 col-md-offset-1" id="details">
+                  <table>
+                    <tr><td><strong>Method Name</strong></td><td>FLOCK</td></tr>
+                    <tr><td><strong>Method Version</strong></td><td>v0.1</td></tr>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
-          <div class="row">
+          <div class="row resultRow">
             <div class="col-md-12 centerSub" id="overview">
               <div class="row" id="ralert"></div>
-              <div class="row">
-                <div class="col-md-12" style="margin-left:5px;">
-                  <div class="row">
-                    <div class="col-md-3">
+              <div class="row resultRow">
+                <div class="col-md-12 selectorsCol">
+                  <div class="row resultRow">
+                    <div class="col-md-3 selectorsCol">
                       <h6>Population</h6>
                       <select id="populselect" class="selectpicker" rel="populations" multiple data-selected-text-format="count>1" data-count-selected-text="{0} of {1} populations">
                       </select>
                     </div>
-                    <div class="col-md-2 markerSelect">
+                    <div class="col-md-2 markerSelect selectorsCol">
                       <h6>X-axis</h6>
                       <select id="xmarker" class="selectpicker"></select>
                     </div>
-                    <div class="col-md-2 markerSelect">
+                    <div class="col-md-2 markerSelect selectorsCol">
                       <h6>Y-axis</h6>
                       <select id="ymarker" class="selectpicker"></select>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-5 selectorsCol">
                       <h6>Parameters</h6>
                       <select id="paramselect" class="selectpicker" multiple data-selected-text-format="count>1" data-count-selected-text="{0} of {1}"></select>
                     </div>
@@ -141,19 +136,29 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-2">
+                <div class="col-md-3">
                   <button class="btn btn-primary" type="button" id="updateButton">Show Result</button>
                 </div>
-                <div class="col-md-10">
+                <div class="col-md-9">
                   <img src="../../images/ajax-loader.gif" id="loading-indicator" style="display:none;"/>
                 </div>
               </div>
               <div class="row" style="margin-top:5px;">
                 <div class="col-md-12">
-                  <div id="flock_main">
-                    <div id="flock_content">
-                      <table id="overviewTable" style="width:100%;"></table>
-                    </div>
+                  <div class="row">
+                      <table id="imageTable" class="imageTable" style="width:100%;"></table>
+                  </div>
+                  <br/><strong style="color:red;">####### MOCK1</strong><br/><br/>
+                  <div class="row">
+                      <table id="imageTable1" class="imageTable" style="width:100%;"></table>
+                  </div>
+                  <br/><strong style="color:red;">####### MOCK2</strong><br/><br/>
+                  <div class="row">
+                      <table id="imageTable2" class="imageTable" style="width:100%;"></table>
+                  </div>
+                  <br/><strong style="color:red;">####### MOCK3</strong><br/><br/>
+                  <div class="row">
+                      <table id="imageTable3" class="imageTable" style="width:100%;"></table>
                   </div>
                 </div>
               </div>
@@ -312,7 +317,7 @@
               //$table.tablesorter();
             }
           };
-          common.ajax('g', '../common/controller.php', {'j':'t_u', 'pid':common.ss_g(common.p.id)}, renderResults);
+          makeAjaxCall('g', '../common/controller.php', {'j':'t_u', 'pid':common.ss_g(common.p.id)}, renderResults);
           /*renderResults(
             {results:[
               {input:'input2_1.zip',par:'bins:8-11, density:4-6',p:'SomeProject',id:'3671b885-6e8d-4274-b510-33b8d8f2f480'},
@@ -378,6 +383,7 @@
                 xcols = (!xcols || xcols==='all')?_data.cols:[xcols];
                 ycols = (!ycols || ycols==='all')?_data.cols:[ycols];
 
+                //original table
                 //headers for x-axis
                 for(var i=0;i<xcols.length;i++) {
                   thead+='<th id="'+xcols[i]+'_x">'+xcols[i]+'</th>';  
@@ -390,38 +396,67 @@
                   for(var j=0;j<xcols.length;j++) {
                     tbody+='<td headers="'+xcols[j]+'_x">';
 
-                    for(var f=0;f<files.length;f++) {
-                      var param_l = params.length;
-                      var divW = (param_l>1?100/param_l:0), filePath = files[f]+'_out';
+                    if(xcols[j] !== ycols[i]) {
+                      tbody += '<div class="scrollable">';
 
-                      for(var p=0;p<param_l;p++) {
-                        var paramPath = filePath+'/'+filePath+'_'+params[p][0]+'_'+params[p][1]+'/images/';
-                        tbody+=
-                          '<img src="../../results/'+taskId+'/'+paramPath+(xcols[j]===ycols[i]?'empty':ycols[i]+'.'+xcols[j]+'.'+imgSuffix)+'.png"/>' +
-                          (xcols[j]!==ycols[i]?(m_f?files[f]:'')+(m_p?'['+params[p][0]+':'+params[p][1]+']':''):'');
-                          /*
-                          '<p>' + (xcols[j]!==ycols[i]?(m_f?files[f]:'')+(m_p?'['+params[p][0]+':'+params[p][1]+']':''):'') + '</p>';
-                          */
-                          /*
-                          '<div style="'+(divW>0?'width:'+divW+'%;':'')+'display:inline-block; text-align:left;">'
-                          +'  <div>'
-                          +'    <img src="../../results/'+taskId+'/'+paramPath+(xcols[j]===ycols[i]?'empty':ycols[i]+'.'+xcols[j]+'.'+imgSuffix)+'.png"/>'
-                          +'  </div>'
-                          +'  <div style="font-size:80%; text-align:left;">'
-                          +     (xcols[j]!==ycols[i]?(m_f?files[f]:'')+(m_p?'['+params[p][0]+':'+params[p][1]+']':''):'')
-                          +'  </div>'
-                          +'</div>';
-                          */
-                      }  
+                      for(var f=0;f<files.length;f++) {
+                        var param_l = params.length;
+                        var divW = (param_l>1?(100/param_l)*10:0), filePath = files[f]+'_out';
+
+                        for(var p=0;p<param_l;p++) {
+                          var paramPath = filePath+'/'+filePath+'_'+params[p][0]+'_'+params[p][1]+'/images/';
+                          tbody+=
+                            '<div style="display:inline-block; text-align:center; border-right:1px solid;">'
+                            +'  <div><img style="width:100%;" src="../../results/'+taskId+'/'+paramPath+ycols[i]+'.'+xcols[j]+'.'+imgSuffix+'.png"/></div>'
+                            +'  <div>' + (m_f?files[f]:'')+(m_p?'['+params[p][0]+':'+params[p][1]+']':'') + '</div>'
+                            +'</div>';
+                        }  
+                      }
+                      tbody+='</div>';
                     }
                     tbody+='</td>';
                   }
                   tbody+='</tr>';
                 }
                 tbody+='</tbody>';
-                $('#overviewTable').html(thead+tbody);
+                $('#imageTable').html(thead+tbody);
+
+                //table1
+                tbody='';
+                for(var i=0;i<ycols.length;i++) {
+                  tbody+='<tr><th id="'+ycols[i]+'_y" headers="name">'+ycols[i]+'</th>';
+
+                  for(var j=0;j<xcols.length;j++) {
+                    tbody+='<td headers="'+xcols[j]+'_x">';
+
+                    if(xcols[j] !== ycols[i]) {
+                      tbody += '<div class="scrollable">';
+
+                      for(var f=0;f<files.length;f++) {
+                        var param_l = params.length;
+                        var divW = (param_l>1?(100/param_l)*10:0), filePath = files[f]+'_out';
+
+                        for(var p=0;p<param_l;p++) {
+                          var paramPath = filePath+'/'+filePath+'_'+params[p][0]+'_'+params[p][1]+'/images/';
+                          tbody+=
+                            '<div style="display:inline-block; text-align:center; border-right:1px solid;">'
+                            +'  <div><img style="width:100%;" src="../../results/'+taskId+'/'+paramPath+ycols[i]+'.'+xcols[j]+'.'+imgSuffix+'.png"/></div>'
+                            +'  <div>' + (m_f?files[f]:'')+(m_p?'['+params[p][0]+':'+params[p][1]+']':'') + '</div>'
+                            +'</div>';
+                        }  
+                      }
+                      tbody+='</div>';
+                    }
+                    tbody+='</td>';
+                  }
+                  tbody+='</tr>';
+                }
+                tbody+='</tbody>';
+                $('#imageTable1').html(tbody);
+
 
                 $('#loading-indicator').hide();
+                fluidImage();
               }
             }
           });
@@ -559,6 +594,72 @@
           }
         }
       };  
+
+      /*
+        fluid-images
+        http://unstoppablerobotninja.com/entry/fluid-images/
+      */
+      var imgSizer = {
+        Config : {
+          imgCache : []
+          ,spacer : "/path/to/your/spacer.gif"
+        }
+        ,collate : function(aScope) {
+          var isOldIE = (document.all && !window.opera && !window.XDomainRequest) ? 1 : 0;
+          if (isOldIE && document.getElementsByTagName) {
+            var c = imgSizer;
+            var imgCache = c.Config.imgCache;
+            var images = (aScope && aScope.length) ? aScope : document.getElementsByTagName("img");
+            for (var i = 0; i < images.length; i++) {
+              images.origWidth = images.offsetWidth;
+              images.origHeight = images.offsetHeight;
+              imgCache.push(images);
+              c.ieAlpha(images);
+              images.style.width = "100%";
+            }
+            if (imgCache.length) {
+              c.resize(function() {
+                for (var i = 0; i < imgCache.length; i++) {
+                  var ratio = (imgCache.offsetWidth / imgCache.origWidth);
+                  imgCache.style.height = (imgCache.origHeight * ratio) + "px";
+                }
+              });
+            }
+          }
+        }
+        ,ieAlpha : function(img) {
+          var c = imgSizer;
+          if (img.oldSrc) {
+            img.src = img.oldSrc;
+          }
+          var src = img.src;
+          img.style.width = img.offsetWidth + "px";
+          img.style.height = img.offsetHeight + "px";
+          img.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + src + "', sizingMethod='scale')"
+          img.oldSrc = src;
+          img.src = c.Config.spacer;
+        }
+       // Ghettomodified version of Simon Willison's addLoadEvent() -- http://simonwillison.net/2004/May/26/addLoadEvent/
+        ,resize : function(func) {
+          var oldonresize = window.onresize;
+          if (typeof window.onresize != 'function') {
+            window.onresize = func;
+          } else {
+            window.onresize = function() {
+              if (oldonresize) {
+                oldonresize();
+              }
+              func();
+            }
+          }
+        }
+      };
+      var fluidImage = function() {
+        if (document.getElementById && document.getElementsByTagName) {
+          var aImgs = document.getElementById("imageTable").getElementsByTagName("img");
+          imgSizer.collate(aImgs);
+        }
+      };
     //todo at submission("Show Result") - there should be a validation check on inputs (markers, files, populations and params)
     </script>
   </body>

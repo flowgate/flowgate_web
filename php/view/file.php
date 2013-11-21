@@ -184,6 +184,7 @@
       });
 
       var _page = {
+        f_contr: "../common/controller.php?j=f_",
         fajax: function(t,d,cb) {
           $.ajax({
             type: "POST",
@@ -217,8 +218,8 @@
               $("#fileTable").tablesorter();
             }
           }
-          //common.ajax('g', '../common/controller.php?j=f_u',{pid:sessionStorage.getItem("gofcm.pid")}, renderFiles);
-          this.fajax('u', {pid:sessionStorage.getItem("gofcm.pid")}, renderFiles);
+          makeAjaxCall('g', '../common/controller.php?j=f_u',{pid:sessionStorage.getItem("gofcm.pid")}, renderFiles);
+          //this.fajax('u', {pid:sessionStorage.getItem("gofcm.pid")}, renderFiles);
         },
         uploadDone: function(file) {
           this.fajax('a', {fname:file.name, pid:sessionStorage.getItem("gofcm.pid")}, null);  
@@ -258,7 +259,7 @@
             density: density,
             pop: pop
           }
-          common.ajax('p', '../common/controller.php?j=t_s', jobParam, runCB);
+          makeAjaxCall('p', '../common/controller.php?j=t_s', jobParam, runCB);
         }
       };
     </script>
