@@ -385,18 +385,18 @@
 
                 //original table
                 //headers for x-axis
-                for(var i=0;i<xcols.length;i++) {
-                  thead+='<th id="'+xcols[i]+'_x">'+xcols[i]+'</th>';  
+                for(var x=0;x<xcols.length;i++) {
+                  thead+='<th id="'+xcols[x]+'_x">'+xcols[x]+'</th>';  
                 }
                 thead+='</tr></thead>';
 
-                for(var i=0;i<ycols.length;i++) {
-                  tbody+='<tr><th id="'+ycols[i]+'_y" headers="name">'+ycols[i]+'</th>';
+                for(var y=0;y<ycols.length;i++) {
+                  tbody+='<tr><th id="'+ycols[y]+'_y" headers="name">'+ycols[y]+'</th>';
 
-                  for(var j=0;j<xcols.length;j++) {
-                    tbody+='<td headers="'+xcols[j]+'_x">';
+                  for(var x=0;x<xcols.length;x++) {
+                    tbody+='<td headers="'+xcols[x]+'_x">';
 
-                    if(xcols[j] !== ycols[i]) {
+                    if(xcols[x] !== ycols[y]) {
                       tbody += '<div class="scrollable">';
 
                       for(var f=0;f<files.length;f++) {
@@ -407,7 +407,7 @@
                           var paramPath = filePath+'/'+filePath+'_'+params[p][0]+'_'+params[p][1]+'/images/';
                           tbody+=
                             '<div style="display:inline-block; text-align:center; border-right:1px solid;">'
-                            +'  <div><img style="width:100%;" src="../../results/'+taskId+'/'+paramPath+ycols[i]+'.'+xcols[j]+'.'+imgSuffix+'.png"/></div>'
+                            +'  <div><img style="width:100%;" src="../../results/'+taskId+'/'+paramPath+ycols[y]+'.'+xcols[x]+'.'+imgSuffix+'.png"/></div>'
                             +'  <div>' + (m_f?files[f]:'')+(m_p?'['+params[p][0]+':'+params[p][1]+']':'') + '</div>'
                             +'</div>';
                         }  
@@ -418,41 +418,41 @@
                   }
                   tbody+='</tr>';
                 }
+
                 tbody+='</tbody>';
                 $('#imageTable').html(thead+tbody);
 
-                //table1
+                //table1 with file header
                 tbody='';
+                for(var f=0;f<files.length;f++) {
+                  tbody+='<tr><th headers="name">'+files[f]+'</th>';
+                  if(xcols[x] !== ycols[y]) {
+                    tbody += '<div class="scrollable">';
+                    var param_l = params.length;
+                    var divW = (param_l>1?(100/param_l)*10:0), filePath = files[f]+'_out';
+
+                    for(var p=0;p<param_l;p++) {
+                      var paramPath = filePath+'/'+filePath+'_'+params[p][0]+'_'+params[p][1]+'/images/';
+                      tbody+=
+                        '<div style="display:inline-block; text-align:center; border-right:1px solid;">'
+                        +'  <div><img style="width:100%;" src="../../results/'+taskId+'/'+paramPath+ycols[y]+'.'+xcols[x]+'.'+imgSuffix+'.png"/></div>'
+                        +'  <div>' + (m_p?'['+params[p][0]+':'+params[p][1]+']':'') + '</div>'
+                        +'</div>';
+                    }  
+                    tbody+='</div>';
+                  }
+                  tbody+='</tr>';
+                }
+
+                tbody+='</tbody>';
+                $('#imageTable1').html(tbody);
+
                 for(var i=0;i<ycols.length;i++) {
-                  tbody+='<tr><th id="'+ycols[i]+'_y" headers="name">'+ycols[i]+'</th>';
 
                   for(var j=0;j<xcols.length;j++) {
                     tbody+='<td headers="'+xcols[j]+'_x">';
 
-                    if(xcols[j] !== ycols[i]) {
-                      tbody += '<div class="scrollable">';
-
-                      for(var f=0;f<files.length;f++) {
-                        var param_l = params.length;
-                        var divW = (param_l>1?(100/param_l)*10:0), filePath = files[f]+'_out';
-
-                        for(var p=0;p<param_l;p++) {
-                          var paramPath = filePath+'/'+filePath+'_'+params[p][0]+'_'+params[p][1]+'/images/';
-                          tbody+=
-                            '<div style="display:inline-block; text-align:center; border-right:1px solid;">'
-                            +'  <div><img style="width:100%;" src="../../results/'+taskId+'/'+paramPath+ycols[i]+'.'+xcols[j]+'.'+imgSuffix+'.png"/></div>'
-                            +'  <div>' + (m_f?files[f]:'')+(m_p?'['+params[p][0]+':'+params[p][1]+']':'') + '</div>'
-                            +'</div>';
-                        }  
-                      }
-                      tbody+='</div>';
-                    }
-                    tbody+='</td>';
-                  }
-                  tbody+='</tr>';
-                }
-                tbody+='</tbody>';
-                $('#imageTable1').html(tbody);
+                    
 
 
                 $('#loading-indicator').hide();
