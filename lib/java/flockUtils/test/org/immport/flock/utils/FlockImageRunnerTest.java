@@ -10,7 +10,7 @@ import org.junit.Test;
  */
 public class FlockImageRunnerTest {
     FlockImageRunner runner = new FlockImageRunner();
-    private final String testDir = "/Users/hkim/Stuffs/test/gofcm/";// /Users/hkim/Stuffs/test/gofcm/, /Users/movence/works/test/gofcm/
+    private final String testDir = "/Users/movence/works/test/gofcm/";// /Users/hkim/Stuffs/test/gofcm/, /Users/movence/works/test/gofcm/
 
     @Test
     public void run() throws Exception {
