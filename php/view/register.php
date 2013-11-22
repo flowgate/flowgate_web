@@ -23,19 +23,19 @@
             <div class="form-group">
               <label for="uname" class="col-sm-2 control-label">Name<strong style="color:darkred;">*</strong></label>
               <div class="col-sm-10">
-                <input type="email" class="form-control" id="uname" placeholder="Name">
+                <input type="text" class="form-control" id="uname" name="uname" placeholder="Name">
               </div>
             </div>
             <div class="form-group">
               <label for="uemail" class="col-sm-2 control-label">Email<strong style="color:darkred;">*</strong></label>
               <div class="col-sm-10">
-                <input type="email" class="form-control" id="uemail" placeholder="Email">
+                <input type="email" class="form-control" id="uemail" name="uemail" placeholder="Email">
               </div>
             </div>
             <div class="form-group">
               <label for="uid" class="col-sm-2 control-label">ID<strong style="color:darkred;">*</strong></label>
               <div class="col-sm-10">
-                <input type="text" class="form-control" id="uid" placeholder="USER ID">
+                <input type="text" class="form-control" id="uid" name="uid" placeholder="USER ID">
               </div>
             </div>
             <div class="form-group">
@@ -47,7 +47,7 @@
             <div class="form-group">
               <label for="uaffil" class="col-sm-2 control-label">Affilate</label>
               <div class="col-sm-10">
-                <input type="text" class="form-control" id="uaffil" placeholder="Aiffiliate">
+                <input type="text" class="form-control" id="uaffil" name="uaffil" placeholder="Aiffiliate">
               </div>
             </div>
             <button type="submit" class="btn btn-default" style="float:right;">Register</button> 
