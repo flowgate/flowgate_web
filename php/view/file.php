@@ -63,7 +63,7 @@
 
 <body>
     <div id="nav"></div>
-    <div class="container hero-unit">
+    <div class="container">
         <h3>File</h3>
         <div id="fileAlert"></div>
         <div>
@@ -86,60 +86,69 @@
     </div>
 
     <!-- upload modal -->
-    <div id="fileUploadModal" class="modal hide fade">
-      <div class="modal-header">
-        <a href="#" class="close" data-dismiss="modal">&times;</a>
-        <h3 id="prompt">File Upload</h3>
-      </div>
-      <div class="modal-body">
-        <div class="divDialogElements">
-          <div class="divPopupMenu">
-            <div>
-              <span class="btn btn-success fileinput-button">
-                <i class="glyphicon glyphicon-plus"></i>
-                <span>Select files...</span>
-                <input id="fileupload" type="file" name="files[]" multiple>
-              </span>
-              <p style="padding-top: 15px;" class="text-info">OR drag & drop files into this popup.</p>  
+    <div class="modal fade" id="fileUploadModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="prompt">File Upload</h4>
+          </div>
+          <div class="modal-body">
+            <div class="divDialogElements">
+              <div class="divPopupMenu">
+                <div>
+                  <span class="btn btn-success fileinput-button">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    <span>Select files...</span>
+                    <input id="fileupload" type="file" name="files[]" multiple>
+                  </span>
+                  <p style="padding-top: 15px;" class="text-info">OR drag & drop files into this popup.</p>  
+                </div>
+                <div id="progress" class="progress">
+                  <div class="progress-bar progress-bar-success"></div>
+                </div>
+                <div id="files" class="files"></div>
+              </div>
             </div>
-            <div id="progress" class="progress">
-              <div class="progress-bar progress-bar-success"></div>
-            </div>
-            <div id="files" class="files"></div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
           </div>
         </div>
       </div>
-      <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-      </div>
     </div>
     <!-- job submission modal -->
-    <div id="runModal" class="modal hide fade">
-      <div class="modal-header">
-        <a href="#" class="close" data-dismiss="modal">&times;</a>
-        <h3 id="prompt">Run FLOCK</h3>
-      </div>
-      <div class="modal-body">
-        <div class="divDialogElements">
-          <h4 class="muted">Pipeline Parameters</h4>
-          <input type="hidden" name="rid" id="rid" />
-          Bins (int or range[x-y]): <input class="xlarge" id="rbin" type="text" /><br/>
-          Density (int or range[x-y]): <input class="xlarge" id="rden" type="text" /><br/>
-          Population (int): <input class="xlarge" id="rpop" type="text" />
+    <div class="modal fade" id="runModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="prompt">Run FLOCK</h4>
+          </div>
+          <div class="modal-body">
+            <div class="divDialogElements">
+              <h4 class="muted">Pipeline Parameters</h4>
+              <input type="hidden" name="rid" id="rid" />
+              <label for="rbin" class="control-label">Bins</label>
+              <div><input type="text" class="form-control" id="rbin" placeholder="int or range[x-y]"></div>
+              <label for="rden" class="control-label">Density</label>
+              <div><input type="text" class="form-control" id="rden" placeholder="int or range[x-y]"></div>
+              <label for="rpop" class="control-label">Population</label>
+              <div><input type="text" class="form-control" id="rpop" placeholder="int"></div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <img src="../../images/ajax-loader.gif" id="loading-indicator" style="display:none;"/>
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+            <a href="#" class="btn btn-primary" onclick="_page.run();">Run</a>
+          </div>
         </div>
-        <div style="margin-top:15px;">
-          <p class="text-warning">*job submission may take some time with a large file.</p>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <img src="../../images/ajax-loader.gif" id="loading-indicator" style="display:none;"/>
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-        <a href="#" class="btn btn-primary" onclick="_page.run();">Run</a>
       </div>
     </div>
 
     <script src="../../js/shared.js"></script>
     <script src="../../js/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
     <!--<script src="../../js/jquery.ui.widget.js"></script>-->
     <script src="../../js/jquery.ui.min.js"></script>
     <script src="../../js/jquery.fileupload.min.js"></script>
@@ -175,6 +184,7 @@
       });
 
       var _page = {
+        f_contr: "../common/controller.php?j=f_",
         fajax: function(t,d,cb) {
           $.ajax({
             type: "POST",
@@ -208,8 +218,8 @@
               $("#fileTable").tablesorter();
             }
           }
-          //common.ajax('g', '../common/controller.php?j=f_u',{pid:sessionStorage.getItem("gofcm.pid")}, renderFiles);
-          this.fajax('u', {pid:sessionStorage.getItem("gofcm.pid")}, renderFiles);
+          makeAjaxCall('g', '../common/controller.php?j=f_u',{pid:sessionStorage.getItem("gofcm.pid")}, renderFiles);
+          //this.fajax('u', {pid:sessionStorage.getItem("gofcm.pid")}, renderFiles);
         },
         uploadDone: function(file) {
           this.fajax('a', {fname:file.name, pid:sessionStorage.getItem("gofcm.pid")}, null);  
@@ -249,7 +259,7 @@
             density: density,
             pop: pop
           }
-          common.ajax('p', '../common/controller.php?j=t_s', jobParam, runCB);
+          makeAjaxCall('p', '../common/controller.php?j=t_s', jobParam, runCB);
         }
       };
     </script>
