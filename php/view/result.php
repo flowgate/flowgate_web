@@ -39,7 +39,7 @@
     .imageTable img {
       width: auto;
       height: auto;
-      max-width: 100px;
+      max-width: 150px;
       /*min-width: 50px;
       min-width: 85px;
       min-height: 85px;*/
@@ -53,7 +53,9 @@
 
     #filesContainer, #imagesContainer { padding: 0 !important; }
 
-    .scrollable { overflow: scroll; overflow-y:hidden; white-space:nowrap;}
+    .scrollableX { overflow: auto; overflow-y:hidden; white-space:nowrap;}
+    .scrollableY { height: 175px; overflow: auto; overflow-x:hidden;}
+    .crossing { background-color: #bbb; }
   </style>
 
 </head>
@@ -143,12 +145,17 @@
                   <img src="../../images/ajax-loader.gif" id="loading-indicator" style="display:none;"/>
                 </div>
               </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <p class="text-info">Each table cell with images is scrollable!</p>
+                </div>
+              </div>
               <div class="row" style="margin-top:5px;">
                 <div class="col-md-12">
                   <div class="row">
                       <table id="imageTable" class="imageTable" style="width:100%;"></table>
                   </div>
-                  <br/><strong style="color:red;">####### MOCK1</strong><br/><br/>
+                  <br/><strong style="color:red;">####### VERTICAL SCROLL</strong><br/><br/>
                   <div class="row">
                       <table id="imageTable1" class="imageTable" style="width:100%;"></table>
                   </div>
@@ -372,10 +379,10 @@
                     xcols = data.xmarker,
                     ycols = data.ymarker,
                     dirs = data.dirs,
-                    m_f = data.m_f,
+                    m_f = data.m_f, //multi-file?
                     files = data.files,
                     params = data.params,
-                    m_p = data.m_p,
+                    m_p = data.m_p, //multi-parameter?
                     imgSuffix = popIds.replace(/,/g,'.') + '.color.highlighted',
                     thead = '<thead><tr><th id="name" style="width:7%;"></th>', 
                     tbody = '<tbody>';
@@ -385,19 +392,18 @@
 
                 //original table
                 //headers for x-axis
-                for(var x=0;x<xcols.length;i++) {
-                  thead+='<th id="'+xcols[x]+'_x">'+xcols[x]+'</th>';  
+                for(var x=0;x<xcols.length;x++) {
+                  thead+='<th>'+xcols[x]+'</th>';  
                 }
                 thead+='</tr></thead>';
 
-                for(var y=0;y<ycols.length;i++) {
-                  tbody+='<tr><th id="'+ycols[y]+'_y" headers="name">'+ycols[y]+'</th>';
-
+                var rows = '';
+                for(var y=0;y<ycols.length;y++) {
+                  rows += '<tr><th headers="name">'+ycols[y]+'</th>';
+                  var cells = '';
                   for(var x=0;x<xcols.length;x++) {
-                    tbody+='<td headers="'+xcols[x]+'_x">';
-
                     if(xcols[x] !== ycols[y]) {
-                      tbody += '<div class="scrollable">';
+                      cells += '<td><div class="scrollableX">';
 
                       for(var f=0;f<files.length;f++) {
                         var param_l = params.length;
@@ -405,24 +411,66 @@
 
                         for(var p=0;p<param_l;p++) {
                           var paramPath = filePath+'/'+filePath+'_'+params[p][0]+'_'+params[p][1]+'/images/';
-                          tbody+=
+                          cells +=
                             '<div style="display:inline-block; text-align:center; border-right:1px solid;">'
                             +'  <div><img style="width:100%;" src="../../results/'+taskId+'/'+paramPath+ycols[y]+'.'+xcols[x]+'.'+imgSuffix+'.png"/></div>'
                             +'  <div>' + (m_f?files[f]:'')+(m_p?'['+params[p][0]+':'+params[p][1]+']':'') + '</div>'
                             +'</div>';
                         }  
                       }
-                      tbody+='</div>';
+                    } else { //put grey background for crossing X & Y markers
+                      cells += '<td class="crossing"><div>';
                     }
-                    tbody+='</td>';
+                    cells+='</div></td>';
                   }
-                  tbody+='</tr>';
+                  rows+=cells+'</tr>';
                 }
 
-                tbody+='</tbody>';
+                tbody+=rows + '</tbody>';
                 $('#imageTable').html(thead+tbody);
 
+                //vertical scroll
+                thead = '<thead><tr><th id="name" style="width:7%;"></th>';
+                tbody = '<tbody>';
+                for(var x=0;x<xcols.length;x++) {
+                  thead+='<th>'+xcols[x]+'</th>';  
+                }
+                thead+='</tr></thead>';
+
+                var rows = '';
+                for(var y=0;y<ycols.length;y++) {
+                  rows += '<tr><th headers="name">'+ycols[y]+'</th>';
+                  var cells = '';
+                  for(var x=0;x<xcols.length;x++) {
+                    if(xcols[x] !== ycols[y]) {
+                      cells += '<td><div class="scrollableY">';
+
+                      for(var f=0;f<files.length;f++) {
+                        var param_l = params.length;
+                        var divW = (param_l>1?(100/param_l)*10:0), filePath = files[f]+'_out';
+
+                        for(var p=0;p<param_l;p++) {
+                          var paramPath = filePath+'/'+filePath+'_'+params[p][0]+'_'+params[p][1]+'/images/';
+                          cells +=
+                            '<div style="text-align:center; border-right:1px solid;">'
+                            +'  <div><img style="width:100%;" src="../../results/'+taskId+'/'+paramPath+ycols[y]+'.'+xcols[x]+'.'+imgSuffix+'.png"/></div>'
+                            +'  <div>' + (m_f?files[f]:'')+(m_p?'['+params[p][0]+':'+params[p][1]+']':'') + '</div>'
+                            +'</div>';
+                        }  
+                      }
+                    } else { //put grey background for crossing X & Y markers
+                      cells += '<td class="crossing"><div>';
+                    }
+                    cells+='</div></td>';
+                  }
+                  rows+=cells+'</tr>';
+                }
+
+                tbody+=rows + '</tbody>';
+                $('#imageTable1').html(thead+tbody);
+
                 //table1 with file header
+                if
                 tbody='';
                 for(var f=0;f<files.length;f++) {
                   tbody+='<tr><th headers="name">'+files[f]+'</th>';
@@ -445,21 +493,18 @@
                 }
 
                 tbody+='</tbody>';
-                $('#imageTable1').html(tbody);
+                $('#imageTable2').html(tbody);
 
-                for(var i=0;i<ycols.length;i++) {
+                // for(var i=0;i<ycols.length;i++) {
 
-                  for(var j=0;j<xcols.length;j++) {
-                    tbody+='<td headers="'+xcols[j]+'_x">';
-
-                    
-
+                //   for(var j=0;j<xcols.length;j++) {
+                //     tbody+='<td headers="'+xcols[j]+'_x">';
 
                 $('#loading-indicator').hide();
                 fluidImage();
               }
             }
-          });
+          })
         },
         popul: function(cnt) {
           var $selecObj = $('#populselect'),
