@@ -89,7 +89,7 @@
             $jid = $_module->submit($pid, $fid, $_uidx, $bins, $density, $pop);
             $message['jid'] = $jid;
             break;
-        case "t_u": //get user files
+        case "t_u": //get user jobs
             $_module->getTasks($_uidx, (isset($_SESSION['currpId'])?$_SESSION['currpId']:null), null);
             $message['results'] = $_module::$RESULT;
             break;
