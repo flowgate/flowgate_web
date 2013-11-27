@@ -15,8 +15,6 @@ var common = {
       this.open('errorModal');
     },
     open: function(id) {
-      console.log(id);
-      console.log($('#'+id));
       $('#'+id).modal('show');
     },
     hide: function(id) {

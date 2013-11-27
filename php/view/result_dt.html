@@ -16,6 +16,8 @@
       border-radius:3px;
     }
 
+    table.DTFC_Cloned th { white-space: nowrap; }
+
     .caret { margin-top: 10px; }
 
     UL.jqueryFileTree LI.ext_cb { padding-left:5px; }
@@ -127,7 +129,7 @@
                   <button class="btn btn-primary" type="button" id="updateButton">Show Result</button>
                 </div>
                 <div class="col-md-9">
-                  <img src="../../images/ajax-loader.gif" id="loading-indicator" style="display:none;"/>
+                  <img src="../../css/images/ajax-loader.gif" id="loading-indicator" style="display:none;"/>
                 </div>
               </div>
               <div class="row">
@@ -166,6 +168,7 @@
 
       var _page = {
         init: false, //initial load flag,
+        imageTable: null,
         data: {
           taskId: '',
           files: '', //comma separated list of selected files,
@@ -343,59 +346,49 @@
                     files = data.files,
                     params = data.params,
                     m_p = data.m_p, //multi-parameter?
-                    imgSuffix = popIds.replace(/,/g,'.') + '.color.highlighted',
-                    thead = '<thead><tr><th id="name"></th>', 
-                    tbody = '<tbody>';
+                    imgSuffix = popIds.replace(/,/g,'.') + '.color.highlighted'; 
 
                 xcols = (!xcols || xcols==='all')?_data.cols:[xcols];
                 ycols = (!ycols || ycols==='all')?_data.cols:[ycols];
 
-                
                 //dataTables
-                for(var x=0;x<xcols.length;x++) {
-                  thead+='<th>'+xcols[x]+'</th>';  
-                }
-                thead+='</tr></thead>';
 
-                var rows = '';
-                for(var y=0;y<ycols.length;y++) {
-                  rows += '<tr><th headers="name">'+ycols[y]+'</th>';
-                  var cells = '';
-                  for(var x=0;x<xcols.length;x++) {
-                    if(xcols[x] !== ycols[y]) {
-                      cells += '<td><div>';
-
-                      for(var f=0;f<files.length;f++) {
-                        var param_l = params.length;
-                        var divW = (param_l>1?(100/param_l)*10:0), filePath = files[f]+'_out';
-
-                        for(var p=0;p<param_l;p++) {
-                          var paramPath = filePath+'/'+filePath+'_'+params[p][0]+'_'+params[p][1]+'/images/';
-                          cells +=
-                            '<div style="display:inline-block;">'
-                            +'  <div><img style="width:100%;" src="../../results/'+taskId+'/'+paramPath+ycols[y]+'.'+xcols[x]+'.'+imgSuffix+'.png"/></div>'
-                            +'  <div>' + (m_f?files[f]:'')+(m_p?'['+params[p][0]+':'+params[p][1]+']':'') + '</div>'
-                            +'</div>';
-                        }  
-                      }
-                    } else { //put grey background for crossing X & Y markers
-                      cells += '<td class="crossing"><div>';
-                    }
-                    cells+='</div></td>';
+                if(m_f) {
+                  var thead = '<thead><tr>';
+                  thead += '<th id="name"></th>'; //row header
+                  for(var p=0;p<params.length;p++) {
+                    thead+='<th>['+params[p][0]+':'+params[p][1]+']</th>';  
                   }
-                  rows+=cells+'</tr>';
-                }
+                  thead+='</tr></thead>';
 
-                tbody+=rows + '</tbody>';
-                $('#imageTable3').html(thead+tbody);
-                var oTable = $('#imageTable3').dataTable({
-                  "sScrollY": "600px",
-                  "sScrollX": "100%",
-                  "sScrollXInner": "120%",
-                  "bScrollCollapse": true,
-                  "bPaginate": false
-                });
-                new FixedColumns(oTable,{ "iLeftWidth": 15 });
+                  var resultsPath = '../../results/'+taskId+'/';
+                  var rows = '';
+                  for(var f=0;f<files.length;f++) {
+                    var row = '<td>'+files[f]+'</td>';
+                    var filePath = files[f]+'_out';
+                    var fileResultPath = resultsPath+filePath+'/'+filePath+'_';
+                    for(var p=0;p<params.length;p++) {
+                      var paramPath = fileResultPath+params[p][0]+'_'+params[p][1]+'/images/';
+                      row += '<td><img src="'+paramPath+ycols+'.'+xcols+'.'+imgSuffix+'.png"/></td>';
+                    }
+                    rows += '<tr>' + row + '</tr>';
+                  }
+
+                  if(_page.imageTable) {
+                    _page.imageTable.fnDestroy();
+                  }
+                  var tbody = '<tbody>' + rows + '</tbody>';
+                  $('#imageTable3').html(thead+tbody);
+                  var oTable = $('#imageTable3').dataTable({
+                    "sScrollY": "600px",
+                    "sScrollX": "100%",
+                    "sScrollXInner": "120%",
+                    "bScrollCollapse": true,
+                    "bPaginate": false
+                  });
+                  new FixedColumns(oTable,{ "sLeftWidth":"fixed", "iLeftWidth": 25 });
+                  _page.imageTable = oTable;
+                }
 
                 $('#loading-indicator').hide();
               }
