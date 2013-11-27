@@ -10,7 +10,7 @@ class DatabaseModule {
 	function connect() {
 		$username = "ifx_gofcm_adm";
         $password = "ifx_gofcm_adm";
-        $hostname = "genepatt-dev.jcvi.org:3666"; //"localhost:3306"; //"genepatt-dev.jcvi.org:3666"; 
+        $hostname = "localhost:3306"; //"localhost:3306"; //"genepatt-dev.jcvi.org:3666"; 
 
         //connection to the database
         $con = mysqli_connect($hostname, $username, $password, DatabaseModule::$DBNAME) or die("Unable to connect to MySQL");

@@ -138,7 +138,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <img src="../../images/ajax-loader.gif" id="loading-indicator" style="display:none;"/>
+            <img src="../../css/images/ajax-loader.gif" id="loading-indicator" style="display:none;"/>
             <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
             <a href="#" class="btn btn-primary" onclick="_page.run();">Run</a>
           </div>

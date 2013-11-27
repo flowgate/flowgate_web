@@ -143,7 +143,7 @@
                   <button class="btn btn-primary" type="button" id="updateButton">Show Result</button>
                 </div>
                 <div class="col-md-9">
-                  <img src="../../images/ajax-loader.gif" id="loading-indicator" style="display:none;"/>
+                  <img src="../../css/images/ajax-loader.gif" id="loading-indicator" style="display:none;"/>
                 </div>
               </div>
               <div class="row">
