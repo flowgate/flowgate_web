@@ -180,7 +180,8 @@ div.DTFC_LeftHeadWrapper table,
 div.DTFC_LeftFootWrapper table,
 div.DTFC_RightHeadWrapper table,
 div.DTFC_RightFootWrapper table,
-table.DTFC_Cloned tr.even {
+table.DTFC_Cloned tr.even,
+table.DTFC_Cloned tr.odd {
     background-color: white;
 }
  
