@@ -1,17 +1,14 @@
 package org.immport.flock.utils;
 
-import org.apache.commons.io.IOUtils;
 import org.immport.flock.commons.Zipper;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStreamReader;
 import java.net.URI;
-import java.net.URL;
-import java.security.CodeSource;
-import java.security.ProtectionDomain;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 /**
  * User: hkim
@@ -142,6 +139,15 @@ public class FlockRunner {
     public URI getFlockFile() throws Exception {
         URI fileURI = null;
 
+        String jarPath = this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
+        String decodedPath = URLDecoder.decode(jarPath, "UTF-8");
+        String directory = decodedPath.substring(0, decodedPath.lastIndexOf(File.separator) + 1);
+        File flock = new File(directory + flockName);
+
+
+        /*
+        * This block is used only when flock binary is included within that jar
+
         ProtectionDomain domain = FlockRunner.class.getProtectionDomain();
         CodeSource source = domain.getCodeSource();
         URL sourceLocation = source.getLocation();
@@ -167,9 +173,9 @@ public class FlockRunner {
             IOUtils.closeQuietly(ins);
 
             fileURI = tempFile.toURI();
-        }
+        }*/
 
-        return fileURI;
+        return flock.toURI();
     }
 
     private void runFlock(URI flockUri, File workingDir, String dataFile, int bin, int density, int population) throws Exception {
