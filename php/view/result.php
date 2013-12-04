@@ -161,14 +161,6 @@
                   <div class="row">
                       <table id="imageTable1" class="imageTable" style="width:100%;"></table>
                   </div>
-                  <br/><strong style="color:red;">####### MultiFile (Shown only with multi file)</strong><br/><br/>
-                  <div class="row">
-                      <table id="imageTable2" class="imageTable" style="width:100%;"></table>
-                  </div>
-                  <br/><strong style="color:red;">####### DataTables</strong><br/><br/>
-                  <div class="row">
-                      <table id="imageTable3" class="imageTable" style="width:100%;"></table>
-                  </div>
                 </div>
               </div>
             </div>
@@ -467,83 +459,6 @@
 
                 tbody+=rows + '</tbody>';
                 $('#imageTable1').html(thead+tbody);
-
-                //table1 with file header
-                tbody='';
-                for(var f=0;f<files.length;f++) {
-                  tbody+='<tr><th headers="name">'+files[f]+'</th>';
-                  if(xcols[x] !== ycols[y]) {
-                    tbody += '<div class="scrollable">';
-                    var param_l = params.length;
-                    var divW = (param_l>1?(100/param_l)*10:0), filePath = files[f]+'_out';
-
-                    for(var p=0;p<param_l;p++) {
-                      var paramPath = filePath+'/'+filePath+'_'+params[p][0]+'_'+params[p][1]+'/images/';
-                      tbody+=
-                        '<div style="display:inline-block; text-align:center; border-right:1px solid;">'
-                        +'  <div><img style="width:100%;" src="../../results/'+taskId+'/'+paramPath+ycols[y]+'.'+xcols[x]+'.'+imgSuffix+'.png"/></div>'
-                        +'  <div>' + (m_p?'['+params[p][0]+':'+params[p][1]+']':'') + '</div>'
-                        +'</div>';
-                    }  
-                    tbody+='</div>';
-                  }
-                  tbody+='</tr>';
-                }
-
-                tbody+='</tbody>';
-                $('#imageTable2').html(tbody);
-
-                //dataTables
-                thead = '<thead><tr><th id="name" style="width:35px;"></th>';
-                tbody = '<tbody>';
-                console.log(xcols);
-                for(var x=0;x<xcols.length;x++) {
-                  thead+='<th>'+xcols[x]+'</th>';  
-                }
-                thead+='</tr></thead>';
-
-                var rows = '';
-                for(var y=0;y<ycols.length;y++) {
-                  rows += '<tr><th headers="name">'+ycols[y]+'</th>';
-                  var cells = '';
-                  for(var x=0;x<xcols.length;x++) {
-                    if(xcols[x] !== ycols[y]) {
-                      cells += '<td><div>';
-
-                      for(var f=0;f<files.length;f++) {
-                        var param_l = params.length;
-                        var divW = (param_l>1?(100/param_l)*10:0), filePath = files[f]+'_out';
-
-                        for(var p=0;p<param_l;p++) {
-                          var paramPath = filePath+'/'+filePath+'_'+params[p][0]+'_'+params[p][1]+'/images/';
-                          cells +=
-                            '<div style="display:inline-block; border-right:1px solid;">'
-                            +'  <div><img style="width:100%;" src="../../results/'+taskId+'/'+paramPath+ycols[y]+'.'+xcols[x]+'.'+imgSuffix+'.png"/></div>'
-                            +'  <div>' + (m_f?files[f]:'')+(m_p?'['+params[p][0]+':'+params[p][1]+']':'') + '</div>'
-                            +'</div>';
-                        }  
-                      }
-                    } else { //put grey background for crossing X & Y markers
-                      cells += '<td class="crossing"><div>';
-                    }
-                    cells+='</div></td>';
-                  }
-                  rows+=cells+'</tr>';
-                }
-
-                tbody+=rows + '</tbody>';
-                $('#imageTable3').html(thead+tbody);
-                var oTable = $('#imageTable3').dataTable({
-                  "sScrollY": "300px",
-                  "sScrollX": "100%",
-                  "sScrollXInner": "1200px",
-                  "bScrollCollapse": true,
-                  "bPaginate": false
-                });
-                new FixedColumns(oTable,{
-                  "sLeftWidth": "relative",
-                  "iLeftWidth": 1
-                });
 
                 $('#loading-indicator').hide();
               }
