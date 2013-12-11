@@ -159,7 +159,6 @@ class DatabaseModule {
 		} elseif(!is_null($pid)) {
 			$query = $query." and a.datasetID=".$pid;	
 		}
-		error_log($query);
 		return $this->findMany($con, $query);
 	}
 }

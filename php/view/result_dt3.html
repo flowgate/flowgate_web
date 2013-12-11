@@ -139,9 +139,7 @@
               </div>
               <div class="row" style="margin-top:5px;">
                 <div class="col-md-12">
-                  <div class="row" id="imageTableRow">
-                      <table id="imageTable3" class="imageTable" style="width:100%;"></table>
-                  </div>
+                  <div class="row" id="imageTableRow"></div>
                 </div>
               </div>
             </div>
@@ -350,53 +348,67 @@
 
                 xcols = (!xcols || xcols==='all')?_data.cols:[xcols];
                 ycols = (!ycols || ycols==='all')?_data.cols:[ycols];
+                var m_m = xcols.length > 1 || ycols.length > 1; //multi-marker?
 
                 //dataTables
+                var thead = '<thead><tr>';
+                thead += '<th id="name">'+(m_f?'File':'Maker')+'</th>'; //row header
+                for(var p=0;p<params.length;p++) {
+                  thead+='<th>['+params[p][0]+':'+params[p][1]+']</th>';  
+                }
+                thead+='</tr></thead>';
 
-                if(m_f) {
-                  var thead = '<thead><tr>';
-                  thead += '<th id="name">File</th>'; //row header
-                  for(var p=0;p<params.length;p++) {
-                    thead+='<th>['+params[p][0]+':'+params[p][1]+']</th>';  
-                  }
-                  thead+='</tr></thead>';
+                var resultsPath = '../../results/'+taskId+'/';
+                var rows = '';
+                for(var f=0;f<files.length;f++) {
+                  var filePath = files[f]+'_out';
+                  var fileResultPath = resultsPath+filePath+'/'+filePath+'_';
 
-                  var resultsPath = '../../results/'+taskId+'/';
-                  var rows = '';
-                  for(var f=0;f<files.length;f++) {
-                    var row = '<td style="width:5%;">'+files[f]+'</td>';
-                    var filePath = files[f]+'_out';
-                    var fileResultPath = resultsPath+filePath+'/'+filePath+'_';
+                  var row = '';
+                  if(m_m) {
+                    for(var x=0;x<xcols.length;x++) {
+                      for(var y=0;y<ycols.length;y++) {
+                        if(xcols[x]!==ycols[y]) {
+                          row = '<td style="width:5%;">'+xcols[x]+':'+ycols[y]+'</td>';
+                          for(var p=0;p<params.length;p++) {
+                            var paramPath = fileResultPath+params[p][0]+'_'+params[p][1]+'/images/';
+                            row += '<td><img src="'+paramPath+xcols[x]+'.'+ycols[y]+'.'+imgSuffix+'.png"/></td>';
+                          }
+                          rows += '<tr>' + row + '</tr>';
+                        }
+                      }
+                    }
+                  } else {
+                    row = '<td style="width:5%;">'+files[f]+'</td>';
                     for(var p=0;p<params.length;p++) {
                       var paramPath = fileResultPath+params[p][0]+'_'+params[p][1]+'/images/';
-                      row += '<td><img src="'+paramPath+ycols+'.'+xcols+'.'+imgSuffix+'.png"/></td>';
+                      row += '<td><img src="'+paramPath+xcols+'.'+ycols+'.'+imgSuffix+'.png"/></td>';
                     }
                     rows += '<tr>' + row + '</tr>';
                   }
-
-                  if(_page.imageTable) {
-                    _page.imageTable.fnDestroy();
-                    $('#imageTableRow').html('<table id="imageTable3" class="imageTable" style="width:100%;"></table>');
-                  }
-                  var tbody = '<tbody>' + rows + '</tbody>';
-                  $('#imageTable3').html(thead+tbody);
-
-                  $('#imageTable3').imagesLoaded().then(function() {
-                    var oTable = $('#imageTable3').dataTable({
-                      "sScrollY": "550px",
-                      "sScrollX": "100%",
-                      "sScrollXInner": "110%",
-                      "bScrollCollapse": true,
-                      "bPaginate": false,
-                      "bAutoWidth": false,
-                      "bFilter": false
-                    });
-                    var oFC = new FixedColumns(oTable);
-                    _page.imageTable = oTable;
-                    //hide loading bar
-                    $('#loading-indicator').hide();  
-                  });
                 }
+
+                if(_page.imageTable) {
+                  _page.imageTable.fnDestroy();
+                }
+                var tbody = '<tbody>' + rows + '</tbody>';
+                $('#imageTableRow').html('<table id="imageTable3" class="imageTable" style="width:100%;">'+thead+tbody+'</table>');
+
+                $('#imageTable3').imagesLoaded().then(function() {
+                  var oTable = $('#imageTable3').dataTable({
+                    "sScrollY": "550px",
+                    "sScrollX": "100%",
+                    "sScrollXInner": "110%",
+                    "bScrollCollapse": true,
+                    "bPaginate": false,
+                    "bAutoWidth": false,
+                    "bFilter": false
+                  });
+                  var oFC = new FixedColumns(oTable);
+                  _page.imageTable = oTable;
+                  //hide loading bar
+                  $('#loading-indicator').hide();  
+                });
               }
             }
           });
