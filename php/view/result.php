@@ -10,6 +10,7 @@
   <link href="../../css/jqueryFileTree.css" rel="stylesheet">
   <link href="../../css/bootstrap-select.css" rel="stylesheet">
   <link href="../../css/jquery.ui.css" rel="stylesheet">
+  <link href="../../css/DT_bootstrap.css" rel="stylesheet">
   <style type="text/css">
     .centerSub {
       background-color:#eee; 
@@ -17,33 +18,17 @@
       border-radius:3px;
     }
 
+    table.DTFC_Cloned th { white-space: nowrap; }
+
     .caret { margin-top: 10px; }
 
     UL.jqueryFileTree LI.ext_cb { padding-left:5px; }
 
-    .imageTable { table-layout: fixed; }
-    .imageTable td { border: 3px #7f7f7f solid; }
-    .imageTable th { 
-      font-family: Verdana,Arial,Helvetica,sans-serif;
-      font-weight: normal;
-      font-size: .9em;
-      font-color: black;
-      text-align: left;
-      color: black;
-      margin: 0;
-      padding: 5px 12px 5px 12px;
-      vertical-align: top;
-      border: 3px solid #7f7f7f;
-      background-color: #f5f5f5;
-    }
     .imageTable img {
       width: auto;
       height: auto;
       width: 100%;
       max-width: 150px;
-      /*min-width: 50px;
-      min-width: 85px;
-      min-height: 85px;*/
     }
 
     .resultRow { margin: 0 !important;}
@@ -54,9 +39,10 @@
 
     #filesContainer, #imagesContainer { padding: 0 !important; }
 
-    .scrollableX { overflow: auto; overflow-y:hidden; white-space:nowrap;}
-    .scrollableY { height: 175px; overflow: auto; overflow-x:hidden;}
     .crossing { background-color: #bbb; }
+
+    #imageTable td { border: 1px solid black;}
+    .imageTable th { background-color: white; }
   </style>
 
 </head>
@@ -146,20 +132,10 @@
                   <img src="../../css/images/ajax-loader.gif" id="loading-indicator" style="display:none;"/>
                 </div>
               </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <p class="text-info">Each table cell with images is scrollable!</p>
-                </div>
-              </div>
               <div class="row" style="margin-top:5px;">
                 <div class="col-md-12">
-                  <strong style="color:red;">####### HORIZONTAL SCROLL</strong><br/><br/>
                   <div class="row">
                       <table id="imageTable" class="imageTable" style="width:100%;"></table>
-                  </div>
-                  <br/><strong style="color:red;">####### VERTICAL SCROLL</strong><br/><br/>
-                  <div class="row">
-                      <table id="imageTable1" class="imageTable" style="width:100%;"></table>
                   </div>
                 </div>
               </div>
@@ -172,25 +148,15 @@
     <script src="../../js/jquery.min.js"></script>
     <script src="../../js/shared.js"></script>
     <script src="../../js/jqueryFileTree.js"></script>
-    <script src="../../js/bootstrap-select.js"></script>
+    <script src="../../js/bootstrap-select.min.js"></script>
     <script src="../../js/jquery.ui.min.js"></script>
     <script src="../../js/jquery.dataTables.min.js"></script>
+    <script src="../../js/DT_bootstrap.js"></script>
     <script src="../../js/dataTables.FixedColumns.js"></script>
-    <!--<script src="../../js/dataTables.FixedColumns.min.js"></script>-->
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
     <script>
       $(function(){
         $("#nav").load("../common/nav.php");
-
-        var query = window.location.search.substring(1),
-            vars = query.split("&"),
-            taskId = ''; 
-        for (var i=0;i<vars.length;i++) {
-          var pair = vars[i].split("=");
-          if(pair[0]==='taskId') {
-            taskId = pair[1];
-          }
-        }
         _data.results();
         $('#imagesContainer').resizable();
       });
@@ -374,96 +340,91 @@
                     files = data.files,
                     params = data.params,
                     m_p = data.m_p, //multi-parameter?
-                    imgSuffix = popIds.replace(/,/g,'.') + '.color.highlighted',
-                    thead = '<thead><tr><th id="name" style="width:7%;"></th>', 
-                    tbody = '<tbody>';
+                    imgSuffix = popIds.replace(/,/g,'.') + '.color.highlighted'; 
 
                 xcols = (!xcols || xcols==='all')?_data.cols:[xcols];
                 ycols = (!ycols || ycols==='all')?_data.cols:[ycols];
+                var m_m = xcols.length > 1 || ycols.length > 1; //multi-marker?
 
-                //original table
-                //headers for x-axis
-                for(var x=0;x<xcols.length;x++) {
-                  thead+='<th>'+xcols[x]+'</th>';  
+                //dataTables
+                var thead = '<thead><tr>';
+                thead += '<th id="name">'+(m_f?'File':'Maker')+'</th>'; //row header
+                for(var p=0;p<params.length;p++) {
+                  thead+='<th class="imageMaxWidth">['+params[p][0]+':'+params[p][1]+']</th>';  
                 }
                 thead+='</tr></thead>';
 
+                var resultsPath = '../../results/'+taskId+'/';
                 var rows = '';
-                for(var y=0;y<ycols.length;y++) {
-                  rows += '<tr><th headers="name">'+ycols[y]+'</th>';
-                  var cells = '';
-                  for(var x=0;x<xcols.length;x++) {
-                    if(xcols[x] !== ycols[y]) {
-                      cells += '<td><div class="scrollableX">';
+                for(var f=0;f<files.length;f++) {
+                  var filePath = files[f]+'_out';
+                  var fileResultPath = resultsPath+filePath+'/'+filePath+'_';
 
-                      for(var f=0;f<files.length;f++) {
-                        var param_l = params.length;
-                        var divW = (param_l>1?(100/param_l)*10:0), filePath = files[f]+'_out';
-
-                        for(var p=0;p<param_l;p++) {
-                          var paramPath = filePath+'/'+filePath+'_'+params[p][0]+'_'+params[p][1]+'/images/';
-                          cells +=
-                            '<div style="display:inline-block; text-align:center; border-right:1px solid;">'
-                            +'  <div><img style="width:100%;" src="../../results/'+taskId+'/'+paramPath+ycols[y]+'.'+xcols[x]+'.'+imgSuffix+'.png"/></div>'
-                            +'  <div>' + (m_f?files[f]:'')+(m_p?'['+params[p][0]+':'+params[p][1]+']':'') + '</div>'
-                            +'</div>';
-                        }  
+                  var row = '';
+                  var columnsArr = [];
+                  var imagesTotalWidth = 0;
+                  if(m_m) {
+                    for(var x=0;x<xcols.length;x++) {
+                      for(var y=0;y<ycols.length;y++) {
+                        if(xcols[x]!==ycols[y]) {
+                          row = '<td style="width:77px;">'+xcols[x]+':'+ycols[y]+'</td>';
+                          for(var p=0;p<params.length;p++) {
+                            var paramPath = fileResultPath+params[p][0]+'_'+params[p][1]+'/images/';
+                            row += '<td><img src="'+paramPath+xcols[x]+'.'+ycols[y]+'.'+imgSuffix+'.png"/></td>';
+                          }
+                          rows += '<tr>' + row + '</tr>';
+                        }
                       }
-                    } else { //put grey background for crossing X & Y markers
-                      cells += '<td class="crossing"><div>';
                     }
-                    cells+='</div></td>';
-                  }
-                  rows+=cells+'</tr>';
-                }
-
-                tbody+=rows + '</tbody>';
-                $('#imageTable').html(thead+tbody);
-
-                //vertical scroll
-                thead = '<thead><tr><th id="name" style="width:7%;"></th>';
-                tbody = '<tbody>';
-                for(var x=0;x<xcols.length;x++) {
-                  thead+='<th>'+xcols[x]+'</th>';  
-                }
-                thead+='</tr></thead>';
-
-                var rows = '';
-                for(var y=0;y<ycols.length;y++) {
-                  rows += '<tr><th headers="name">'+ycols[y]+'</th>';
-                  var cells = '';
-                  for(var x=0;x<xcols.length;x++) {
-                    if(xcols[x] !== ycols[y]) {
-                      cells += '<td><div class="scrollableY">';
-
-                      for(var f=0;f<files.length;f++) {
-                        var param_l = params.length;
-                        var divW = (param_l>1?(100/param_l)*10:0), filePath = files[f]+'_out';
-
-                        for(var p=0;p<param_l;p++) {
-                          var paramPath = filePath+'/'+filePath+'_'+params[p][0]+'_'+params[p][1]+'/images/';
-                          cells +=
-                            '<div style="display:inline-block; text-align:center; border-right:1px solid;">'
-                            +'  <div><img style="width:100%;" src="../../results/'+taskId+'/'+paramPath+ycols[y]+'.'+xcols[x]+'.'+imgSuffix+'.png"/></div>'
-                            +'  <div>' + (m_f?files[f]:'')+(m_p?'['+params[p][0]+':'+params[p][1]+']':'') + '</div>'
-                            +'</div>';
-                        }  
-                      }
-                    } else { //put grey background for crossing X & Y markers
-                      cells += '<td class="crossing"><div>';
+                  } else {
+                    row = '<td>'+files[f]+'</td>';
+                    for(var p=0;p<params.length;p++) {
+                      var paramPath = fileResultPath+params[p][0]+'_'+params[p][1]+'/images/';
+                      //row += '<td class="' + (p===params.length-1?'imageLast':'imageNotLast') + '"><img src="'+paramPath+xcols+'.'+ycols+'.'+imgSuffix+'.png"/></td>';
+                      row += '<td><img src="'+paramPath+xcols+'.'+ycols+'.'+imgSuffix+'.png"/></td>';
+                      columnsArr.push(p+1);
+                      imagesTotalWidth += 150;
                     }
-                    cells+='</div></td>';
+                    rows += '<tr>' + row + '</tr>';
                   }
-                  rows+=cells+'</tr>';
                 }
 
-                tbody+=rows + '</tbody>';
-                $('#imageTable1').html(thead+tbody);
+                if(_page.imageTable) {
+                  _page.imageTable.fnDestroy();
+                }
+                var tbody = '<tbody>' + rows + '</tbody>';
+                $('#imageTableRow').html('<table id="imageTable" class="imageTable">'+thead+tbody+'</table>');
 
-                $('#loading-indicator').hide();
+                $('#imageTable').imagesLoaded().then(function() {
+
+                  var lastTdSize = $('#imageTable td:last').css('width');
+
+                  if($('#imageTableRow').width() - $('#imageTable>tbody>tr:first>td:first').width() - imagesTotalWidth > 0) {
+                    columnsArr = columnsArr.slice(0, -1);
+                  }
+
+                  var oTable = $('#imageTable').dataTable({
+                    "bAutoWidth": false,
+                    "aoColumnDefs": [
+                      { "sWidth": "77px", "aTargets": [ 0 ] },
+                      { "sWidth": lastTdSize, "aTargets": columnsArr }
+                    ],
+                    "sScrollY": "550px",
+                    "sScrollX": "100%",
+                    "sScrollXInner": "110%",
+                    "bScrollCollapse": true,
+                    "bPaginate": false,
+                    "bFilter": false
+                  });
+                  var oFC = new FixedColumns(oTable);
+                  _page.imageTable = oTable;
+
+                  //hide loading bar
+                  $('#loading-indicator').hide();  
+                });
               }
             }
-          })
+          });
         },
         popul: function(cnt) {
           var $selecObj = $('#populselect'),
