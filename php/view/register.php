@@ -54,8 +54,8 @@
         </form>
     </div>
 
-    <script src="../../js/shared.js"></script>
     <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/shared.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
     <script>
         $(function(){
