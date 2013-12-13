@@ -42,7 +42,11 @@
     .crossing { background-color: #bbb; }
 
     #imageTable td { border: 1px solid black;}
-    .imageTable th { background-color: white; }
+    .imageTable>thead>tr>th { 
+      background-color: white !important;
+      border-right: 1px solid black;
+      border-bottom: 1px solid black;
+     }
   </style>
 
 </head>
@@ -85,7 +89,7 @@
             <div class="row col-md-12" id="fileNav" style="overflow:auto;"></div>
           </div>
         </div>
-        <div class="col-md-10" id="imagesContainer" style="height:100%;">
+        <div class="col-md-10" id="imagesContainer" style="height:100%;padding-left:5px;">
           <div class="row resultRow">
             <div class="col-md-12 centerSub">
               <div class="row">
@@ -134,9 +138,7 @@
               </div>
               <div class="row" style="margin-top:5px;">
                 <div class="col-md-12">
-                  <div class="row">
-                      <table id="imageTable" class="imageTable" style="width:100%;"></table>
-                  </div>
+                  <div class="row" id="imageTableRow"></div>
                 </div>
               </div>
             </div>
@@ -155,14 +157,9 @@
     <script src="../../js/dataTables.FixedColumns.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
     <script>
-      $(function(){
-        $("#nav").load("../common/nav.php");
-        _data.results();
-        $('#imagesContainer').resizable();
-      });
-
       var _page = {
         init: false, //initial load flag,
+        imageTable: null,
         data: {
           taskId: '',
           files: '', //comma separated list of selected files,
@@ -348,9 +345,9 @@
 
                 //dataTables
                 var thead = '<thead><tr>';
-                thead += '<th id="name">'+(m_f?'File':'Maker')+'</th>'; //row header
+                thead += '<th id="name">'+(m_f?'File':'Marker')+'</th>'; //row header
                 for(var p=0;p<params.length;p++) {
-                  thead+='<th class="imageMaxWidth">['+params[p][0]+':'+params[p][1]+']</th>';  
+                  thead+='<th>['+params[p][0]+':'+params[p][1]+']</th>';  
                 }
                 thead+='</tr></thead>';
 
@@ -397,7 +394,9 @@
 
                 $('#imageTable').imagesLoaded().then(function() {
 
-                  var lastTdSize = $('#imageTable td:last').css('width');
+                  var lastTdSize = $('#imageTable>tbody>tr:first>td:last').css('width');
+                  var rowHeaderSize = $('#imageTable>tbody>tr:first>td:first').css('width');
+                  console.log(lastTdSize, rowHeaderSize);
 
                   if($('#imageTableRow').width() - $('#imageTable>tbody>tr:first>td:first').width() - imagesTotalWidth > 0) {
                     columnsArr = columnsArr.slice(0, -1);
@@ -406,7 +405,7 @@
                   var oTable = $('#imageTable').dataTable({
                     "bAutoWidth": false,
                     "aoColumnDefs": [
-                      { "sWidth": "77px", "aTargets": [ 0 ] },
+                      { "sWidth": rowHeaderSize, "aTargets": [ 0 ] },
                       { "sWidth": lastTdSize, "aTargets": columnsArr }
                     ],
                     "sScrollY": "550px",
@@ -560,6 +559,20 @@
         }
       };
     //todo at submission("Show Result") - there should be a validation check on inputs (markers, files, populations and params)
+
+    
+      $(function(){
+        $("#nav").load("../common/nav.php");
+        _data.results();
+        $('#imagesContainer').resizable();
+
+        //manually calls DataTables' draw function for window resize
+        $( window ).resize(function() { 
+          if(_page.imageTable) {
+            _page.imageTable.fnDraw();
+          }
+        });
+      });
     </script>
   </body>
 </html>
