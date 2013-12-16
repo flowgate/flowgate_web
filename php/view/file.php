@@ -135,6 +135,9 @@
               <div><input type="text" class="form-control" id="rden" placeholder="int or range[x-y]"></div>
               <label for="rpop" class="control-label">Population</label>
               <div><input type="text" class="form-control" id="rpop" placeholder="int"></div>
+              <br/>              
+              <label for="flockLSID" class="control-label">FLOCK Module LSID (OPTIONAL)</label>
+              <div><input type="text" class="form-control" id="flockLsid" placeholder="Insert FLOCK module LSID from GenePattern"></div>
             </div>
           </div>
           <div class="modal-footer">
@@ -235,6 +238,7 @@
           var bins = $('#rbin').val();
           var density = $('#rden').val();
           var pop = $('#rpop').val();
+          var flockLsid = $('#flockLsid').val();
           var pid = common.ss_g(common.p.id); //get current project id from sessionStorage
           var runCB = function(obj) {
             var isError = true;
@@ -257,7 +261,8 @@
             fid: fileId,
             bins: bins,
             density: density,
-            pop: pop
+            pop: pop,
+            lsid: flockLsid
           }
           makeAjaxCall('p', '../common/controller.php?j=t_s', jobParam, runCB);
         }

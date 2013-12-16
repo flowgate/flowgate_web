@@ -25,7 +25,8 @@ public class GenePatternTest {
                 "11",
                 "10",
                 null,
-                UUID.randomUUID().toString()
+                UUID.randomUUID().toString(),
+                ""
         );
     }
 }

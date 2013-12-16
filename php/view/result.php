@@ -394,9 +394,9 @@
 
                 $('#imageTable').imagesLoaded().then(function() {
 
+                  //preserves original sizes in fixedColumns
                   var lastTdSize = $('#imageTable>tbody>tr:first>td:last').css('width');
                   var rowHeaderSize = $('#imageTable>tbody>tr:first>td:first').css('width');
-                  console.log(lastTdSize, rowHeaderSize);
 
                   if($('#imageTableRow').width() - $('#imageTable>tbody>tr:first>td:first').width() - imagesTotalWidth > 0) {
                     columnsArr = columnsArr.slice(0, -1);
@@ -560,7 +560,7 @@
       };
     //todo at submission("Show Result") - there should be a validation check on inputs (markers, files, populations and params)
 
-    
+
       $(function(){
         $("#nav").load("../common/nav.php");
         _data.results();

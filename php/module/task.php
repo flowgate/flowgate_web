@@ -15,7 +15,7 @@ class TaskModule {
     }
 
 
-    function submit($pid, $fid, $uid, $bins, $density, $pop) {
+    function submit($pid, $fid, $uid, $bins, $density, $pop, $lsid) {
         require_once("../common/constants.php");
         $this->dbm();
         $con = $this->dbModule->connect();
@@ -31,7 +31,7 @@ class TaskModule {
             $fileDir = (!is_null($file["dataPath"]) && $file["dataPath"]!="NULL"?$file["dataPath"]:$FILE_DIR);
             $filePath = $fileDir.DIRECTORY_SEPARATOR.$file["dataInputFileName"];
             
-            $ran = $this->runGenepattern("hkim", $jid, $filePath, $bins, $density, $pop);
+            $ran = $this->runGenepattern("hkim", $jid, $filePath, $bins, $density, $pop, $lsid);
             if($ran) {
                 $this::$SUCCESS = $this->dbModule->addTask($con, $jid, $pid, $fid, $uid);
             } else {
@@ -42,13 +42,13 @@ class TaskModule {
         return $jid;
     }
 
-    function runGenepattern($uid, $jid, $input, $bins, $density, $pop) {
+    function runGenepattern($uid, $jid, $input, $bins, $density, $pop, $lsid) {
         $cp = "../../lib/java";
         $executor = "java".
             " -classpath $cp/axis.jar:$cp/mail.jar:$cp/activation.jar:$cp/flockUtils.jar".
             //" -Djava.awt.headless=true".
             " org.immport.flock.utils.GenePattern ";
-        $params = "$uid $input $bins $density $pop color $jid";
+        $params = "$uid $input $bins $density $pop color $jid $lsid";
         error_log($executor.$params);
         //exec($executor.$params." > /dev/null 2>&1 &", $rtnVal);
         return shell_exec($executor.$params);

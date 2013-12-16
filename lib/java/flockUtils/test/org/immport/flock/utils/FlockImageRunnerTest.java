@@ -16,7 +16,7 @@ public class FlockImageRunnerTest {
     public void run() throws Exception {
         String results = "/export/data/results/";
         String jobId = "_"; //UUID.randomUUID().toString();
-        String[] args = {"overview_color", "i", testDir + "result.zip", jobId, results};
+        String[] args = {"overview_color", "i", testDir + "flockResult1.zip", jobId, results};
 
         runner.main(args);
 

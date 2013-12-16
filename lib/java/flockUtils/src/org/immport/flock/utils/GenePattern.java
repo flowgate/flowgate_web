@@ -35,27 +35,34 @@ public class GenePattern {
         String type = args[5];
         String jobId = args[6];
         //String gofcmPath = args[7];
+        String flockLsid = args[7];
 
         GenePattern gp = new GenePattern();
         gp.executePipeline(
                 user, input, bins, density,
-                population, type, jobId//, gofcmPath
+                population, type, jobId, flockLsid//, gofcmPath
         );
     }
 
 
     public void executePipeline(
             String user, String input, String bins, String density,
-            String population, String type, String jobId/*, String gofcmPath*/) throws Exception {
+            String population, String type, String jobId, String flockLsid/*, String gofcmPath*/) throws Exception {
         ResourceBundle rb = ResourceBundle.getBundle("flock");
         String gpAddress = rb.getString(this.GP_ADDRESS);
         if(user == null) {
             user = rb.getString(this.GP_USER);
         }
 
-        String flockModule = rb.getString(this.GP_FLOCK_MODULE);
-        if(flockModule == null) {
-            flockModule = "ImmPortFLOCK";
+        String flockModule = null;
+
+        if(flockLsid != null && !flockLsid.isEmpty() && flockLsid.startsWith("urn:lsid")) {
+            flockModule = flockLsid;
+        } else {
+            flockModule = rb.getString(this.GP_FLOCK_MODULE);
+            if(flockModule == null) {
+                flockModule = "ImmPortFLOCK";
+            }
         }
         String imageModule = rb.getString(this.GP_IMAGE_MODULE);
         if(imageModule == null) {

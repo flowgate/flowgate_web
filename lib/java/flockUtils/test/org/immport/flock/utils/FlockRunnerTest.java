@@ -17,7 +17,7 @@ public class FlockRunnerTest {
         Integer[] bins = new Integer[] {10};
         Integer[] dens = new Integer[] {11};
         runner.execute(
-                testDir + "input36.zip",
+                testDir + "input2.zip",
                 "8-11",
                 "3-6",
                 25,

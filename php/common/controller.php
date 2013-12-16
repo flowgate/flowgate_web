@@ -44,7 +44,7 @@
             //$message['file'] = $_FILES['uploadFile']['name'];
     		break;
     	case "f_u": //get user files
-            $_pid = $_POST['pid'];
+            $_pid = $_GET['pid'];
             $_module->getFiles($_uidx, $_pid, null);
             $message = $_module::$RESULT;
     		break;
@@ -85,8 +85,9 @@
             $bins = $_POST['bins'];
             $density = $_POST['density'];
             $pop = $_POST['pop'];
+            $lsid = $_POST['lsid'];
             
-            $jid = $_module->submit($pid, $fid, $_uidx, $bins, $density, $pop);
+            $jid = $_module->submit($pid, $fid, $_uidx, $bins, $density, $pop, $lsid);
             $message['jid'] = $jid;
             break;
         case "t_u": //get user jobs
