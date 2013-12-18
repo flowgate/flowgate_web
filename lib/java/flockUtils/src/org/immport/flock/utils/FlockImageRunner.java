@@ -20,7 +20,7 @@ import java.util.concurrent.Executors;
  * org.immport.flock.utils
  */
 public class FlockImageRunner {
-    private static final int MAX_POOL_SIZE = 15;
+    private static final int MAX_POOL_SIZE = 12;
     private static final String[] KEYS_FOR_PROP = {"bins", "density", "markers", "populations"};
 
     public static void main(String[] args) throws Exception {
@@ -141,11 +141,13 @@ public class FlockImageRunner {
                             }
 
                             if(key.equals("markers")) {
-                                String onlyMarkers = value.substring(value.indexOf("[") + 1, value.indexOf("]"));
-                                String[] markers = onlyMarkers.split("\\t");
-                                for(String marker : markers) {
-                                    if(!values.contains(marker)) {
-                                        values.add(marker);
+                                if(value.startsWith("[") && value.endsWith("]")) {
+                                    String onlyMarkers = value.substring(value.indexOf("[") + 1, value.indexOf("]"));
+                                    String[] markers = onlyMarkers.split("\\t");
+                                    for(String marker : markers) {
+                                        if(!values.contains(marker)) {
+                                            values.add(marker);
+                                        }
                                     }
                                 }
                             } else {
