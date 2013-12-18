@@ -32,20 +32,26 @@
     }
 
     .resultRow { margin: 0 !important;}
-    .resultWell { margin-bottom: 0 !important; padding: 3px 0px !important; }
+    .resultWell { 
+      margin-bottom: 0 !important; 
+      padding: 3px 0px !important; 
+    }
     .selectorsCol { padding: 0 !important; }
 
     .markerSelect .bootstrap-select { width: 120px; }
 
     #filesContainer, #imagesContainer { padding: 0 !important; }
 
-    .crossing { background-color: #bbb; }
+    .crossing { 
+      background-color: #bbb; 
+      max-width: 150px; 
+    }
 
     #imageTable td { border: 1px solid black;}
-    .imageTable>thead>tr>th { 
+    .imageTable thead tr th,
+    #imageTable tbody tr td:first-child { 
       background-color: white !important;
-      border-right: 1px solid black;
-      border-bottom: 1px solid black;
+      border: 1px solid black;
      }
   </style>
 
@@ -253,7 +259,17 @@
           var data = _page.data;
           data.populs = $('#populselect').val();
           data.xmarker = $('#xmarker').val();
+          if(data.xmarker === 'all') {
+            data.xmarker = $.map($('#xmarker option:not(:first)') ,function(option) {
+              return option.value;
+            });
+          }
           data.ymarker = $('#ymarker').val();
+          if(data.ymarker === 'all') {
+            data.ymarker = $.map($('#ymarker option:not(:first)') ,function(option) {
+              return option.value;
+            });
+          }
           data.params = $('#paramselect').val();
           if(data.populs!=null && data.populs.length>0 
             && data.xmarker!=null && data.xmarker.length>0
@@ -323,27 +339,22 @@
           }).done(function(data) {
             if(data) {
               data = $.parseJSON(data);
-              var imgHtml = "<img src='$imgPath$'/>";
+              if(data.success==='true' && data.result) {
+                var taskId = data.result.taskId, 
+                    imageDir = data.result.imageDir, 
+                    type = data.result.type, 
+                    popIds = data.result.popIds,
+                    xcols = data.result.xmarker,
+                    ycols = data.result.ymarker,
+                    files = data.result.files,
+                    params = data.result.params,
+                    m_f = data.result.multiFile,
+                    m_p = data.result.multiParam,
+                    m_m = data.result.multiMarker,
+                    markerToImage = data.result.markerToImage,
+                    fileMap = data.result.fileMap;
 
-              if(data.success==='true' && data.taskDir && data.type) {
-                var taskId = data.taskId, 
-                    taskDir = data.taskDir, 
-                    type = data.type, 
-                    popIds = data.popIds,
-                    xcols = data.xmarker,
-                    ycols = data.ymarker,
-                    dirs = data.dirs,
-                    m_f = data.m_f, //multi-file?
-                    files = data.files,
-                    params = data.params,
-                    m_p = data.m_p, //multi-parameter?
-                    imgSuffix = popIds.replace(/,/g,'.') + '.color.highlighted'; 
-
-                xcols = (!xcols || xcols==='all')?_data.cols:[xcols];
-                ycols = (!ycols || ycols==='all')?_data.cols:[ycols];
-                var m_m = xcols.length > 1 || ycols.length > 1; //multi-marker?
-
-                //dataTables
+                //headers (always paramet combinations)
                 var thead = '<thead><tr>';
                 thead += '<th id="name">'+(m_f?'File':'Marker')+'</th>'; //row header
                 for(var p=0;p<params.length;p++) {
@@ -351,38 +362,38 @@
                 }
                 thead+='</tr></thead>';
 
-                var resultsPath = '../../results/'+taskId+'/';
+                var columnsForDatatable = [];
+                var imagesTotalWidth = 0; //total image width
+
                 var rows = '';
                 for(var f=0;f<files.length;f++) {
-                  var filePath = files[f]+'_out';
-                  var fileResultPath = resultsPath+filePath+'/'+filePath+'_';
-
+                  var fileData = fileMap[files[f]];
                   var row = '';
-                  var columnsArr = [];
-                  var imagesTotalWidth = 0;
-                  if(m_m) {
-                    for(var x=0;x<xcols.length;x++) {
-                      for(var y=0;y<ycols.length;y++) {
-                        if(xcols[x]!==ycols[y]) {
-                          row = '<td style="width:77px;">'+xcols[x]+':'+ycols[y]+'</td>';
-                          for(var p=0;p<params.length;p++) {
-                            var paramPath = fileResultPath+params[p][0]+'_'+params[p][1]+'/images/';
-                            row += '<td><img src="'+paramPath+xcols[x]+'.'+ycols[y]+'.'+imgSuffix+'.png"/></td>';
+
+                  for(var x=0;x<xcols.length;x++) {
+                    for(var y=0;y<ycols.length;y++) {
+
+                      if(xcols[x]!==ycols[y]) {
+                        row = '<td>' + (m_m ? xcols[x]+':'+ycols[y] : files[f]) + '</td>';
+                        for(var p=0;p<params.length;p++) {
+                          var mergedParam = params[p][0]+':'+params[p][1];
+                          var paramMap = fileData[mergedParam];
+                          if(paramMap.has) {
+                            console.log(paramMap.dir);
+                            row += '<td><img src="' + imageDir + paramMap.dir + 'images/' + markerToImage[(xcols[x] + ':' + ycols[y])] + '"/></td>'; 
+                          } else {
+                            row += '<td class="crossing"></td>';
                           }
-                          rows += '<tr>' + row + '</tr>';
+
+                          if(f === 0) {
+                            columnsForDatatable.push(p+1);
+                            imagesTotalWidth += 150;
+                          }
                         }
+
+                        rows += '<tr>' + row + '</tr>';
                       }
                     }
-                  } else {
-                    row = '<td>'+files[f]+'</td>';
-                    for(var p=0;p<params.length;p++) {
-                      var paramPath = fileResultPath+params[p][0]+'_'+params[p][1]+'/images/';
-                      //row += '<td class="' + (p===params.length-1?'imageLast':'imageNotLast') + '"><img src="'+paramPath+xcols+'.'+ycols+'.'+imgSuffix+'.png"/></td>';
-                      row += '<td><img src="'+paramPath+xcols+'.'+ycols+'.'+imgSuffix+'.png"/></td>';
-                      columnsArr.push(p+1);
-                      imagesTotalWidth += 150;
-                    }
-                    rows += '<tr>' + row + '</tr>';
                   }
                 }
 
@@ -395,18 +406,20 @@
                 $('#imageTable').imagesLoaded().then(function() {
 
                   //preserves original sizes in fixedColumns
-                  var lastTdSize = $('#imageTable>tbody>tr:first>td:last').css('width');
+                  var lastTdSize = $('#imageTable>tbody>tr:first>td:last').width();
                   var rowHeaderSize = $('#imageTable>tbody>tr:first>td:first').css('width');
 
                   if($('#imageTableRow').width() - $('#imageTable>tbody>tr:first>td:first').width() - imagesTotalWidth > 0) {
-                    columnsArr = columnsArr.slice(0, -1);
+                    //appends dummy column for extra space
+                    $('#imageTable>thead tr').append('<th></th>');
+                    $('#imageTable>tbody tr').append('<td></td>');
                   }
 
                   var oTable = $('#imageTable').dataTable({
                     "bAutoWidth": false,
                     "aoColumnDefs": [
                       { "sWidth": rowHeaderSize, "aTargets": [ 0 ] },
-                      { "sWidth": lastTdSize, "aTargets": columnsArr }
+                      { "sWidth": (lastTdSize > 150 ? 150 : lastTdSize) + 'px', "aTargets": columnsForDatatable }
                     ],
                     "sScrollY": "550px",
                     "sScrollX": "100%",

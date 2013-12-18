@@ -36,18 +36,21 @@ public class GenePattern {
         String jobId = args[6];
         //String gofcmPath = args[7];
         String flockLsid = args[7];
+        String imageLsid = args[8];
 
         GenePattern gp = new GenePattern();
         gp.executePipeline(
                 user, input, bins, density,
-                population, type, jobId, flockLsid//, gofcmPath
+                population, type, jobId,//, gofcmPath
+                flockLsid, imageLsid
         );
     }
 
 
     public void executePipeline(
             String user, String input, String bins, String density,
-            String population, String type, String jobId, String flockLsid/*, String gofcmPath*/) throws Exception {
+            String population, String type, String jobId,/*, String gofcmPath*/
+            String flockLsid, String imageLsid) throws Exception {
         ResourceBundle rb = ResourceBundle.getBundle("flock");
         String gpAddress = rb.getString(this.GP_ADDRESS);
         if(user == null) {
@@ -55,7 +58,6 @@ public class GenePattern {
         }
 
         String flockModule = null;
-
         if(flockLsid != null && !flockLsid.isEmpty() && flockLsid.startsWith("urn:lsid")) {
             flockModule = flockLsid;
         } else {
@@ -64,9 +66,14 @@ public class GenePattern {
                 flockModule = "ImmPortFLOCK";
             }
         }
-        String imageModule = rb.getString(this.GP_IMAGE_MODULE);
-        if(imageModule == null) {
-            imageModule = "ImmPortImageGenerator";
+        String imageModule = null;
+        if(imageLsid != null && !imageLsid.isEmpty() && imageLsid.startsWith("urn:lsid")) {
+            imageModule = imageLsid;
+        } else {
+            imageModule = rb.getString(this.GP_IMAGE_MODULE);
+            if(imageModule == null) {
+                imageModule = "ImmPortImageGenerator";
+            }
         }
 
         GPClient gpClient = new GPClient(gpAddress, user);
@@ -89,6 +96,8 @@ public class GenePattern {
                         new Parameter("output_path", rb.getString(this.GP_GOFCM_RESULT_PATH))
                 }
         );
+
+        System.out.printf("job[%s] submitted.%n", jobId);
     }
 
 }

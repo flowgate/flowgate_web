@@ -13,9 +13,21 @@
     if(file_exists($propFile)) {
         $contents = file_get_contents($propFile);
         $json = json_decode($contents, true);
+
+        //sort parameters
+        if($json['params']) {
+            $params = $json['params'];
+            if($params['density']) {
+                sort($params['density']);
+            }
+            if($params['bins']) {
+                sort($params['bins']);
+            }
+            $json['params'] = $params;
+        }
     } else {
         $success = false;
-        $err = "The result or prop file does not exist or analysis has not been completed!";
+        $err = "ERROR: Failed to get result or analysis has not been completed!";
     }
 
     // $fp = fopen("$taskDir/profile.txt",'r');

@@ -31,7 +31,9 @@ class TaskModule {
             $fileDir = (!is_null($file["dataPath"]) && $file["dataPath"]!="NULL"?$file["dataPath"]:$FILE_DIR);
             $filePath = $fileDir.DIRECTORY_SEPARATOR.$file["dataInputFileName"];
             
-            $ran = $this->runGenepattern("hkim", $jid, $filePath, $bins, $density, $pop, $lsid);
+            $flockLsid = ($lsid ? $lsid : $GP_FLOCK_LSID);
+
+            $ran = $this->runGenepattern("hkim", $jid, $filePath, $bins, $density, $pop, $flockLsid, $GP_IMAGE_LSID);
             if($ran) {
                 $this::$SUCCESS = $this->dbModule->addTask($con, $jid, $pid, $fid, $uid);
             } else {
@@ -42,13 +44,13 @@ class TaskModule {
         return $jid;
     }
 
-    function runGenepattern($uid, $jid, $input, $bins, $density, $pop, $lsid) {
+    function runGenepattern($uid, $jid, $input, $bins, $density, $pop, $flockLsid, $imageLsid) {
         $cp = "../../lib/java";
         $executor = "java".
             " -classpath $cp/axis.jar:$cp/mail.jar:$cp/activation.jar:$cp/flockUtils.jar".
             //" -Djava.awt.headless=true".
             " org.immport.flock.utils.GenePattern ";
-        $params = "$uid $input $bins $density $pop color $jid $lsid";
+        $params = "$uid $input $bins $density $pop color $jid $flockLsid $imageLsid";
         error_log($executor.$params);
         //exec($executor.$params." > /dev/null 2>&1 &", $rtnVal);
         return shell_exec($executor.$params);
