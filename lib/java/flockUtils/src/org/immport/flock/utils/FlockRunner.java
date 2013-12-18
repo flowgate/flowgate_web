@@ -1,5 +1,8 @@
 package org.immport.flock.utils;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.LineIterator;
+import org.immport.flock.commons.FlockAdapterFile;
 import org.immport.flock.commons.Zipper;
 
 import java.io.BufferedReader;
@@ -8,6 +11,7 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -99,35 +103,79 @@ public class FlockRunner {
 
             this.executeHelper(flockUri, inputDir, resultDir, bins, densities, population);
 
+            //build final zip output
             Zipper.buildNestedZip(resultDir.getAbsolutePath());
+            //delete input directory
+            FileUtils.deleteDirectory(inputDir);
         }
     }
 
     private void executeHelper(URI flockUri, File in, File out, List<Integer> bins, List<Integer> densities, int population) throws Exception {
         String[] files = in.list();
+
         if(files!=null && files.length>0) {
-            for(String file : files) {
-                String inputFileName = in.getAbsolutePath() + File.separator + file;
-                File inputFile = new File(inputFileName);
-                if(inputFile.isDirectory()) {
-                    File newOut = new File(out.getAbsolutePath() + File.separator + file);
-                    this.executeHelper(flockUri, inputFile, newOut, bins, densities, population);
-                } else {
+            //check if it is a flock result set already
+            boolean hasAllFlockResults = true;
+            List<String> filesList = Arrays.asList(files);
+            for(String output : FlockAdapterFile.FLOCK_RESULTS) {
+                if(!filesList.contains(output)) {
+                    hasAllFlockResults = false;
+                    break;
+                }
+            }
 
-                    if(!inputFile.isHidden()) { //skips hidden files: UNIX(.), Windows(check file property)
-                        String fileOutName = file + "_out";
+            if(hasAllFlockResults) {
+                String binRead = null;
+                String densityRead = null;
+                File fcsPropertiesFiles = new File(in.getAbsolutePath() + File.separator + FlockAdapterFile.FCS);
+                LineIterator lineIterator = FileUtils.lineIterator(fcsPropertiesFiles);
+                try {
+                    while (lineIterator.hasNext() && (binRead == null || densityRead == null)) {
+                        String line = lineIterator.nextLine();
+                        if(line.toLowerCase().startsWith("bin")) {
+                            binRead = line.substring(line.lastIndexOf("=") + 1);
+                        } else if(line.toLowerCase().startsWith("density")) {
+                            densityRead = line.substring(line.lastIndexOf("=") + 1);
+                        }
+                    }
+                } finally {
+                    LineIterator.closeQuietly(lineIterator);
+                }
 
-                        for(int aBin : bins) {
-                            for(int aDensity : densities) {
-                                String currName = out.getAbsolutePath() +
-                                        File.separator +
-                                        fileOutName +
-                                        File.separator +
-                                        fileOutName + "_" + aBin + "_" + aDensity;
-                                File outputDir = new File(currName);
-                                outputDir.mkdirs();
+                boolean outDirectoryEndingOut = out.getAbsolutePath().endsWith("_out");
+                String fileOutName = (out.getName().equals("result") ? "user_result" : out.getName()) + (outDirectoryEndingOut ? "" : "_out");
 
-                                this.runFlock(flockUri, outputDir, inputFileName, aBin, aDensity, population);
+                String currName = out.getAbsolutePath() + (outDirectoryEndingOut ? "" : "_out") +
+                        File.separator +
+                        fileOutName + "_" + binRead + "_" + densityRead;
+                File outputDir = new File(currName);
+                outputDir.mkdirs();
+
+                FileUtils.copyDirectory(in, outputDir);
+            } else {
+                for(String file : files) {
+                    String inputFileName = in.getAbsolutePath() + File.separator + file;
+                    File inputFile = new File(inputFileName);
+                    if(inputFile.isDirectory()) {
+                        File newOut = new File(out.getAbsolutePath() + File.separator + file);
+                        this.executeHelper(flockUri, inputFile, newOut, bins, densities, population);
+                    } else {
+
+                        if(!inputFile.isHidden()) { //skips hidden files: UNIX(.), Windows(check file property)
+                            String fileOutName = file + "_out";
+
+                            for(int aBin : bins) {
+                                for(int aDensity : densities) {
+                                    String currName = out.getAbsolutePath() +
+                                            File.separator +
+                                            fileOutName +
+                                            File.separator +
+                                            fileOutName + "_" + aBin + "_" + aDensity;
+                                    File outputDir = new File(currName);
+                                    outputDir.mkdirs();
+
+                                    this.runFlock(flockUri, outputDir, inputFileName, aBin, aDensity, population);
+                                }
                             }
                         }
                     }
@@ -137,7 +185,6 @@ public class FlockRunner {
     }
 
     public URI getFlockFile() throws Exception {
-        URI fileURI = null;
 
         String jarPath = this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
         String decodedPath = URLDecoder.decode(jarPath, "UTF-8");
@@ -147,6 +194,8 @@ public class FlockRunner {
 
         /*
         * This block is used only when flock binary is included within that jar
+        *
+        URI fileURI = null;
 
         ProtectionDomain domain = FlockRunner.class.getProtectionDomain();
         CodeSource source = domain.getCodeSource();
