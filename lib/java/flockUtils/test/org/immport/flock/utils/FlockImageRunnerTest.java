@@ -10,13 +10,13 @@ import org.junit.Test;
  */
 public class FlockImageRunnerTest {
     FlockImageRunner runner = new FlockImageRunner();
-    private final String testDir = "/Users/movence/works/test/gofcm/";// /Users/hkim/Stuffs/test/gofcm/, /Users/movence/works/test/gofcm/
+    private final String testDir = "/Users/hkim/Stuffs/test/gofcm/";// /Users/hkim/Stuffs/test/gofcm/, /Users/movence/works/test/gofcm/
 
     @Test
     public void run() throws Exception {
         String results = "/export/data/results/";
         String jobId = "_"; //UUID.randomUUID().toString();
-        String[] args = {"overview_color", "i", testDir + "flockResult1.zip", jobId, results};
+        String[] args = {"overview_color", "i", testDir + "result.zip", jobId, results};
 
         runner.main(args);
 

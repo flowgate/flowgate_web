@@ -20,13 +20,13 @@ public class GenePatternTest {
 
         gp.executePipeline(
                 "hkim",
-                testDir + "input36.zip",
+                testDir + "input2.zip",
                 "10",
                 "11",
                 "10",
                 null,
                 UUID.randomUUID().toString(),
-                ""
+                "", ""
         );
     }
 }

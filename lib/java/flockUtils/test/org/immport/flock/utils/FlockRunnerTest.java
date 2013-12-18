@@ -10,17 +10,17 @@ import org.junit.Test;
  */
 public class FlockRunnerTest {
     FlockRunner runner = new FlockRunner();
-    private final String testDir = "/Users/movence/works/test/gofcm/";// /Users/hkim/Stuffs/test/gofcm/, /Users/movence/works/test/gofcm/
+    private final String testDir = "/Users/hkim/Stuffs/test/gofcm/";// /Users/hkim/Stuffs/test/gofcm/, /Users/movence/works/test/gofcm/
 
     @Test
     public void run() throws Exception {
         Integer[] bins = new Integer[] {10};
         Integer[] dens = new Integer[] {11};
         runner.execute(
-                testDir + "input2.zip",
-                "8-11",
-                "3-6",
-                25,
+                testDir + "flockResult3.zip",
+                "10",
+                "11",
+                12,
                 testDir,
                 "flock1_gp_osx");
 
