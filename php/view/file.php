@@ -127,7 +127,7 @@
           </div>
           <div class="modal-body">
             <div class="divDialogElements">
-              <h4 class="muted">Pipeline Parameters</h4>
+              <h4 class="muted">Pipeline Parameters (required for running FLOCK)</h4>
               <input type="hidden" name="rid" id="rid" />
               <label for="rbin" class="control-label">Bins</label>
               <div><input type="text" class="form-control" id="rbin" placeholder="int or range[x-y]"></div>
@@ -240,6 +240,7 @@
           var pop = $('#rpop').val();
           var flockLsid = $('#flockLsid').val();
           var pid = common.ss_g(common.p.id); //get current project id from sessionStorage
+
           var runCB = function(obj) {
             var isError = true;
             if(obj) {

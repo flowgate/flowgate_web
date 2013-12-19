@@ -51,7 +51,6 @@ class TaskModule {
             //" -Djava.awt.headless=true".
             " org.immport.flock.utils.GenePattern ";
         $params = "$uid $input $bins $density $pop color $jid $flockLsid $imageLsid";
-        error_log($executor.$params);
         //exec($executor.$params." > /dev/null 2>&1 &", $rtnVal);
         return shell_exec($executor.$params);
     }
