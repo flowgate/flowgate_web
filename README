@@ -1,0 +1,161 @@
+Contents
+ - <GOFCM SERVER CONFIGURATION>
+ - <Modules in GenePattern>
+ - <GOFCM>
+
+
+<GOFCM SERVER CONFIGURATION>
+	APACHE HTTPD
+		- download packages for apr and apr-util then extract those packages into {httpd}/srclib
+		- ./configure --prefix=/export/apache/httpd --enable-so --with-included-apr
+		- make && make install
+		- (WITHOUT ROOT ACCESS) after install change port to other than 80 in httpd.conf, since 80 is only available to the root
+		- add php module handler to httpd.conf
+			<FilesMatch \.php$>
+			    SetHandler application/x-httpd-php
+			</FilesMatch>
+		- remove directory browsing feature from httpd.conf
+			Options FollowSymLinks MultiViews (remove Indexes)
+		- add a php file with phpinfo() to httpd's document root, then call the page to see apache is up and running
+		- copy gofcm project directory to apache's document root directory (or create a symbolic link)
+
+	PHP
+		- ./configure --prefix=/export/php/ --with-libdir=lib64  --with-mysql --with-mysqli --with-zlib --with-apxs2=/export/apache/httpd/bin/apxs --with-config-file-path=/export/php/ --with-config-file-scan-dir=/export/php/
+		- make && make install
+		- copy php.ini.development from php package directory to "--with-config-file-path"
+		- change values in php.ini
+			upload_tmp_dir = /export/php/tmp
+			upload_max_filesize = 2G
+			post_max_size = 3G
+			error_log = /export/apache/httpd/logs/php_error.log
+
+	MYSQL
+		- http://superuser.com/questions/209203/how-can-i-install-mysql-on-centos-without-being-root-su
+		- download generic mysql GPL tar file from mysql site
+		- untar to the downloaded file
+		- create data/ directories and my.cnf file 
+			[server]
+			user=[username]
+			basedir=/export/packages/mysql
+			datadir=/export/packages/mysql_data/data
+			socket=/export/packages/mysql_data/socket
+			port=[port]
+		- install using the script
+			./mysql_install_db --defaults-file=/export/packages/mysql_data/my.cnf --user=hkim --basedir=/export/packages/mysql --datadir=/export/packages/mysql_data/data --socket=/export/packages/mysql_data/socket
+		- start mysql
+			./bin/mysqld --defaults-file=/export/packages/mysql_data/my.cnf OR
+			./bin/mysqld --basedir=/export/packages/mysql --datadir=/export/packages/mysql_data/data --log-error=/export/packages/mysql_data/data/mysql.err --pid-file=/export/packages/mysql/mysql.pid --socket=/export/packages/mysql_data/thesock --port=3666 &
+		- change root password
+			./bin/mysqladmin -h 127.0.0.1 -P 3666 -u root password 'ifx_projects_adm'
+		- connect 
+			./bin/mysql -h 127.0.0.1 -P 3666 -u root -p
+		- create database and user
+			> create database gofcm;
+			> create user 'ifx_gofcm_adm'@'localhost' identified by 'ifx_gofcm_adm';
+			> grant all privileges on *.* to 'ifx_gofcm_adm'@'localhost';
+			> create user 'ifx_gofcm_adm'@'%' identified by 'ifx_gofcm_adm';
+			> grant all privileges on *.* to 'ifx_gofcm_adm'@'%' with grant option;
+		- import gofcm schema by running a sql script, gofcm_schema.sql
+		- shutdown
+			./bin/mysqladmin -h 127.0.0.1 -P 3666 -u root -p shutdown
+
+
+
+<Modules in GenePattern>
+	!!Genepattern modules must include 'flockUtils.jar'
+	FLOCK
+		ImmPortFLOCK is the default flock module for GOFCM. This module processes user input (zip file) and produces output in zip format.
+		- upload flockUtils.jar and flock c binary file with name 'flock1_gp' (it has to be compiled with compatible compiler with the server)
+		- module parameters
+			+ input: path to input file
+			+ bins: integer or a range (integer-integer)
+			+ density: integer or a range (integer-integer)
+			+ population: integer
+		- command line should look like:
+			<java> -classpath <libdir>flockUtils.jar org.immport.flock.utils.FlockRunner <input> <bins> <density> <population>
+		- FlockRunner class in the jar will seek a flock C binary with name 'flock1_gp' from the classpath
+		- If user wants to try his own flock C binary, he should delete the existing flock1_gp by checking the checkbox and upload his binary with the same name. By saving the module, Genepattern will create a new version of the module and keeps the previous version. The LSID of a module has the version information as an integer value. (The last integer value of LSID)
+		- constants.php under /php/common/ contains information of Genepattern modules. Admin users can always change the default workflow by updating $GP_FLOCK_LSID and $GP_IMAGE_LSID.
+		- keep this LSID copied from module's properties page to use it in gofcm for a custom flock run.
+
+	IMAGE GENERATOR
+		- ImmPortImageGenerator is the default image module for GOFCM. It processes flock results and produces a directory of image files to a designated result area (/export/data/results/{jobId})
+		- upload flockUtils.jar
+		- module parameters
+			+ input: path to input file
+			+ image_type: color or black
+			+ jobId: default to "_", otherwise the module only outputs the result to a particular directory
+			+ population: integer
+			+ output_path: default to "/export/data/results" or other directory. With a custom output_path, $DATA_DIR value of '/php/common/constants.php' must be updated.
+		- command line should look like:
+			<java> -classpath <libdir>flockUtils.jar org.immport.flock.utils.FlockImageRunner overview_<image_type> <population> <input> <jobId> <output_path>
+		- constants.php under /php/common/ contains information of Genepattern modules. Admin users can always change the default workflow by updating $GP_FLOCK_LSID and $GP_IMAGE_LSID.
+
+
+	PIPELINE (creating a pipeline is not required, since GOFCM uses individual modules)
+		- add FLOCK and IMAGE GENERATOR modules then connect the output file from FLOCK module to input file of IMAGE GENERATOR module.
+
+
+
+<GOFCM>
+	DATA 
+		- create '/export/data/files' and '/export/data/results', then create asymbolic link of /export/data/results under gofcm project directory with name 'results' (Skipping this part will result IMAGE NOT FOUND errors in gofcm)
+
+	PHP
+		- constants.php under /php/common/ contains information of Genepattern modules. Admin users can always change the default workflow by updating $GP_FLOCK_LSID and $GP_IMAGE_LSID.
+		- db_new.php under /php/common/ has database access information. Appropriate changes should be made for different database configurations.
+		- flockUtils.jar should be kept udner /lib/java/  with other java library files, since gofcm will use this jar to generate images for population combinations
+
+	FILE
+		- users can upload zip files containing either:
+			+ .txt files for flock runs
+			+ directories that have flock results
+			+ both .txt files and flock results
+		- zip files must have items at the root level. 
+			sample1.zip
+				| input1.txt
+				| input2.txt
+				| dir1
+				| dir2
+			!!NOT
+				wrong.zip
+					| sub
+					  | input1.txt
+					  | dir1
+		- When a zip input has directories of flock result:
+			+ every result directory must include all flock results
+				INPUT_DATA = "coordinates.txt";
+		    PERCENTAGE_TXT = "percentage.txt";
+		    PROFILE_TXT = "profile.txt";
+		    POPULATION_ID_COL = "population_id.txt";
+		    POPULATION_CENTER = "population_center.txt";
+		    MFI = "MFI.txt";
+		    PARAMETERS = "parameters.txt";
+		    FCS = "fcs.properties";
+		  + "fcs.properties" file must contain Bin, Density, Population and Markers information for the result set.
+		  	ex)
+			  	Bin=10
+			  	Density=11
+			  	Populations=24
+			  	Markers=[FSC-H	SSC-H	FL1-H	FL2-H	FL3-H	FL4-H] //tab delimited markers array
+			+ the directory names will appear as file names in gofcm's result page.
+		- users can upload file using a file browser or drag & drop to the upload modal window
+		- if there is another file already exists with the same file name, the backend will append underscore '_' to the end of file name. (duplicate.zip -> duplicate_.zip)
+
+	JOB SUBMISSION
+		- click a file name to submit a job to Genepattern
+		- php will execute flockUtils.jar to fire a job to Genepattern
+		- For a custom FLOCK module, copy the LSID of a module from Genepattern then paste it to "FLOCK Module LSID" input box.
+		- empty LSID input box will process the job through a regular workflow as given in /php/common/constants.php
+		- Bin, Density, Population values will be ignored in case the file already and only has flock results.
+		- Parameter values must be valid values. No float values. Only integer values for single value or a range.
+		- a progress bar will be displayed until FLOCK module finishes its execution and returns a job ID.
+
+	RESULT
+		- "All" options in x & y markers will be unavailable with multiple files selected.
+		- select multiple population will genearte new images in the backend. The image module on Genepattern only generates images for overview(all population) and individual population.
+
+
+
+
+
