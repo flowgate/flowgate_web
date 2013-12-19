@@ -12,6 +12,12 @@
   <link href="../../css/jquery.ui.css" rel="stylesheet">
   <link href="../../css/DT_bootstrap.css" rel="stylesheet">
   <style type="text/css">
+    body, html {
+      height: 100%;
+    }
+    #resultDiv {
+      overflow: auto;
+    }
     .centerSub {
       background-color:#eee; 
       border: 1px solid #888; 
@@ -158,10 +164,9 @@
     <script src="../../js/jqueryFileTree.js"></script>
     <script src="../../js/bootstrap-select.min.js"></script>
     <script src="../../js/jquery.ui.min.js"></script>
-    <script src="../../js/jquery.dataTables.min.js"></script>
-    <script src="../../js/DT_bootstrap.js"></script>
-    <script src="../../js/dataTables.FixedColumns.js"></script>
+    <script src="../../js/jquery.floatThead.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
     <script>
       var _page = {
         init: false, //initial load flag,
@@ -379,7 +384,6 @@
                           var mergedParam = params[p][0]+':'+params[p][1];
                           var paramMap = fileData[mergedParam];
                           if(paramMap.has) {
-                            console.log(paramMap.dir);
                             row += '<td><img src="' + imageDir + paramMap.dir + 'images/' + markerToImage[(xcols[x] + ':' + ycols[y])] + '"/></td>'; 
                           } else {
                             row += '<td class="crossing"></td>';
@@ -405,32 +409,7 @@
 
                 $('#imageTable').imagesLoaded().then(function() {
 
-                  //preserves original sizes in fixedColumns
-                  var lastTdSize = $('#imageTable>tbody>tr:first>td:last').width();
-                  var rowHeaderSize = $('#imageTable>tbody>tr:first>td:first').css('width');
-
-                  if($('#imageTableRow').width() - $('#imageTable>tbody>tr:first>td:first').width() - imagesTotalWidth > 0) {
-                    //appends dummy column for extra space
-                    $('#imageTable>thead tr').append('<th></th>');
-                    $('#imageTable>tbody tr').append('<td></td>');
-                  }
-
-                  var oTable = $('#imageTable').dataTable({
-                    "bAutoWidth": false,
-                    "aoColumnDefs": [
-                      { "sWidth": rowHeaderSize, "aTargets": [ 0 ] },
-                      { "sWidth": (lastTdSize > 150 ? 150 : lastTdSize) + 'px', "aTargets": columnsForDatatable }
-                    ],
-                    "sScrollY": "200px",
-                    "sScrollX": "100%",
-                    "sScrollXInner": "110%",
-                    "bScrollCollapse": true,
-                    "bPaginate": false,
-                    "bFilter": false
-                  });
-                  //var oFC = new FixedColumns(oTable);
-                  _page.imageTable = oTable;
-
+                  $('#imageTable').floatThead()
                   //hide loading bar
                   $('#loading-indicator').hide();  
                 });
