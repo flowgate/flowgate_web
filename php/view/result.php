@@ -86,7 +86,7 @@
       </div>
       <div>
         <div class="col-md-2" id="filesContainer">
-          <div class="well resultWell" id="files" style="height:100%;overflow:auto;">
+          <div class="well resultWell" id="files" style="overflow:auto;">
             <div class="row col-md-12" style="margin-top:5px;">
               <button class="btn btn-xs btn-primary" type="button" id="fileAllButton">Select All</button>
               <button class="btn btn-xs btn-warning" type="button" id="fileNoneButton">Deselect All</button>
@@ -96,6 +96,7 @@
           </div>
         </div>
         <div class="col-md-10" id="imagesContainer" style="height:100%;padding-left:5px;">
+          <!--
           <div class="row resultRow">
             <div class="col-md-12 centerSub">
               <div class="row">
@@ -108,6 +109,7 @@
               </div>
             </div>
           </div>
+          -->
           <div class="row resultRow">
             <div class="col-md-12 centerSub" id="overview" style="height:100%;">
               <div class="row" id="ralert"></div>
@@ -379,7 +381,6 @@
                           var mergedParam = params[p][0]+':'+params[p][1];
                           var paramMap = fileData[mergedParam];
                           if(paramMap.has) {
-                            console.log(paramMap.dir);
                             row += '<td><img src="' + imageDir + paramMap.dir + 'images/' + markerToImage[(xcols[x] + ':' + ycols[y])] + '"/></td>'; 
                           } else {
                             row += '<td class="crossing"></td>';
@@ -400,6 +401,9 @@
                 if(_page.imageTable) {
                   _page.imageTable.fnDestroy();
                 }
+                
+                var heightBeforeImages = $(document).height();
+
                 var tbody = '<tbody>' + rows + '</tbody>';
                 $('#imageTableRow').html('<table id="imageTable" class="imageTable">'+thead+tbody+'</table>');
 
@@ -421,7 +425,7 @@
                       { "sWidth": rowHeaderSize, "aTargets": [ 0 ] },
                       { "sWidth": (lastTdSize > 150 ? 150 : lastTdSize) + 'px', "aTargets": columnsForDatatable }
                     ],
-                    "sScrollY": "200px",
+                    "sScrollY": $('#files').height() - 170 + "px",
                     "sScrollX": "100%",
                     "sScrollXInner": "110%",
                     "bScrollCollapse": true,
@@ -566,7 +570,8 @@
               collapseSpeed: 200,
               multiFolder: true
             }, function(file) {
-            }); 
+            });
+            $('#files').height($(document).height() - 100);
             $('#filesContainer').resizable();
           }
         }
@@ -579,9 +584,13 @@
         _data.results();
         $('#imagesContainer').resizable();
 
-        //manually calls DataTables' draw function for window resize
+        //manually calls DataTables' draw function for window resizing
         $( window ).resize(function() { 
-          if(_page.imageTable) {
+          $('#files').height($(window).height() - 100);
+
+          if($(".dataTables_scrollBody")) { //if datatables exist
+            var oSettings = _page.imageTable.fnSettings();
+            oSettings.oScroll.sY = ($('#files').height() - 170) + "px";
             _page.imageTable.fnDraw();
           }
         });
