@@ -1,0 +1,14 @@
+Biobase_2.8.0
+robustbase_0.5-0-1
+mvtnorm_0.9-92
+pcaPP_1.8-2
+rrcov_1.0-00
+mvoutlier_1.4
+rpanel_1.0-5
+ks_1.6.13
+feature_1.2.4
+graph_1.26.0
+flowCore_1.14.1
+limma_3.4.5
+marray_1.26.0
+Rcompression

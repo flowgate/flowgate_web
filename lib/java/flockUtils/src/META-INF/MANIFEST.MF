@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Class-Path: activation.jar mail.jar axis.jar
+Main-Class: org.immport.flock.utils.FlockRunner
+
