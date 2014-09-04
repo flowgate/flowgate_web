@@ -225,6 +225,9 @@ public class FlockRunner {
                 FileUtils.copyDirectory(in, outputDir);
             } else {
                 for(String file : files) {
+                    if(file.contains("stdout") || file.contains("stderr")) {
+                        continue;
+                    }
                     String inputFileName = in.getAbsolutePath() + File.separator + file;
                     File inputFile = new File(inputFileName);
                     if(inputFile.isDirectory()) {
