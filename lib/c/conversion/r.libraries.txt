@@ -11,4 +11,3 @@ graph_1.26.0
 flowCore_1.14.1
 limma_3.4.5
 marray_1.26.0
-Rcompression

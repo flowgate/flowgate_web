@@ -5,6 +5,7 @@
 #options("warn"=-1)
 #library(marray)
 #suppressPackageStartupMessages(suppressMessages(library(flowCore)))
+library(Rcompression)
 
 # set output to 0 when input is less than cutoff value
 ipfloor <- function (x, cutoff = 0, target = 0) {
