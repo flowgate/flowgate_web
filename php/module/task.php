@@ -2,7 +2,7 @@
 
 class TaskModule {
 
-	public static $SUCCESS = false;
+    public static $SUCCESS = false;
     public static $RESULT = null;
     private $dbModule = null;
 
@@ -22,14 +22,27 @@ class TaskModule {
         $fid = $params["fid"];
         $uidx = $params["uidx"];
         $resultDir = $params["resultsDir"];
+        $bins = $params["bins"];
+        $density = $params["density"];
+        $pop = $params["pop"];
+        $workflow = $params["workflow"];
+        $filtering = ($params["filtering"] == "1" ? true : false);
+        $manualParam = ($params["manual"] == "1" ? true: false);
+
+        if(!$manualParam) { //auto mode
+            $bins = "-1";
+            $density = "-1";
+            $pop = "-1";
+        }
+
         $ran = false;
 
         session_write_close();
 
-
         //job id
         $jid = $this->v3UUID($params["uid"]);
-        $this->dbModule->addAnalysis($con, $params["name"], $jid, $pid, $fid, $uidx);
+        $mergedParam = ($manualParam ? "bins-$bins:$density:$pop" : "auto").(":filtering-".($filtering ? 'true' : 'false'));
+        $this->dbModule->addAnalysis($con, $params["name"], $jid, $pid, $fid, $workflow, $mergedParam, $uidx);
 
         $file = $this->dbModule->getFile($con, $uidx, $pid, $fid);
         
@@ -43,23 +56,12 @@ class TaskModule {
             $outputDir = $resultDir.DIRECTORY_SEPARATOR.$jid;
 
             $lsid = $params["lsid"];
-            $filtering = $params["filtering"] == "1" ? true : false;
-            $manualParam = $params["manual"] == "1" ? true: false;
-            $bins = $params["bins"];
-            $density = $params["density"];
-            $pop = $params["pop"];
-
-            if($manualParam) { //auto mode
-                $bins = "-1";
-                $density = "-1";
-                $pop = "-1";
-            }
-
-            $workflow = $params["workflow"];            
-            if($workflow == "bio") {
+            
+            if($workflow == "bioKepler") {
                 $this->runScript($jid, $filePath, $bins, $density, $pop, $outputDir, $justFileName);   
             } else {
-                $this->runGenepattern($jid, $filePath, $bins, $density, $pop, $params["flockId"], $params["imageId"]);
+                $isFcs = (strpos($lsid,'fcs')!==false ? 'true' : 'false');
+                $this->runGenepattern($jid, $filePath, $bins, $density, $pop, $isFcs, $params["flockId"], $params["imageId"]);
             }
             $ran = true;
         }
@@ -74,12 +76,12 @@ class TaskModule {
         return $jid;
     }
 
-    function runGenepattern($jid, $input, $bins, $density, $pop, $flockLsid, $imageLsid) {
+    function runGenepattern($jid, $input, $bins, $density, $pop, $isFcs, $flockLsid, $imageLsid) {
         $cp = "../../lib/java";
-        $executor = "java -classpath $cp/axis.jar:$cp/mail.jar:$cp/activation.jar:$cp/flockUtils.jar org.immport.flock.utils.GenePattern ";
-        $params = "submitter $input $bins $density $pop color $jid $flockLsid $imageLsid";
+        $executor = "java -classpath $cp/axis.jar:$cp/mail.jar:$cp/activation.jar:$cp/flockUtils.jar org.immport.flock.utils.GenePattern";
+        $params = "submitter $input $bins $density $pop color $isFcs $jid $flockLsid $imageLsid";
 
-        return exec($executor.$params."> /dev/null 2>&1 &");
+        return exec("($executor $params)> /dev/null 2>&1 &");
     }
 
     function runScript($jid, $inputPath, $bins, $density, $pop, $outputDir, $inputFileName) {
@@ -125,7 +127,7 @@ class TaskModule {
         );
     } 
 
-	function getAnalysis($uid, $pid, $fid, $tid) {
+    function getAnalysis($uid, $pid, $fid, $tid) {
         $this->dbm();
         $con = $this->dbModule->connect();
         $result = $this->dbModule->getAnalysis($con, $uid, $pid, $fid, $tid);
@@ -133,6 +135,6 @@ class TaskModule {
             $this::$RESULT = $result;
         }
         $this::$SUCCESS = true;
-	}
+    }
 }
 ?>
