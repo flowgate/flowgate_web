@@ -15,7 +15,7 @@
         $json = json_decode($contents, true);
 
         //sort parameters
-        if($json['auto'] && $json['params']) {
+        if(!$json['auto'] && $json['params']) {
             $params = $json['params'];
             if($params['density']) {
                 sort($params['density']);
