@@ -309,7 +309,7 @@
                   '<tr>' + // onclick="_page.view(\''+r.analysisID+'\',\''+r.analysisName+'\');"
                     '<td>'+(i+1)+'</td>'+
                     '<td><a href="javascript:_page.view(\''+r.analysisID+'\',\''+r.analysisName+'\');">'+r.analysisName+'</a></td>' +
-                    '<td>Genepattern</td>' +
+                    '<td>' + (r.analysisWorkflow ? r.analysisWorkflow : '') + '</td>' +
                     '<td><a href="javascript:_page.view(\''+r.analysisID+'\',\''+r.analysisName+'\');">'+r.analysisID+'</a></td>' +
                     '<td>' + statusText + (status==='2'?'<br/><a href="../common/download.php?jid='+ r.analysisID +'" class="btn btn-primary btn-xs">Download</a>':'') + '</td>' +
                     '<td>'+r.analysisTime+'</td>' +

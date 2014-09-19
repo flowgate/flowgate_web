@@ -138,11 +138,11 @@ class DatabaseModule {
 	}
 
 	//task
-	function addAnalysis($con, $tname, $tid, $pid, $fid, $uid) {
+	function addAnalysis($con, $tname, $tid, $pid, $fid, $wf, $param, $uid) {
 		$query = sprintf(
-			"INSERT INTO %s.%s (analysisName, analysisID, datasetID, dataInputFileID, userIdx, analysisTime) values ('%s', '%s', %d, %d, %d, now())",
+			"INSERT INTO %s.%s (analysisName, analysisID, datasetID, dataInputFileID, userIdx, analysisWorkflow, analysisParam, analysisTime) values ('%s', '%s', %d, %d, %d, '%s', '%s', now())",
 				$this::$DBNAME, $this::$TASKTABLE,
-				$tname, $tid, $pid, $fid, $uid);
+				$tname, $tid, $pid, $fid, $uid, $wf, $param);
 		return $this->executeQuery($con, $query);
 	}
 

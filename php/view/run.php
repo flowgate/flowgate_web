@@ -34,8 +34,8 @@
         <div class="col-sm-9">
           <select class="form-control" id="workflow" name="workflow">
             <option value=""></option>
-            <option value="bio">bioKepler</option>
-            <option value="gp">GenePattern</option>
+            <option value="bioKepler">bioKepler</option>
+            <option value="genePattern">GenePattern</option>
           </select>
         </div>
       </div>
@@ -108,10 +108,10 @@
 
         if(selected) {
           if(selected === 'bio') {
-            opts += '<option value="1">FLOCK_bioKepler (bioKID=1)</option>';
+            opts += '<option value="bio1">FLOCK_bioKepler (bioKID=1)</option>';
           } else {
-            opts += '<option value="1">FLOCK_TXT_INPUT (LSID=FlockgateFLOCKTXT)</option>';
-            opts += '<option value="1">FLOCK_FCS_INPUT (LSID=FlockgateFLOCKFCS)</option>';     
+            opts += '<option value="gp_txt">FLOCK_TXT_INPUT (LSID=FlockgateFLOCKTXT)</option>';
+            opts += '<option value="gp_fcs">FLOCK_FCS_INPUT (LSID=FlockgateFLOCKFCS)</option>';     
           }
           $('#lsid').prop('disabled', false);
         }
